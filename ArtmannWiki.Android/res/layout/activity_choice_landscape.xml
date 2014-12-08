@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    style="?android:attr/buttonBarButtonStyle"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <TableRow
+        style="?android:attr/buttonBarButtonStyle">
+        <Button
+            android:layout_width="128sp"
+            android:layout_height="128sp"
+            style="?android:attr/buttonBarButtonStyle"
+            android:background="@drawable/search"
+            android:id="@+id/choice_wiki_search"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:layout_height="fill_parent"
+            android:layout_width="64sp"/>
+
+        <Button
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            style="?android:attr/buttonBarButtonStyle"
+            android:background="@drawable/save"
+            android:id="@+id/choice_wiki_new_entity"
+            android:layout_gravity="center_vertical" />
+    </TableRow>
+    <TableRow
+        style="?android:attr/buttonBarButtonStyle">
+        <TextView
+            android:text="@string/action_choice_search"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"/>
+
+
+        <TextView
+            android:layout_height="fill_parent"
+            android:layout_width="64sp"/>
+
+        <TextView
+            android:text="@string/action_choice_new_input"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </TableRow>
+</TableLayout>

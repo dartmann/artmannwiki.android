@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Allgemein -->
+    <string name="app_name">ArtmannWiki</string>
+    <string name="title_activity_choice">ArtmannWiki</string>
+    <string name="title_activity_categorie_list">Kategorien</string>
+    <string name="title_activity_new_entity">Neuer Eintrag</string>
+    <string name="title_activity_new_login">Neuer Login</string>
+    <string name="title_activity_new_device">Neues Handy/Tablet</string>
+    <string name="title_activity_new_mail">Neue E-Mail</string>
+    <string name="title_activity_single_category">SingleCategory</string>
+    <string name="action_sign_in">Anmelden</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="action_quit">Beenden</string>
+    <string name="action_save">Speichern</string>
+    <string name="hint_password">Passwort</string>
+    <string name="hint_username">Benutzername</string>
+    <string name="hint_password_repeat">Passwort wiederholen</string>
+    <string name="hint_number">Nummer</string>
+    <string name="hint_pin">Pin</string>
+    <string name="hint_puk">Puk</string>
+    <string name="action_hint_mail">E-Mail</string>
+    <string name="prompt_saved_succesfully">Eintrag erfolgreich gespeichert</string>
+    <string name="prompt_all_fields_must_be_filled">Jedes Feld muss ausgefüllt sein</string>
+    <string name="text_required_fields">Die gekennzeichneten Felder(*) sind Pflichtfelder!</string>
+
+    <!-- Spezifisch -->
+    <string name="action_choice_new_input">Wiki Eintrag erstellen</string>
+    <string name="action_choice_search">Wiki durchsuchen</string>
+    <string name="action_new_entity_question">Was soll eingetragen werden?</string>
+    <string name="action_new_entity_login">Login</string>
+    <string name="action_new_device">Handy/Tablet</string>
+    <string name="prompt_register">Bitte ein Passwort ihrer Wahl eingeben.\nMindestens 6 Zeichen sind erfolderlich.</string>
+    <string name="prompt_password_invalid">Passwort ungültig</string>
+    <string name="prompt_password_unidentical">Passwort nicht identisch</string>
+    <string name="prompt_new_login_info_required">Info- und Benutzerfeld wird benötigt</string>
+    <string name="hint_new_login_info">Für was wird der Login verwendet?</string>
+
+    <!-- Farben -->
+    <drawable name="white">#ffffff</drawable>
+    <drawable name="blue">#2554C7</drawable>
+    <drawable name="green">#347C2C</drawable>
+    <drawable name="orange">#ff9900</drawable>
+    <drawable name="pink">#FF00FF</drawable>
+    <drawable name="violet">#a020f0</drawable>
+    <drawable name="gray">#778899</drawable>
+    <drawable name="red">#C11B17</drawable>
+    <drawable name="mistyrose">#FBBBB9</drawable>
+    <drawable name="screen_background_holo_light">#fff3f3f3</drawable>
+    <drawable name="screen_background_holo_dark">#ff000000</drawable>
+    <color name="background_holo_dark">#ff000000</color>
+    <color name="background_holo_light">#fff3f3f3</color>
+
+    <!-- blafoo -->
+    <string name="hello_world">Hello world!</string>
+
+</resources>

@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="de.davidartmann.artmannwiki.android.NewMail">
+
+    <EditText
+        android:id="@+id/new_mail_edittext_mailadress"
+        android:inputType="textEmailAddress"
+        android:maxLength="35"
+        android:hint="@string/action_hint_mail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/new_mail_edittext_password"
+        android:layout_below="@+id/new_mail_edittext_mailadress"
+        android:hint="@string/hint_password"
+        android:maxLength="35"
+        android:inputType="textVisiblePassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/new_mail_edittext_password_repeat"
+        android:layout_below="@+id/new_mail_edittext_password"
+        android:hint="@string/hint_password_repeat"
+        android:maxLength="35"
+        android:inputType="textVisiblePassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/new_mail_button_save"
+        android:layout_below="@+id/new_mail_edittext_password_repeat"
+        android:text="@string/action_save"
+        style="?android:textAppearanceSmall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
