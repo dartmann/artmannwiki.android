@@ -34,6 +34,7 @@
     <string name="prompt_register">Bitte ein Passwort ihrer Wahl eingeben.\nMindestens 6 Zeichen sind erfolderlich.</string>
     <string name="prompt_password_invalid">Passwort ungültig</string>
     <string name="prompt_password_unidentical">Passwort nicht identisch</string>
+    <string name="prompt_password_too_short">Passwort zu kurz</string>
     <string name="prompt_new_login_info_required">Info- und Benutzerfeld wird benötigt</string>
     <string name="hint_new_login_info">Für was wird der Login verwendet?</string>
 
@@ -54,5 +55,9 @@
 
     <!-- blafoo -->
     <string name="hello_world">Hello world!</string>
+    
+    <!-- Descriptions -->
+    <string name="navbar_imageview">image view for the navigationsbar</string>
+    <string name="navbar_listitem">single list item for each navbar fragment</string>
 
 </resources>
