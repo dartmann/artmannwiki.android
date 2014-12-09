@@ -1,26 +1,23 @@
 package de.davidartmann.artmannwiki.android;
 
-import de.artmann.artmannwiki.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import de.artmann.artmannwiki.R;
 
 public class Login extends Activity {
     //-----------------------------------------------------------------------------------
-    static final String PREFS_NAME = "sprefsfile_artmannwiki";
+    private static final String PREFS_NAME = "sprefsfile_artmannwiki";
     //-----------------------------------------------------------------------------------
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,10 +60,11 @@ public class Login extends Activity {
                         Toast.makeText(Login.this, R.string.prompt_password_unidentical, Toast.LENGTH_SHORT).show();
                    }
                     else if((passField1.equals(passField2)) && (passwordField.length()<6)) {
-                        Toast.makeText(Login.this, "Passwort nicht lang genug", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, R.string.prompt_password_too_short, Toast.LENGTH_SHORT).show();
                     }
                     else if(!(passField1.equals(passField2)) && (passwordField.length()<6)) {
-                        Toast.makeText(Login.this, "Passwort nicht lang genug und nicht identisch", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, R.string.prompt_password_invalid+" und "
+                        		+R.string.prompt_password_too_short, Toast.LENGTH_SHORT).show();
                     }
                     else {
                         Toast.makeText(Login.this, R.string.prompt_password_invalid, Toast.LENGTH_SHORT).show();
@@ -107,5 +105,14 @@ public class Login extends Activity {
     protected void onPause() {
         super.onPause();
         finish();
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+        	@Override
+        	public void run() {
+        		Intent intent = new Intent(Intent.ACTION_MAIN);
+        		intent.addCategory(Intent.CATEGORY_HOME);
+        		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        		startActivity(intent);
+        	}
+        });;
     }
 }
