@@ -18,7 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import de.artmann.artmannwiki.R;
-import de.davidartmann.artmannwiki.android.Drawer.PlanetFragment;
+import de.davidartmann.artmannwiki.android.drawer.PlanetFragment;
 
 
 public class Choice extends Activity {

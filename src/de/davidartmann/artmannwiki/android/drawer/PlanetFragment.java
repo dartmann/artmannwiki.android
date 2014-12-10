@@ -1,4 +1,4 @@
-package de.davidartmann.artmannwiki.android.Drawer;
+package de.davidartmann.artmannwiki.android.drawer;
 
 import java.util.Locale;
 
