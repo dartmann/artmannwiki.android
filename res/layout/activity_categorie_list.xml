@@ -6,10 +6,22 @@
     android:orientation="vertical"
     tools:context="de.davidartmann.artmannwiki.android.CategorieList">
 
-    <ListView
-        android:id="@+id/categoryList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-    />
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="22px"
+        android:layout_height="22px"
+        android:layout_marginLeft="4px"
+        android:layout_marginRight="10px"
+        android:layout_marginTop="4px"
+        android:src="@drawable/ic_launcher" >
+    </ImageView>
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@+id/label"
+        android:textSize="20px" >
+    </TextView>
 
 </LinearLayout>

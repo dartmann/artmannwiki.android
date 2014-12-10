@@ -3,6 +3,7 @@ package de.davidartmann.artmannwiki.android.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * 
@@ -15,9 +16,15 @@ public class DBManager extends SQLiteOpenHelper {
 	
 	private static final int DB_VERSION = 1;
     private static final String DB_NAME = "artmannwiki.db";
+    
+    //public columan names, for every entity the same
+    public static final String COLUMN_ID = "_id";
+	public static final String COLUMN_CREATETIME = "create_time";
+	public static final String COLUMN_LASTUPDATE = "last_update";
+	public static final String COLUMN_ACTIVE = "active";
 
 
-	DBManager(Context context) {
+	public DBManager(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
@@ -26,13 +33,15 @@ public class DBManager extends SQLiteOpenHelper {
 	 */
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(AccountManager.createAccountTable());
-
 	}
 
 	/**
 	 * All the static update Methods of the ModelManager classes are called here
 	 */
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.w(DBManager.class.getName(),
+		        "Upgrading database from version " + oldVersion + " to "
+		            + newVersion + ", which will destroy all old data");
 		db.execSQL(AccountManager.upgradeAccountTable());
         onCreate(db);
 	}

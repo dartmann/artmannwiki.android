@@ -24,7 +24,7 @@
             android:label="@string/title_activity_choice" >
         </activity>
         
-        <!-- 
+         
         <activity
             android:name="de.davidartmann.artmannwiki.android.CategorieList"
             android:label="@string/title_activity_categorie_list"
@@ -33,6 +33,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.artmann.artmannwiki.Choice" />
         </activity>
+        
+        <!--
         <activity
             android:name="de.davidartmann.artmannwiki.android.NewEntity"
             android:label="@string/title_activity_new_entity"

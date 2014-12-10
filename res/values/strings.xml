@@ -57,10 +57,10 @@
     <string name="hello_world">Hello world!</string>
     
     <!-- Descriptions -->
-    <string name="navbar_imageview">image view for the navigationsbar</string>
-    <string name="navbar_listitem">single list item for each navbar fragment</string>
     
     <!-- NavigationDrawer -->
+    <string name="drawer_imageview">image view for the navigationsbar</string>
+    <string name="drawer_listitem">single list item for each navbar fragment</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>
