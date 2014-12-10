@@ -15,6 +15,10 @@ public class Account extends SoftDeleteEntity {
 	
 	private String pin;
 	
+	public Account() {
+		
+	}
+	
 	public Account(String o, String i, String b, String p) {
 		this.owner = o;
 		this.iban = i;
