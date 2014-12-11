@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.database.AccountManager;
 import de.davidartmann.artmannwiki.android.model.Account;
@@ -31,7 +30,7 @@ public class CategorieList extends ListActivity {
         accountManager = new AccountManager(CategorieList.this);
         accountManager.openWritable();
         //creating testdata
-        Account account = new Account("bla", "foo", "bar", "shit");
+        Account account = new Account("Meister Eder", "123456123", "BYLADMNIEA", "1234");
         account.setActive(true);
         account.setCreateTime(new Date());
         account.setLastUpdate(new Date());
@@ -50,8 +49,7 @@ public class CategorieList extends ListActivity {
     	accountManager = new AccountManager(CategorieList.this);
         accountManager.openWritable();
     	final Account account = (Account) listView.getItemAtPosition(position);
-    	boolean test = accountManager.deleteAccount(account);
-    	Toast.makeText(this, String.valueOf(test), Toast.LENGTH_LONG).show();;
+    	accountManager.softDeleteAccount(account);
         view.animate().setDuration(2000).alpha(0).withEndAction(new Runnable() {
             @Override
             public void run() {

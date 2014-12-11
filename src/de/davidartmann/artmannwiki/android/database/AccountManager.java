@@ -72,8 +72,12 @@ public class AccountManager {
 	 * @return {@link Account}
 	 */
 	public Account getAccountById(long id) {
-		Cursor cursor = db.query(TABLE_ACCOUNTS, null, DBManager.COLUMN_ID + "=" + id, null, null, null, null);
-		return accountFromCursor(cursor);
+		Cursor cursor = db.query(TABLE_ACCOUNTS, null, DBManager.COLUMN_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
+		//always place the cursor to the first element, before accessing
+		cursor.moveToFirst();
+		Account account = accountFromCursor(cursor);
+		cursor.close();
+		return account;
 	}
 	
 	/**
@@ -83,7 +87,10 @@ public class AccountManager {
 	 */
 	public Account getAccountByIban(String iban) {
 		Cursor cursor = db.query(TABLE_ACCOUNTS, null, COLUMN_IBAN + "=" + iban, null, null, null, null);
-		return accountFromCursor(cursor);
+		cursor.moveToFirst();
+		Account account = accountFromCursor(cursor);
+		cursor.close();
+		return account;
 	}
 	
 	/**
@@ -92,9 +99,10 @@ public class AccountManager {
 	 * @return {@link Account}
 	 */
 	public Account addAccount(Account account) {
+		account.setCreateTime(new Date());
 		ContentValues values = fillContenValuesWithAccountData(account);
 		long insertId = db.insert(TABLE_ACCOUNTS, null, values);
-		Cursor cursor = db.query(TABLE_ACCOUNTS, null, DBManager.COLUMN_ID + "=" + insertId, null, null, null, null);
+		Cursor cursor = db.query(TABLE_ACCOUNTS, null, DBManager.COLUMN_ID + "=?", new String[] {String.valueOf(insertId)}, null, null, null);
 		cursor.moveToFirst();
 		Account toReturn = accountFromCursor(cursor);
 		cursor.close();
@@ -106,26 +114,23 @@ public class AccountManager {
 	 * @param account
 	 * @return true if account could be deleted, false otherwise
 	 */
-	public boolean deleteAccount(Account account) {
+	public boolean fullDeleteAccount(Account account) {
 		long id = account.getId();
 		System.out.println("Deleted account with id: " + id);
-		int result = db.delete(TABLE_ACCOUNTS, DBManager.COLUMN_ID + "=" + id, null);
-		if (result == 0) {
-			return false;
-		}
-		return true;
+		return db.delete(TABLE_ACCOUNTS, DBManager.COLUMN_ID + "=" + id, null) > 0;
 	}
 	
 	/**
 	 * Method to <u>soft delete</u> an {@link Account}.
+	 * This means the active status is set to false.
 	 * @param account
 	 */
 	public boolean softDeleteAccount(Account account) {
 		long id = account.getId();
-		//TODO: soft delete is not working
 		Account toDeactive = getAccountById(id);
 		if (toDeactive != null) {
 			toDeactive.setActive(false);
+			updateAccount(toDeactive);
 			return true;
 		}
 		return false;
@@ -145,10 +150,9 @@ public class AccountManager {
 		while(!cursor.isAfterLast()) {
 			Account account = accountFromCursor(cursor);
 			if (account.isActive()) {
-				//accountList.add(account);
+				System.out.println("Account with id "+account.getId()+" is active, so gets added");
+				accountList.add(account);
 			}
-			//temp:
-			accountList.add(account);
 			cursor.moveToNext();
 		}
         cursor.close();
@@ -162,6 +166,7 @@ public class AccountManager {
 	 */
 	public Account updateAccount(Account account) {
 		long accountId = account.getId();
+		account.setLastUpdate(new Date());
 		ContentValues contentValues = fillContenValuesWithAccountData(account);
 		db.update(TABLE_ACCOUNTS, contentValues, DBManager.COLUMN_ID + "=" + accountId, null);
 		Cursor cursor = db.query(TABLE_ACCOUNTS, ALL_COLUMNS, DBManager.COLUMN_ID + "=" + accountId, null, null, null, null);
@@ -181,7 +186,8 @@ public class AccountManager {
 	public Account accountFromCursor(Cursor cursor) {
 		Account account = new Account();
 		account.setId(cursor.getLong(0));
-		account.setActive(Boolean.valueOf(String.valueOf(cursor.getInt(1))));
+		//account.setActive(Boolean.valueOf(String.valueOf(cursor.getInt(1))));
+		account.setActive(cursor.getInt(1) == 0 ? false : true);
 		account.setCreateTime(new Date(cursor.getLong(2)));
 		account.setLastUpdate(new Date(cursor.getLong(3)));
 		account.setOwner(cursor.getString(4));
@@ -191,9 +197,14 @@ public class AccountManager {
 		return account;
 	}
 	
+	/**
+	 * Helper Method for the update Method, because the {@link SQLiteDatabase} update method needs ContentValues.
+	 * @param account
+	 * @return {@link ContentValues}
+	 */
 	public ContentValues fillContenValuesWithAccountData(Account account) {
 		ContentValues values = new ContentValues();
-		values.put(DBManager.COLUMN_ACTIVE, account.isActive());
+		values.put(DBManager.COLUMN_ACTIVE, account.isActive() == false ? 0 : 1);
 		values.put(DBManager.COLUMN_CREATETIME, account.getCreateTime().getTime());
 		values.put(DBManager.COLUMN_LASTUPDATE, account.getLastUpdate().getTime());
 		values.put(COLUMN_OWNER, account.getOwner());
