@@ -6,7 +6,13 @@ import java.util.Date;
  * 
  * This class is the simplest entity class and holds attributes for the primary keys(id), 
  * checkings of when the data was first stored(createTime) and when it got updated the last time(lastUpdate)
- * 
+ * <br>
+ * <u>Attributes: </u>
+ * <ul>
+ * 	<li>id ({@link String})</li>
+ * 	<li>lastUpdate ({@link Date})</li>
+ * 	<li>createTime ({@link Date})</li>
+ * </ul>
  */
 public class BaseEntity {
 	

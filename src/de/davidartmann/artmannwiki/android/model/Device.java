@@ -3,7 +3,14 @@ package de.davidartmann.artmannwiki.android.model;
 /**
  * 
  * This class stands for a Device. E.g. for a Tablet or a Smartphone/Handy.
- *
+ *<br>
+ * <u>Attributes: </u>
+ * <ul>
+ * 	<li>name ({@link String})</li>
+ * 	<li>number ({@link String})</li>
+ * 	<li>pin ({@link String})</li>
+ * 	<li>puk ({@link String})</li>
+ * </ul>
  */
 public class Device extends SoftDeleteEntity {
 

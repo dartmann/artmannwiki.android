@@ -3,7 +3,12 @@ package de.davidartmann.artmannwiki.android.model;
 /**
  * 
  * This class stands for an Email Account. E.g. for Gmail or Yahoo.
- *
+ *<br>
+ * <u>Attributes: </u>
+ * <ul>
+ * 	<li>emailadress ({@link String})</li>
+ * 	<li>password ({@link String})</li>
+ * </ul>
  */
 public class Email extends SoftDeleteEntity {
 

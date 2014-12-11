@@ -3,7 +3,13 @@ package de.davidartmann.artmannwiki.android.model;
 /**
  * 
  * This class stands for a Login Account. E.g. for a Webinterface(FritzBox) or a Windows Account.
- *
+ *<br>
+ * <u>Attributes: </u>
+ * <ul>
+ * 	<li>username ({@link String})</li>
+ * 	<li>password ({@link String})</li>
+ * 	<li>description ({@link String})</li>
+ * </ul>
  */
 public class Login extends SoftDeleteEntity {
 

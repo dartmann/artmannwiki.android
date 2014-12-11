@@ -3,6 +3,14 @@ package de.davidartmann.artmannwiki.android.model;
 /**
  * 
  * This class stands for a Bank Account. E.g. for Sparkasse or DiBa.
+ * <br>
+ * <u>Attributes: </u>
+ * <ul>
+ * 	<li>owner ({@link String})</li>
+ * 	<li>iban ({@link String})</li>
+ * 	<li>bic ({@link String})</li>
+ * 	<li>pin ({@link String})</li>
+ * </ul>
  *
  */
 public class Account extends SoftDeleteEntity {

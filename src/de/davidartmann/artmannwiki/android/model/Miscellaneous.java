@@ -3,7 +3,12 @@ package de.davidartmann.artmannwiki.android.model;
 /**
  * 
  * This class stands for an everything what needs not more than an text and an appropriate description.
- *
+ *<br>
+ * <u>Attributes: </u>
+ * <ul>
+ * 	<li>text ({@link String})</li>
+ * 	<li>description ({@link String})</li>
+ * </ul>
  */
 public class Miscellaneous extends SoftDeleteEntity {
 
