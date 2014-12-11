@@ -1,6 +1,5 @@
 package de.davidartmann.artmannwiki.android.database;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +25,8 @@ public class AccountManager {
 	private static final String COLUMN_IBAN = "iban";
 	private static final String COLUMN_BIC = "bic";
 	private static final String COLUMN_PIN = "pin";
-	private String[] ALL_COLUMNS = { COLUMN_OWNER, COLUMN_IBAN, COLUMN_BIC, COLUMN_PIN };
+	private String[] ALL_COLUMNS = { DBManager.COLUMN_ID, DBManager.COLUMN_ACTIVE, 
+			DBManager.COLUMN_CREATETIME, DBManager.COLUMN_LASTUPDATE, COLUMN_OWNER, COLUMN_IBAN, COLUMN_BIC, COLUMN_PIN };
 	
 	private static final String CREATE_TABLE_ACCOUNT = "create table "
 		      + TABLE_ACCOUNTS + "(" 
@@ -66,7 +66,26 @@ public class AccountManager {
 		return "DROP TABLE IF EXISTS" + TABLE_ACCOUNTS;
 	}
 	
-	//TODO: Ensure to make is active
+	/**
+	 * Method to get a new {@link Account} by his <u>id</u> from the database.
+	 * @param id ({@link Long})
+	 * @return {@link Account}
+	 */
+	public Account getAccountById(long id) {
+		Cursor cursor = db.query(TABLE_ACCOUNTS, null, DBManager.COLUMN_ID + "=" + id, null, null, null, null);
+		return accountFromCursor(cursor);
+	}
+	
+	/**
+	 * Method to get a new {@link Account} by his <u>iban</u> from the database.
+	 * @param iban ({@link String})
+	 * @return {@link Account}
+	 */
+	public Account getAccountByIban(String iban) {
+		Cursor cursor = db.query(TABLE_ACCOUNTS, null, COLUMN_IBAN + "=" + iban, null, null, null, null);
+		return accountFromCursor(cursor);
+	}
+	
 	/**
 	 * Method to store a new {@link Account} in the database.
 	 * @param account
@@ -76,27 +95,19 @@ public class AccountManager {
 		ContentValues values = fillContenValuesWithAccountData(account);
 		long insertId = db.insert(TABLE_ACCOUNTS, null, values);
 		Cursor cursor = db.query(TABLE_ACCOUNTS, null, DBManager.COLUMN_ID + "=" + insertId, null, null, null, null);
-		String[] test = cursor.getColumnNames();
-		/*
-		for (int i = 0; i < test.length; i++) {
-			System.out.println(test[i] +" "+ cursor.getColumnIndex(test[i]));
-		}
-		*/
 		cursor.moveToFirst();
 		Account toReturn = accountFromCursor(cursor);
 		cursor.close();
 		return toReturn;
 	}
 	
-	//TODO: realise the softdelete
 	/**
-	 * Method to delete an {@link Account}.
+	 * Method to <u>fully delete</u> an {@link Account}.
 	 * @param account
 	 * @return true if account could be deleted, false otherwise
 	 */
 	public boolean deleteAccount(Account account) {
 		long id = account.getId();
-		System.out.println("ID: "+id);
 		System.out.println("Deleted account with id: " + id);
 		int result = db.delete(TABLE_ACCOUNTS, DBManager.COLUMN_ID + "=" + id, null);
 		if (result == 0) {
@@ -105,7 +116,21 @@ public class AccountManager {
 		return true;
 	}
 	
-	//TODO: only get active ones
+	/**
+	 * Method to <u>soft delete</u> an {@link Account}.
+	 * @param account
+	 */
+	public boolean softDeleteAccount(Account account) {
+		long id = account.getId();
+		//TODO: soft delete is not working
+		Account toDeactive = getAccountById(id);
+		if (toDeactive != null) {
+			toDeactive.setActive(false);
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * Method to retrieve all Accounts from the database.
 	 * @param sqlHelper
@@ -113,10 +138,16 @@ public class AccountManager {
 	 */
 	public List<Account> getAllAccounts() {
 		List<Account> accountList = new ArrayList<Account>();
-		Cursor cursor = db.query(TABLE_ACCOUNTS, ALL_COLUMNS, null, null, null, null, null);
+		//columns parameter(second one) is also null because then all columns get returned
+		//and thats neccessary, so the accountFromCursor() method works correctly
+		Cursor cursor = db.query(TABLE_ACCOUNTS, null, null, null, null, null, null);
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
 			Account account = accountFromCursor(cursor);
+			if (account.isActive()) {
+				//accountList.add(account);
+			}
+			//temp:
 			accountList.add(account);
 			cursor.moveToNext();
 		}

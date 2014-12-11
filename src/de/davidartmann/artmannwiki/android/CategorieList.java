@@ -41,6 +41,7 @@ public class CategorieList extends ListActivity {
         adapter = new ArrayAdapter<Account>(this,
             R.layout.activity_categorie_list, R.id.label, accountList);
         setListAdapter(adapter);
+        //Toast.makeText(this, accountList.size(), Toast.LENGTH_LONG).show();
     }
     
     @SuppressLint("NewApi")
