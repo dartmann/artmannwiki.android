@@ -12,7 +12,7 @@ import de.davidartmann.artmannwiki.android.model.Account;
 
 /**
  * 
- * This Account model helper class.
+ * {@link Account} model helper class.
  *
  */
 public class AccountManager {
