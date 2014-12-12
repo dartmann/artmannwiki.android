@@ -23,8 +23,6 @@ public class EmailManager {
 	private static final String TABLE_EMAIL = "email";
 	private static final String COLUMN_EMAILADDRESS = "emailaddress";
 	private static final String COLUMN_PASSWORD = "password";
-//	private String[] ALL_COLUMNS = { DBManager.COLUMN_ID, DBManager.COLUMN_ACTIVE, 
-//			DBManager.COLUMN_CREATETIME, DBManager.COLUMN_LASTUPDATE, COLUMN_EMAILADDRESS, COLUMN_PASSWORD };
 
 	private static final String CREATE_TABLE_EMAIL = "create table "
 		      + TABLE_EMAIL + "(" 
@@ -37,7 +35,7 @@ public class EmailManager {
 		      +");";
 	
 	/**
-	 * Contructor with the actual context for the DBManager
+	 * Constructor with the actual context for the DBManager
 	 * @param context
 	 */
 	public EmailManager(Context context) {
@@ -141,8 +139,6 @@ public class EmailManager {
 	 */
 	public List<Email> getAllEmails() {
 		List<Email> emailList = new ArrayList<Email>();
-		//columns parameter(second one) is also null because then all columns get returned
-		//and thats necessary, so the accountFromCursor() method works correctly
 		Cursor cursor = db.query(TABLE_EMAIL, null, null, null, null, null, null);
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
@@ -190,7 +186,7 @@ public class EmailManager {
 	}
 	
 	/**
-	 * Helper Method, because the {@link SQLiteDatabase} insert method needs ContentValues.
+	 * Helper method, because the {@link SQLiteDatabase} insert method needs ContentValues.
 	 * @param email
 	 * @return {@link ContentValues}
 	 */
@@ -204,7 +200,7 @@ public class EmailManager {
 	}
 	
 	/**
-	 * Helper Method, because the {@link SQLiteDatabase} update method needs ContentValues.
+	 * Helper method, because the {@link SQLiteDatabase} update method needs ContentValues.
 	 * @param email
 	 * @return {@link ContentValues}
 	 */

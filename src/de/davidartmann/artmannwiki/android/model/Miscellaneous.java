@@ -16,9 +16,21 @@ public class Miscellaneous extends SoftDeleteEntity {
 	
 	private String description;
 	
-	public Miscellaneous(String t, String d) {
-		this.text = t;
-		this.description = d;
+	/**
+	 * Empty constructor
+	 */
+	public Miscellaneous() {
+		
+	}
+	
+	/**
+	 * Constructor to create a new instance with only its own attributes
+	 * @param text
+	 * @param description
+	 */
+	public Miscellaneous(String text, String description) {
+		this.text = text;
+		this.description = description;
 	}
 
 	public String getText() {

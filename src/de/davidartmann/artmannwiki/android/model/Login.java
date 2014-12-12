@@ -19,10 +19,23 @@ public class Login extends SoftDeleteEntity {
 	
 	private String description;
 	
-	public Login(String u, String p, String d) {
-		this.username = u;
-		this.password = p;
-		this.description = d;
+	/**
+	 * Empty constructor
+	 */
+	public Login() {
+		
+	}
+
+	/**
+	 * Constructor to create a new instance with only its own attributes
+	 * @param username
+	 * @param password
+	 * @param description
+	 */
+	public Login(String username, String password, String description) {
+		this.username = username;
+		this.password = password;
+		this.description = description;
 	}
 
 	public String getUsername() {

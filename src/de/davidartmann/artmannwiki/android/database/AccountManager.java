@@ -20,7 +20,7 @@ public class AccountManager {
 	private DBManager dbManager;
 	private SQLiteDatabase db;
 	
-	private static final String TABLE_ACCOUNTS = "account";
+	private static final String TABLE_ACCOUNT = "account";
 	private static final String COLUMN_OWNER = "owner";
 	private static final String COLUMN_IBAN = "iban";
 	private static final String COLUMN_BIC = "bic";
@@ -29,7 +29,7 @@ public class AccountManager {
 //			DBManager.COLUMN_CREATETIME, DBManager.COLUMN_LASTUPDATE, COLUMN_OWNER, COLUMN_IBAN, COLUMN_BIC, COLUMN_PIN };
 	
 	private static final String CREATE_TABLE_ACCOUNT = "create table "
-		      + TABLE_ACCOUNTS + "(" 
+		      + TABLE_ACCOUNT + "(" 
 		      + DBManager.COLUMN_ID + " integer primary key autoincrement,"
 		      + DBManager.COLUMN_ACTIVE + " integer not null,"
 		      + DBManager.COLUMN_CREATETIME + " datetime not null,"
@@ -41,7 +41,7 @@ public class AccountManager {
 		      +");";
 	
 	/**
-	 * Contructor with the actual context for the DBManager
+	 * Constructor with the actual context for the DBManager
 	 * @param context
 	 */
 	public AccountManager(Context c) {
@@ -67,7 +67,7 @@ public class AccountManager {
 	
 	//gets called from the DBManager#onUpdate()
 	public static String upgradeAccountTable() {
-		return "DROP TABLE IF EXISTS" + TABLE_ACCOUNTS;
+		return "DROP TABLE IF EXISTS" + TABLE_ACCOUNT;
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public class AccountManager {
 	 * @return {@link Account}
 	 */
 	public Account getAccountById(long id) {
-		Cursor cursor = db.query(TABLE_ACCOUNTS, null, DBManager.COLUMN_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
+		Cursor cursor = db.query(TABLE_ACCOUNT, null, DBManager.COLUMN_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
 		//always place the cursor to the first element, before accessing
 		cursor.moveToFirst();
 		Account account = accountFromCursor(cursor);
@@ -90,7 +90,7 @@ public class AccountManager {
 	 * @return {@link Account}
 	 */
 	public Account getAccountByIban(String iban) {
-		Cursor cursor = db.query(TABLE_ACCOUNTS, null, COLUMN_IBAN + "=" + iban, null, null, null, null);
+		Cursor cursor = db.query(TABLE_ACCOUNT, null, COLUMN_IBAN + "=" + iban, null, null, null, null);
 		cursor.moveToFirst();
 		Account account = accountFromCursor(cursor);
 		cursor.close();
@@ -105,8 +105,8 @@ public class AccountManager {
 	public Account addAccount(Account account) {
 		account.setCreateTime(new Date());
 		ContentValues values = fillContenValuesWithNewAccountData(account);
-		long insertId = db.insert(TABLE_ACCOUNTS, null, values);
-		Cursor cursor = db.query(TABLE_ACCOUNTS, null, DBManager.COLUMN_ID + "=?", new String[] {String.valueOf(insertId)}, null, null, null);
+		long insertId = db.insert(TABLE_ACCOUNT, null, values);
+		Cursor cursor = db.query(TABLE_ACCOUNT, null, DBManager.COLUMN_ID + "=?", new String[] {String.valueOf(insertId)}, null, null, null);
 		cursor.moveToFirst();
 		Account toReturn = accountFromCursor(cursor);
 		cursor.close();
@@ -120,7 +120,7 @@ public class AccountManager {
 	 */
 	public boolean fullDeleteAccount(Account account) {
 		long id = account.getId();
-		return db.delete(TABLE_ACCOUNTS, DBManager.COLUMN_ID + "=" + id, null) > 0;
+		return db.delete(TABLE_ACCOUNT, DBManager.COLUMN_ID + "=" + id, null) > 0;
 	}
 	
 	/**
@@ -147,7 +147,7 @@ public class AccountManager {
 		List<Account> accountList = new ArrayList<Account>();
 		//columns parameter(second one) is also null because then all columns get returned
 		//and thats necessary, so the accountFromCursor() method works correctly
-		Cursor cursor = db.query(TABLE_ACCOUNTS, null, null, null, null, null, null);
+		Cursor cursor = db.query(TABLE_ACCOUNT, null, null, null, null, null, null);
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
 			Account account = accountFromCursor(cursor);
@@ -169,8 +169,8 @@ public class AccountManager {
 		long accountId = account.getId();
 		account.setLastUpdate(new Date());
 		ContentValues contentValues = fillContentValuesWithUpdatedAccountData(account);
-		db.update(TABLE_ACCOUNTS, contentValues, DBManager.COLUMN_ID + "=" + accountId, null);
-		Cursor cursor = db.query(TABLE_ACCOUNTS, null, DBManager.COLUMN_ID + "=" + accountId, null, null, null, null);
+		db.update(TABLE_ACCOUNT, contentValues, DBManager.COLUMN_ID + "=" + accountId, null);
+		Cursor cursor = db.query(TABLE_ACCOUNT, null, DBManager.COLUMN_ID + "=" + accountId, null, null, null, null);
 		cursor.moveToFirst();
 		Account returnAccount = accountFromCursor(cursor);
 		cursor.close();
@@ -185,7 +185,6 @@ public class AccountManager {
 	public Account accountFromCursor(Cursor cursor) {
 		Account account = new Account();
 		account.setId(cursor.getLong(0));
-		//account.setActive(Boolean.valueOf(String.valueOf(cursor.getInt(1))));
 		account.setActive(cursor.getInt(1) == 0 ? false : true);
 		account.setCreateTime(new Date(cursor.getLong(2)));
 		account.setLastUpdate(new Date(cursor.getLong(3)));
@@ -197,7 +196,7 @@ public class AccountManager {
 	}
 	
 	/**
-	 * Helper Method, because the {@link SQLiteDatabase} insert method needs ContentValues.
+	 * Helper method, because the {@link SQLiteDatabase} insert method needs ContentValues.
 	 * @param account
 	 * @return {@link ContentValues}
 	 */
@@ -213,7 +212,7 @@ public class AccountManager {
 	}
 	
 	/**
-	 * Helper Method, because the {@link SQLiteDatabase} update method needs ContentValues.
+	 * Helper method, because the {@link SQLiteDatabase} update method needs ContentValues.
 	 * @param account
 	 * @return {@link ContentValues}
 	 */

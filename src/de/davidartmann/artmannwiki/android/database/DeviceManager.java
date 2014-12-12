@@ -25,8 +25,6 @@ public class DeviceManager {
 	private static final String COLUMN_NUMBER = "number";
 	private static final String COLUMN_PIN = "pin";
 	private static final String COLUMN_PUK = "puk";
-//	private String[] ALL_COLUMNS = { DBManager.COLUMN_ID, DBManager.COLUMN_ACTIVE, 
-//			DBManager.COLUMN_CREATETIME, DBManager.COLUMN_LASTUPDATE, COLUMN_NAME, COLUMN_NUMBER, COLUMN_PIN, COLUMN_PUK };
 	
 	private static final String CREATE_TABLE_DEVICE = "create table "
 		      + TABLE_DEVICE + "(" 
@@ -41,7 +39,7 @@ public class DeviceManager {
 		      +");";
 	
 	/**
-	 * Contructor with the actual context for the DBManager
+	 * Constructor with the actual context for the DBManager
 	 * @param context
 	 */
 	public DeviceManager(Context context) {
@@ -145,8 +143,6 @@ public class DeviceManager {
 	 */
 	public List<Device> getAllDevices() {
 		List<Device> deviceList = new ArrayList<Device>();
-		//columns parameter(second one) is also null because then all columns get returned
-		//and thats necessary, so the accountFromCursor() method works correctly
 		Cursor cursor = db.query(TABLE_DEVICE, null, null, null, null, null, null);
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
@@ -196,7 +192,7 @@ public class DeviceManager {
 	}
 	
 	/**
-	 * Helper Method, because the {@link SQLiteDatabase} insert method needs ContentValues.
+	 * Helper method, because the {@link SQLiteDatabase} insert method needs ContentValues.
 	 * @param device
 	 * @return {@link ContentValues}
 	 */
@@ -212,7 +208,7 @@ public class DeviceManager {
 	}
 	
 	/**
-	 * Helper Method, because the {@link SQLiteDatabase} update method needs ContentValues.
+	 * Helper method, because the {@link SQLiteDatabase} update method needs ContentValues.
 	 * @param device
 	 * @return {@link ContentValues}
 	 */
