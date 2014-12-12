@@ -1,4 +1,4 @@
-package de.davidartmann.artmannwiki.android;
+package checkIfDeletable;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ public class DBManager extends SQLiteOpenHelper {
     private static final String KATEGORIE_EMAIL = "E-Mail";
     private static final String KATEGORIE_DEVICE = "Handy/Tablet";
 
-    DBManager(Context context) {
+    public DBManager(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 

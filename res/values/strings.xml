@@ -57,6 +57,7 @@
     <string name="hello_world">Hello world!</string>
     
     <!-- Descriptions -->
+    <string name="categorylistitemicon">Image of the category list items</string>
     
     <!-- NavigationDrawer -->
     <string name="drawer_imageview">image view for the navigationsbar</string>

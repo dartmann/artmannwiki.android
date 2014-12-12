@@ -1,4 +1,4 @@
-package de.davidartmann.artmannwiki.android;
+package checkIfDeletable;
 
 /**
  * Created by David on 29.08.2014.

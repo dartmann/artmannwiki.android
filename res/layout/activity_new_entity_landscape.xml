@@ -70,7 +70,7 @@
             <ImageButton
                 android:contentDescription="@string/action_hint_mail"
                 android:id="@+id/new_entity_button_mail"
-                android:background="@drawable/mail"
+                android:background="@drawable/email"
                 android:layout_width="128sp"
                 android:layout_height="128sp" />
             <TextView

@@ -2,6 +2,8 @@ package de.davidartmann.artmannwiki.android;
 
 import java.util.ArrayList;
 
+import checkIfDeletable.DBManager;
+import checkIfDeletable.Entity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,7 +22,7 @@ public class SingleCategory extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_single_category);
+        setContentView(R.layout.single_category);
         fillWithData();
     }
 

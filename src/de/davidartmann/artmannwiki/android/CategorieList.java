@@ -1,6 +1,6 @@
 package de.davidartmann.artmannwiki.android;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -9,45 +9,49 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import de.artmann.artmannwiki.R;
-import de.davidartmann.artmannwiki.android.database.AccountManager;
-import de.davidartmann.artmannwiki.android.database.DeviceManager;
-import de.davidartmann.artmannwiki.android.model.Account;
-import de.davidartmann.artmannwiki.android.model.Device;
+import de.davidartmann.artmannwiki.android.adapter.CategoryListArrayAdapter;
 
 
 public class CategorieList extends ListActivity {
-	private AccountManager accountManager;
-	private List<Account> accountList;
-	private ArrayAdapter<Account> adapter;
+	//private AccountManager accountManager;
+	private List<String> listValues = new ArrayList<String>();
+	//private List<Account> accountList;
+	private CategoryListArrayAdapter categoryListAdapter;
+	//private ArrayAdapter<Account> adapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_categorie_list);
+        String[] values = new String[] {"Bankkonto", "Gerät", "E-Mail", "Versicherung", "Login", "Diverse/Notizen"};
+        for(String s : values) {
+        	listValues.add(s);
+        }
         
+        //TODO: implement addHeaderView()?!
         //final ListView listview = (ListView) findViewById(R.id.categoryList);
+        /*
         accountManager = new AccountManager(CategorieList.this);
         accountManager.openWritable();
         // creating testdata
         Account account = new Account("Meister Eder", "123456123", "BYLADMNIEA", "1234");
         account.setActive(true);
         account.setCreateTime(new Date());
-        //account.setLastUpdate(new Date());
         accountManager.addAccount(account);
         accountList = accountManager.getAllAccounts();
-        // use custom layout
         adapter = new ArrayAdapter<Account>(this,
-            R.layout.activity_categorie_list, R.id.label, accountList);
-        setListAdapter(adapter);
-        //Toast.makeText(this, accountList.size(), Toast.LENGTH_LONG).show();
+            R.layout.activity_category_list, R.id.label, accountList);
+        */
+        categoryListAdapter = new CategoryListArrayAdapter(this, listValues);
+        setListAdapter(categoryListAdapter);
     }
     
     @SuppressLint("NewApi")
 	@Override
 	protected void onListItemClick(ListView listView, final View view, int position, long id) {
+    	/*
     	accountManager = new AccountManager(CategorieList.this);
         accountManager.openWritable();
     	final Account account = (Account) listView.getItemAtPosition(position);
@@ -57,17 +61,20 @@ public class CategorieList extends ListActivity {
         view.animate().setDuration(2000).alpha(0).withEndAction(new Runnable() {
             public void run() {
                 //accountList.remove(account);
-                adapter.notifyDataSetChanged();
+                categoryListAdapter.notifyDataSetChanged();
                 view.setAlpha(1);
             }
         });
+        */
 	}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.categorie_list, menu);
-        return true;
+    	// Not necessary, so commented
+        //getMenuInflater().inflate(R.menu.categorie_list, menu);
+        //return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
 	@Override
@@ -76,23 +83,20 @@ public class CategorieList extends ListActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_exit || super.onOptionsItemSelected(item);
     }
 
 
 	@Override
 	protected void onPause() {
-		accountManager.close();
+		//accountManager.close();
 		super.onPause();
 	}
 
 
 	@Override
 	protected void onResume() {
-		accountManager.openWritable();
+		//accountManager.openWritable();
 		super.onResume();
 	}
 

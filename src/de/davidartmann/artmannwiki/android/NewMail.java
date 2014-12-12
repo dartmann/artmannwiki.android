@@ -1,5 +1,7 @@
 package de.davidartmann.artmannwiki.android;
 
+import checkIfDeletable.DBManager;
+import checkIfDeletable.Entity;
 import de.artmann.artmannwiki.R;
 import android.app.Activity;
 import android.os.Bundle;

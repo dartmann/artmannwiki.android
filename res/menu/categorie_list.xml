@@ -6,14 +6,5 @@
           android:icon="@drawable/action_search"
           android:title="@string/action_websearch"
           android:showAsAction="ifRoom|withText" />
-    
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
-    
-    <item android:id="@+id/action_exit"
-        android:title="@string/action_quit"
-        android:orderInCategory="200"
-        android:showAsAction="never" />
+
 </menu>

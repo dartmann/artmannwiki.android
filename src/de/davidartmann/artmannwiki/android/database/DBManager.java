@@ -33,11 +33,11 @@ public class DBManager extends SQLiteOpenHelper {
 	 */
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(AccountManager.createAccountTable());
-//		db.execSQL(DeviceManager.createDeviceTable());
-//		db.execSQL(EmailManager.createEmailTable());
-//		db.execSQL(InsuranceManager.createInsuranceTable());
-//		db.execSQL(LoginManager.createLoginTable());
-//		db.execSQL(MiscellaneousManager.createMiscellaneousTable());
+		db.execSQL(DeviceManager.createDeviceTable());
+		db.execSQL(EmailManager.createEmailTable());
+		db.execSQL(InsuranceManager.createInsuranceTable());
+		db.execSQL(LoginManager.createLoginTable());
+		db.execSQL(MiscellaneousManager.createMiscellaneousTable());
 	}
 
 	/**
@@ -48,11 +48,11 @@ public class DBManager extends SQLiteOpenHelper {
 		        "Upgrading database from version " + oldVersion + " to "
 		            + newVersion + ", which will destroy all old data");
 		db.execSQL(AccountManager.upgradeAccountTable());
-//		db.execSQL(DeviceManager.upgradeDeviceTable());
-//		db.execSQL(EmailManager.upgradeEmailTable());
-//		db.execSQL(InsuranceManager.upgradeEmailTable());
-//		db.execSQL(LoginManager.upgradeLoginTable());
-//		db.execSQL(MiscellaneousManager.upgradeMiscellaneousTable());
+		db.execSQL(DeviceManager.upgradeDeviceTable());
+		db.execSQL(EmailManager.upgradeEmailTable());
+		db.execSQL(InsuranceManager.upgradeEmailTable());
+		db.execSQL(LoginManager.upgradeLoginTable());
+		db.execSQL(MiscellaneousManager.upgradeMiscellaneousTable());
         onCreate(db);
 	}
 

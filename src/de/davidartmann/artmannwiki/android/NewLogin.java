@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import checkIfDeletable.DBManager;
+import checkIfDeletable.Entity;
 import de.artmann.artmannwiki.R;
 
 

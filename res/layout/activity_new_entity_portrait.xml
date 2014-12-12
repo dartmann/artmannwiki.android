@@ -48,7 +48,7 @@
         android:id="@+id/new_entity_button_mail"
         android:layout_marginTop="10sp"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/mail"
+        android:background="@drawable/email"
         android:layout_width="128sp"
         android:layout_height="128sp" />
     <TextView
