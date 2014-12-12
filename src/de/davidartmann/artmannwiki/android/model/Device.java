@@ -22,11 +22,25 @@ public class Device extends SoftDeleteEntity {
 	
 	private String puk;
 	
-	public Device(String na, String nu, String pi, String pu) {
-		this.name = na;
-		this.number = nu;
-		this.pin = pi;
-		this.puk = pu;
+	/**
+	 * Empty constructor
+	 */
+	public Device() {
+		
+	}
+	
+	/**
+	 * Constructor to create a new instance with only its own attributes
+	 * @param name
+	 * @param number
+	 * @param pin
+	 * @param puk
+	 */
+	public Device(String name, String number, String pin, String puk) {
+		this.name = name;
+		this.number = number;
+		this.pin = pin;
+		this.puk = puk;
 	}
 
 	public String getName() {

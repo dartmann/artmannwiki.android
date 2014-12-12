@@ -25,21 +25,25 @@ public class AccountManager {
 	private static final String COLUMN_IBAN = "iban";
 	private static final String COLUMN_BIC = "bic";
 	private static final String COLUMN_PIN = "pin";
-	private String[] ALL_COLUMNS = { DBManager.COLUMN_ID, DBManager.COLUMN_ACTIVE, 
-			DBManager.COLUMN_CREATETIME, DBManager.COLUMN_LASTUPDATE, COLUMN_OWNER, COLUMN_IBAN, COLUMN_BIC, COLUMN_PIN };
+//	private String[] ALL_COLUMNS = { DBManager.COLUMN_ID, DBManager.COLUMN_ACTIVE, 
+//			DBManager.COLUMN_CREATETIME, DBManager.COLUMN_LASTUPDATE, COLUMN_OWNER, COLUMN_IBAN, COLUMN_BIC, COLUMN_PIN };
 	
 	private static final String CREATE_TABLE_ACCOUNT = "create table "
 		      + TABLE_ACCOUNTS + "(" 
 		      + DBManager.COLUMN_ID + " integer primary key autoincrement,"
 		      + DBManager.COLUMN_ACTIVE + " integer not null,"
 		      + DBManager.COLUMN_CREATETIME + " datetime not null,"
-		      + DBManager.COLUMN_LASTUPDATE + " datetime not null,"
+		      + DBManager.COLUMN_LASTUPDATE + " datetime,"
 		      + COLUMN_OWNER + " text not null,"
 		      + COLUMN_IBAN + " text not null,"
 		      + COLUMN_BIC + " text not null,"
 		      + COLUMN_PIN + " text not null"
 		      +");";
 	
+	/**
+	 * Contructor with the actual context for the DBManager
+	 * @param context
+	 */
 	public AccountManager(Context c) {
 		dbManager = new DBManager(c);
 	}
@@ -100,7 +104,7 @@ public class AccountManager {
 	 */
 	public Account addAccount(Account account) {
 		account.setCreateTime(new Date());
-		ContentValues values = fillContenValuesWithAccountData(account);
+		ContentValues values = fillContenValuesWithNewAccountData(account);
 		long insertId = db.insert(TABLE_ACCOUNTS, null, values);
 		Cursor cursor = db.query(TABLE_ACCOUNTS, null, DBManager.COLUMN_ID + "=?", new String[] {String.valueOf(insertId)}, null, null, null);
 		cursor.moveToFirst();
@@ -116,7 +120,6 @@ public class AccountManager {
 	 */
 	public boolean fullDeleteAccount(Account account) {
 		long id = account.getId();
-		System.out.println("Deleted account with id: " + id);
 		return db.delete(TABLE_ACCOUNTS, DBManager.COLUMN_ID + "=" + id, null) > 0;
 	}
 	
@@ -137,20 +140,18 @@ public class AccountManager {
 	}
 	
 	/**
-	 * Method to retrieve all Accounts from the database.
-	 * @param sqlHelper
+	 * Method to retrieve all {@link Account}s from the database.
 	 * @return {@link List} with {@link Account}s
 	 */
 	public List<Account> getAllAccounts() {
 		List<Account> accountList = new ArrayList<Account>();
 		//columns parameter(second one) is also null because then all columns get returned
-		//and thats neccessary, so the accountFromCursor() method works correctly
+		//and thats necessary, so the accountFromCursor() method works correctly
 		Cursor cursor = db.query(TABLE_ACCOUNTS, null, null, null, null, null, null);
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
 			Account account = accountFromCursor(cursor);
 			if (account.isActive()) {
-				System.out.println("Account with id "+account.getId()+" is active, so gets added");
 				accountList.add(account);
 			}
 			cursor.moveToNext();
@@ -167,9 +168,9 @@ public class AccountManager {
 	public Account updateAccount(Account account) {
 		long accountId = account.getId();
 		account.setLastUpdate(new Date());
-		ContentValues contentValues = fillContenValuesWithAccountData(account);
+		ContentValues contentValues = fillContentValuesWithUpdatedAccountData(account);
 		db.update(TABLE_ACCOUNTS, contentValues, DBManager.COLUMN_ID + "=" + accountId, null);
-		Cursor cursor = db.query(TABLE_ACCOUNTS, ALL_COLUMNS, DBManager.COLUMN_ID + "=" + accountId, null, null, null, null);
+		Cursor cursor = db.query(TABLE_ACCOUNTS, null, DBManager.COLUMN_ID + "=" + accountId, null, null, null, null);
 		cursor.moveToFirst();
 		Account returnAccount = accountFromCursor(cursor);
 		cursor.close();
@@ -177,9 +178,7 @@ public class AccountManager {
 	}
 	
 	/**
-	 * Method to get a new account instance out of a cursor element.
-	 * This instance is only used for display, so it isn't complete.
-	 * Basic attributes are missing, it has only relevant.
+	 * Method to get a new {@link Account} instance out of a cursor element.
 	 * @param cursor
 	 * @return {@link Account}
 	 */
@@ -198,14 +197,29 @@ public class AccountManager {
 	}
 	
 	/**
-	 * Helper Method for the update Method, because the {@link SQLiteDatabase} update method needs ContentValues.
+	 * Helper Method, because the {@link SQLiteDatabase} insert method needs ContentValues.
 	 * @param account
 	 * @return {@link ContentValues}
 	 */
-	public ContentValues fillContenValuesWithAccountData(Account account) {
+	public ContentValues fillContenValuesWithNewAccountData(Account account) {
 		ContentValues values = new ContentValues();
 		values.put(DBManager.COLUMN_ACTIVE, account.isActive() == false ? 0 : 1);
 		values.put(DBManager.COLUMN_CREATETIME, account.getCreateTime().getTime());
+		values.put(COLUMN_OWNER, account.getOwner());
+		values.put(COLUMN_IBAN, account.getIban());
+		values.put(COLUMN_BIC, account.getBic());
+		values.put(COLUMN_PIN, account.getPin());
+		return values;
+	}
+	
+	/**
+	 * Helper Method, because the {@link SQLiteDatabase} update method needs ContentValues.
+	 * @param account
+	 * @return {@link ContentValues}
+	 */
+	public ContentValues fillContentValuesWithUpdatedAccountData(Account account) {
+		ContentValues values = new ContentValues();
+		values.put(DBManager.COLUMN_ACTIVE, account.isActive() == false ? 0 : 1);
 		values.put(DBManager.COLUMN_LASTUPDATE, account.getLastUpdate().getTime());
 		values.put(COLUMN_OWNER, account.getOwner());
 		values.put(COLUMN_IBAN, account.getIban());

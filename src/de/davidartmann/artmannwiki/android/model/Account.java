@@ -23,15 +23,25 @@ public class Account extends SoftDeleteEntity {
 	
 	private String pin;
 	
+	/**
+	 * Empty constructor
+	 */
 	public Account() {
 		
 	}
 	
-	public Account(String o, String i, String b, String p) {
-		this.owner = o;
-		this.iban = i;
-		this.bic = b;
-		this.pin = p;
+	/**
+	 * Constructor to create a new instance with only its own attributes
+	 * @param owner
+	 * @param iban
+	 * @param bic
+	 * @param pin
+	 */
+	public Account(String owner, String iban, String bic, String pin) {
+		this.owner = owner;
+		this.iban = iban;
+		this.bic = bic;
+		this.pin = pin;
 	}
 
 	public String getOwner() {

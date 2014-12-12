@@ -19,10 +19,23 @@ public class Insurance extends SoftDeleteEntity {
 	
 	private String membershipId;
 	
-	public Insurance(String n, String k, String m) {
-		this.name = n;
-		this.kind = k;
-		this.membershipId = m;
+	/**
+	 * Empty constructor
+	 */
+	public Insurance() {
+		
+	}
+	
+	/**
+	 * Constructor to create a new instance with only its own attributes
+	 * @param name
+	 * @param kind
+	 * @param membershipId
+	 */
+	public Insurance(String name, String kind, String membershipId) {
+		this.name = name;
+		this.kind = kind;
+		this.membershipId = membershipId;
 	}
 
 	public String getName() {

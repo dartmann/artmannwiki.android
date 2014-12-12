@@ -33,7 +33,9 @@ public class DBManager extends SQLiteOpenHelper {
 	 */
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(AccountManager.createAccountTable());
-		db.execSQL(DeviceManager.createDeviceTable());
+//		db.execSQL(DeviceManager.createDeviceTable());
+//		db.execSQL(EmailManager.createEmailTable());
+//		db.execSQL(InsuranceManager.createInsuranceTable());
 	}
 
 	/**
@@ -44,7 +46,9 @@ public class DBManager extends SQLiteOpenHelper {
 		        "Upgrading database from version " + oldVersion + " to "
 		            + newVersion + ", which will destroy all old data");
 		db.execSQL(AccountManager.upgradeAccountTable());
-		db.execSQL(DeviceManager.upgradeDeviceTable());
+//		db.execSQL(DeviceManager.upgradeDeviceTable());
+//		db.execSQL(EmailManager.upgradeEmailTable());
+//		db.execSQL(InsuranceManager.upgradeEmailTable());
         onCreate(db);
 	}
 

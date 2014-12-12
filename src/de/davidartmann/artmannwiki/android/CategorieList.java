@@ -13,7 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.database.AccountManager;
+import de.davidartmann.artmannwiki.android.database.DeviceManager;
 import de.davidartmann.artmannwiki.android.model.Account;
+import de.davidartmann.artmannwiki.android.model.Device;
 
 
 public class CategorieList extends ListActivity {
@@ -29,11 +31,11 @@ public class CategorieList extends ListActivity {
         //final ListView listview = (ListView) findViewById(R.id.categoryList);
         accountManager = new AccountManager(CategorieList.this);
         accountManager.openWritable();
-        //creating testdata
+        // creating testdata
         Account account = new Account("Meister Eder", "123456123", "BYLADMNIEA", "1234");
         account.setActive(true);
         account.setCreateTime(new Date());
-        account.setLastUpdate(new Date());
+        //account.setLastUpdate(new Date());
         accountManager.addAccount(account);
         accountList = accountManager.getAllAccounts();
         // use custom layout
@@ -49,11 +51,12 @@ public class CategorieList extends ListActivity {
     	accountManager = new AccountManager(CategorieList.this);
         accountManager.openWritable();
     	final Account account = (Account) listView.getItemAtPosition(position);
-    	accountManager.softDeleteAccount(account);
+    	//accountManager.softDeleteAccount(account);
+    	account.setOwner("Pumuckel");
+    	accountManager.updateAccount(account);
         view.animate().setDuration(2000).alpha(0).withEndAction(new Runnable() {
-            @Override
             public void run() {
-                accountList.remove(account);
+                //accountList.remove(account);
                 adapter.notifyDataSetChanged();
                 view.setAlpha(1);
             }

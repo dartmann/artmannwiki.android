@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.artmann.artmannwiki.R;
 
-public class Login extends Activity {
+public class LoginMain extends Activity {
     //-----------------------------------------------------------------------------------
     private static final String PREFS_NAME = "sprefsfile_artmannwiki";
     //-----------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ public class Login extends Activity {
                 if(passwdSp.equals("")) {
                     if((passField1.equals(passField2)) && (passField1.length()>=6)) {
                         editor.putString("passwordString",passwordField.getText().toString()).apply();
-                        Toast.makeText(Login.this, "Erfolgreiche erste Anmeldung", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginMain.this, "Erfolgreiche erste Anmeldung", Toast.LENGTH_SHORT).show();
                         //setContentView(R.layout.activity_main_wiki);
                         Intent intent = new Intent(getBaseContext(), Choice.class);
                         startActivity(intent);
@@ -57,29 +57,29 @@ public class Login extends Activity {
                         imm.hideSoftInputFromWindow(passwordField.getWindowToken(), 0);
                     }
                     else if((!(passField1.equals(passField2))) && (passwordField.length()>=6)) {
-                        Toast.makeText(Login.this, R.string.prompt_password_unidentical, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginMain.this, R.string.prompt_password_unidentical, Toast.LENGTH_SHORT).show();
                    }
                     else if((passField1.equals(passField2)) && (passwordField.length()<6)) {
-                        Toast.makeText(Login.this, R.string.prompt_password_too_short, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginMain.this, R.string.prompt_password_too_short, Toast.LENGTH_SHORT).show();
                     }
                     else if(!(passField1.equals(passField2)) && (passwordField.length()<6)) {
-                        Toast.makeText(Login.this, R.string.prompt_password_invalid+" und "
+                        Toast.makeText(LoginMain.this, R.string.prompt_password_invalid+" und "
                         		+R.string.prompt_password_too_short, Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        Toast.makeText(Login.this, R.string.prompt_password_invalid, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginMain.this, R.string.prompt_password_invalid, Toast.LENGTH_SHORT).show();
                     }
                 }
                 else {
                     if(passField1.equals(passwdSp)) {
-                        Toast.makeText(Login.this, "Erfolgreiche Anmeldung", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginMain.this, "Erfolgreiche Anmeldung", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getBaseContext(), Choice.class);
                         startActivity(intent);
                         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(passwordField.getWindowToken(), 0);
                     }
                     else {
-                        Toast.makeText(Login.this, R.string.prompt_password_invalid, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginMain.this, R.string.prompt_password_invalid, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
