@@ -49,4 +49,8 @@ public class Email extends SoftDeleteEntity {
 		this.password = password;
 	}
 	
+	public String toString() {
+		return "Emailadresse: "+emailaddress;
+	}
+	
 }

@@ -74,5 +74,9 @@ public class Device extends SoftDeleteEntity {
 	public void setPuk(String puk) {
 		this.puk = puk;
 	}
+	
+	public String toString() {
+		return "Gerät: "+name+"\n"+"Nummer: "+number;
+	}
 
 }

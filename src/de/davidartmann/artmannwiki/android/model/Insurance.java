@@ -62,4 +62,8 @@ public class Insurance extends SoftDeleteEntity {
 		this.membershipId = membershipId;
 	}
 	
+	public String toString() {
+		return "Name: "+name+"\n"+"Art: "+kind;
+	}
+	
 }

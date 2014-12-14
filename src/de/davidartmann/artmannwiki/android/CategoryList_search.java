@@ -1,5 +1,6 @@
 package de.davidartmann.artmannwiki.android;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -12,47 +13,151 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.database.AccountManager;
+import de.davidartmann.artmannwiki.android.database.DeviceManager;
+import de.davidartmann.artmannwiki.android.database.EmailManager;
+import de.davidartmann.artmannwiki.android.database.InsuranceManager;
+import de.davidartmann.artmannwiki.android.database.LoginManager;
+import de.davidartmann.artmannwiki.android.database.MiscellaneousManager;
 import de.davidartmann.artmannwiki.android.model.Account;
+import de.davidartmann.artmannwiki.android.model.Device;
+import de.davidartmann.artmannwiki.android.model.Email;
+import de.davidartmann.artmannwiki.android.model.Insurance;
+import de.davidartmann.artmannwiki.android.model.Login;
+import de.davidartmann.artmannwiki.android.model.Miscellaneous;
 
 public class CategoryList_search extends Activity {
 	private Spinner spinner;
 	private ListView listView;
 	private AccountManager accountManager;
+	private DeviceManager deviceManager;
+	private EmailManager emailManager;
+	private InsuranceManager insuranceManager;
+	private LoginManager loginManager;
+	private MiscellaneousManager miscellaneousManager;
+	private List<String> spinnerItems;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_categorylist_search);
-		spinner = (Spinner) findViewById(R.id.activity_categorylist_search_spinner);
-		addSpinnerOnItemSelectListener();
-		
+		// customize the spinner
+		spinnerItems = new ArrayList<String>();
+		String[] values = new String[] {"Bankkonto", "Gerät", "E-Mail", "Versicherung", "Login", "Diverse/Notizen"};
+		for(String s : values) {
+        	spinnerItems.add(s);
+        }
+		// Instantiate the manager classes
 		accountManager = new AccountManager(this);
-		accountManager.openWritable();
-		List<Account> accountList = accountManager.getAllAccounts();
-		ArrayAdapter<Account> accountAdapter = new ArrayAdapter<Account>(this, android.R.layout.simple_list_item_1, accountList);
+		deviceManager = new DeviceManager(this);
+		emailManager = new EmailManager(this);
+		insuranceManager = new InsuranceManager(this);
+		loginManager = new LoginManager(this);
+		miscellaneousManager = new MiscellaneousManager(this);
+		// find the components
+		spinner = (Spinner) findViewById(R.id.activity_categorylist_search_spinner);
 		listView = (ListView) findViewById(R.id.activity_categorylist_search_listview);
-		listView.setAdapter(accountAdapter);
+		// add features
+		//TODO: customize the spinner (images like the save list)
+		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.custom_spinner, spinnerItems);
+		//spinnerAdapter.setDropDownViewResource(R.layout.custom_spinner);
+		spinner.setAdapter(spinnerAdapter);
+		addSpinnerOnItemSelectListener();
+		//TODO delete if testing finished
+		makeTestData();
 	}
-	
+
 	private void addSpinnerOnItemSelectListener() {
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				// TODO Auto-generated method stub
-				
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				String selectedItem = (String) parent.getItemAtPosition(position);
+				showSelectedEntities(selectedItem);
 			}
 
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
-				
+			public void onNothingSelected(AdapterView<?> parent) {
+				// nothing to do here
 			}
 		});
 	}
 
+	private void showSelectedEntities(String s) {
+		if (s.equals("Bankkonto")) {
+			accountManager.openReadable();
+			List<Account> accountList = accountManager.getAllAccounts();
+			ArrayAdapter<Account> accountAdapter = new ArrayAdapter<Account>(this, android.R.layout.simple_list_item_1, accountList);
+			listView.setAdapter(accountAdapter);
+			accountAdapter.notifyDataSetChanged();
+		} else if(s.equals("Gerät")) {
+			deviceManager.openReadable();
+			List<Device> deviceList = deviceManager.getAllDevices();
+			ArrayAdapter<Device> deviceAdapter = new ArrayAdapter<Device>(this, android.R.layout.simple_list_item_1, deviceList);
+			listView.setAdapter(deviceAdapter);
+			deviceAdapter.notifyDataSetChanged();
+		} else if (s.equals("E-Mail")) {
+			emailManager.openReadable();
+			List<Email> emailList = emailManager.getAllEmails();
+			ArrayAdapter<Email> emailAdapter = new ArrayAdapter<Email>(this, android.R.layout.simple_list_item_1, emailList);
+			listView.setAdapter(emailAdapter);
+			emailAdapter.notifyDataSetChanged();
+		} else if (s.equals("Versicherung")) {
+			insuranceManager.openReadable();
+			List<Insurance> insuranceList = insuranceManager.getAllInsurances();
+			ArrayAdapter<Insurance> insuranceAdapter = new ArrayAdapter<Insurance>(this, android.R.layout.simple_list_item_1, insuranceList);
+			listView.setAdapter(insuranceAdapter);
+			insuranceAdapter.notifyDataSetChanged();
+		} else if (s.equals("Login")) {
+			loginManager.openReadable();
+			List<Login> loginList = loginManager.getAllLogins();
+			ArrayAdapter<Login> loginAdapter = new ArrayAdapter<Login>(this, android.R.layout.simple_list_item_1, loginList);
+			listView.setAdapter(loginAdapter);
+			loginAdapter.notifyDataSetChanged();
+		} else if (s.equals("Diverse/Notizen")) {
+			miscellaneousManager.openReadable();
+			List<Miscellaneous> miscellaneousList = miscellaneousManager.getAllMiscellaneous();
+			ArrayAdapter<Miscellaneous> miscArrayAdapter = new ArrayAdapter<Miscellaneous>(this, android.R.layout.simple_list_item_1, miscellaneousList);
+			listView.setAdapter(miscArrayAdapter);
+			miscArrayAdapter.notifyDataSetChanged();
+		}
+	}
+	
+	private void makeTestData() {		
+		accountManager.openWritable();
+		deviceManager.openWritable();
+		emailManager.openWritable();
+		insuranceManager.openWritable();
+		loginManager.openWritable();
+		miscellaneousManager.openWritable();
+		
+		Account account = new Account("Meister Eder", "123456123", "BYLADMNIEA", "1234");
+        account.setActive(true);
+        accountManager.addAccount(account);
+        
+        Device device = new Device("Handy123", "017526661654", "1234", "13245678");
+        device.setActive(true);
+        deviceManager.addDevice(device);
+        
+        Email email = new Email("blafoo@test.de", "jklsadfjklsdafjklö");
+        email.setActive(true);
+        emailManager.addEmail(email);
+        
+        Insurance insurance = new Insurance("testversicherung", "bscheiser", "321321321321");
+        insurance.setActive(true);
+        insuranceManager.addInsurance(insurance);
+        
+        Login login = new Login("administrator", "123superSecure@123!", "admintestuser");
+        login.setActive(true);
+        loginManager.addLogin(login);
+        
+        Miscellaneous miscellaneous = new Miscellaneous("kasdfsdfajklsdfajklö", "asasdasdasdasdasd");
+        miscellaneous.setActive(false);
+        miscellaneousManager.addMiscellaneous(miscellaneous);
+	}
 
 	protected void onPause() {
+		accountManager.close();
+		deviceManager.close();
+		emailManager.close();
+		insuranceManager.close();
+		loginManager.close();
+		miscellaneousManager.close();
 		super.onPause();
 	}
 

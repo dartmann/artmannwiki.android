@@ -78,7 +78,7 @@ public class Account extends SoftDeleteEntity {
 	
 	// Will be used by the ArrayAdapter in the ListView
 	public String toString() {
-		return "IBAN: " + iban + "\n" + "Eigentümer: " + owner;
+		return "Eigentümer: " + owner+"\n"+"IBAN: " + iban;
 	}
 	
 }

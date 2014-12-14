@@ -49,4 +49,8 @@ public class Miscellaneous extends SoftDeleteEntity {
 		this.description = description;
 	}
 	
+	public String toString() {
+		return "Text: "+text+"\n"+"Beschreibung: "+description;
+	}
+	
 }

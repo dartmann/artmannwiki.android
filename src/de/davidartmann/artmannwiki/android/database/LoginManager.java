@@ -126,7 +126,7 @@ public class LoginManager {
 	 * Method to retrieve all {@link Login}s from the database.
 	 * @return {@link List} with {@link Login}s
 	 */
-	public List<Login> getAllAccounts() {
+	public List<Login> getAllLogins() {
 		List<Login> loginList = new ArrayList<Login>();
 		Cursor cursor = db.query(TABLE_LOGIN, null, null, null, null, null, null);
 		cursor.moveToFirst();

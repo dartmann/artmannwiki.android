@@ -62,4 +62,8 @@ public class Login extends SoftDeleteEntity {
 		this.description = description;
 	}
 	
+	public String toString() {
+		return "Benutzername: "+username;
+	}
+	
 }

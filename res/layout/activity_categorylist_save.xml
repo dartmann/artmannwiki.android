@@ -14,11 +14,10 @@
         android:layout_height="fill_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="6dip"
-        android:layout_marginEnd="6dip"
-        android:layout_marginLeft="4dip"
-        android:layout_marginStart="4dip"
-        android:layout_marginTop="4dp"
+        android:paddingRight="20dip"
+        android:paddingLeft="10dip"
+        android:paddingStart="10dip"
+        android:paddingEnd="10dip"
         android:src="@drawable/ic_launcher" >
     </ImageView>
 
@@ -28,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/icon"
-        android:layout_toRightOf="@+id/icon"
+        android:layout_toRightOf="@id/icon"
         android:gravity="center_vertical"
         android:text="@+id/label"
         android:textSize="24sp" />
