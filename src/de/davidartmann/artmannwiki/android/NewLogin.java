@@ -3,17 +3,12 @@ package de.davidartmann.artmannwiki.android;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.text.style.BackgroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
 import checkIfDeletable.DBManager;
 import checkIfDeletable.Entity;
 import de.artmann.artmannwiki.R;
