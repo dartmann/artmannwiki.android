@@ -9,29 +9,28 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import de.artmann.artmannwiki.R;
-import de.davidartmann.artmannwiki.android.adapter.CategoryListArrayAdapter;
+import de.davidartmann.artmannwiki.android.adapter.CategoryListSaveArrayAdapter;
+import de.davidartmann.artmannwiki.android.model.Account;
 
 
-public class CategorieList extends ListActivity {
+public class CategorieList_save extends ListActivity {
 	//private AccountManager accountManager;
 	private List<String> listValues = new ArrayList<String>();
 	//private List<Account> accountList;
-	private CategoryListArrayAdapter categoryListAdapter;
+	private CategoryListSaveArrayAdapter categoryListAdapter;
 	//private ArrayAdapter<Account> adapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_categorie_list);
         String[] values = new String[] {"Bankkonto", "Gerät", "E-Mail", "Versicherung", "Login", "Diverse/Notizen"};
         for(String s : values) {
         	listValues.add(s);
         }
         
-        //TODO: implement addHeaderView()?!
-        //final ListView listview = (ListView) findViewById(R.id.categoryList);
         /*
         accountManager = new AccountManager(CategorieList.this);
         accountManager.openWritable();
@@ -44,7 +43,7 @@ public class CategorieList extends ListActivity {
         adapter = new ArrayAdapter<Account>(this,
             R.layout.activity_category_list, R.id.label, accountList);
         */
-        categoryListAdapter = new CategoryListArrayAdapter(this, listValues);
+        categoryListAdapter = new CategoryListSaveArrayAdapter(this, listValues);
         setListAdapter(categoryListAdapter);
     }
     

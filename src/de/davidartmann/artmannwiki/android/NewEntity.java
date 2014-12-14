@@ -17,10 +17,10 @@ public class NewEntity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            setContentView(R.layout.activity_new_entity_landscape);
+            setContentView(R.layout._activity_new_entity_landscape);
         }
         else {
-            setContentView(R.layout.activity_new_entity_portrait);
+            setContentView(R.layout._activity_new_entity_portrait);
         }
         ImageButton loginButton = (ImageButton) findViewById(R.id.new_entity_button_login);
         ImageButton deviceButton = (ImageButton) findViewById(R.id.new_entity_button_device);

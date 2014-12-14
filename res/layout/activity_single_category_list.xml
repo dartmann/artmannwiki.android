@@ -7,6 +7,6 @@
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:orientation="vertical"
     android:padding="6dip"
-    tools:context="de.davidartmann.artmannwiki.android.CategorieList" >
+    tools:context="de.davidartmann.artmannwiki.android.CategorieList_save" >
 
 </ListView>

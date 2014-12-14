@@ -16,7 +16,6 @@ public class Choice extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             setContentView(R.layout.activity_choice_landscape);
         }
@@ -30,17 +29,15 @@ public class Choice extends Activity {
         wikiSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), CategorieList.class);
+            	Intent intent = new Intent(getBaseContext(), CategoryList_search.class);
                 startActivity(intent);
             }
         });
         wikiNewEntityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            	/*
-                Intent intent = new Intent(getBaseContext(), NewEntity.class);
+            	Intent intent = new Intent(getBaseContext(), CategorieList_save.class);
                 startActivity(intent);
-                */
             }
         });
         

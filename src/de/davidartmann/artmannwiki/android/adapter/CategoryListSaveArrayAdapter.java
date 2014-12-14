@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import de.artmann.artmannwiki.R;
 
-public class CategoryListArrayAdapter extends ArrayAdapter<String> {
+public class CategoryListSaveArrayAdapter extends ArrayAdapter<String> {
 	
 	private final Activity context;
 	private final List<String> names;
@@ -23,8 +23,8 @@ public class CategoryListArrayAdapter extends ArrayAdapter<String> {
 	    ImageView imageView;
     }
 	
-	public CategoryListArrayAdapter(Activity context, List<String> names) {
-		super(context, R.layout.activity_category_list, names);
+	public CategoryListSaveArrayAdapter(Activity context, List<String> names) {
+		super(context, R.layout.activity_categorylist_save, names);
 		this.context = context;
 		this.names = names;
 	}
@@ -41,7 +41,7 @@ public class CategoryListArrayAdapter extends ArrayAdapter<String> {
 		if (convertView == null) {
 			//Inflate the layout
 			inflater = context.getLayoutInflater();
-			convertView = inflater.inflate(R.layout.activity_category_list, null);
+			convertView = inflater.inflate(R.layout.activity_categorylist_save, null);
 			viewHolder = new ViewHolder();
 			viewHolder.textView = (TextView) convertView.findViewById(R.id.label);
 			viewHolder.imageView = (ImageView) convertView.findViewById(R.id.icon);

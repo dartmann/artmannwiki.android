@@ -3,7 +3,7 @@
     android:versionCode="1" 
     android:versionName="1.0"
     package="de.artmann.artmannwiki" >
-    <uses-sdk android:targetSdkVersion="17" android:minSdkVersion="14" android:maxSdkVersion="21"/>
+    <uses-sdk android:targetSdkVersion="17" android:minSdkVersion="16" android:maxSdkVersion="21"/>
 
     <application
         android:allowBackup="true"
@@ -24,10 +24,19 @@
             android:label="@string/title_activity_choice" >
         </activity>
         
+        <activity 
+            android:name="de.davidartmann.artmannwiki.android.CategoryList_search"
+            android:label="@string/categories"
+            android:parentActivityName="de.davidartmann.artmannwiki.android.Choice" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.artmann.artmannwiki.Choice" />
+        </activity>
+        
          
         <activity
-            android:name="de.davidartmann.artmannwiki.android.CategorieList"
-            android:label="@string/title_activity_categorie_list"
+            android:name="de.davidartmann.artmannwiki.android.CategorieList_save"
+            android:label="@string/categories"
             android:parentActivityName="de.davidartmann.artmannwiki.android.Choice" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

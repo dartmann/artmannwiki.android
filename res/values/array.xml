@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="planets_array">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
+    <string-array name="Entities">
+        <item>Bankkonto</item>
+        <item>Gerät</item>
+        <item>E-Mail</item>
+        <item>Versicherung</item>
+        <item>Login</item>
+        <item>Diverse/Notizen</item>
     </string-array>
 </resources>
