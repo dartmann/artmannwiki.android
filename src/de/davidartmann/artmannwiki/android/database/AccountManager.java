@@ -127,6 +127,7 @@ public class AccountManager {
 	 * Method to <u>soft delete</u> an {@link Account}.
 	 * This means the active status is set to false.
 	 * @param account
+	 * @return true if Account could be soft deleted, false otherwise.
 	 */
 	public boolean softDeleteAccount(Account account) {
 		long id = account.getId();

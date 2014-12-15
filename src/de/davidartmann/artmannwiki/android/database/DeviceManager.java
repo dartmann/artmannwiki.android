@@ -125,6 +125,7 @@ public class DeviceManager {
 	 * Method to <u>soft delete</u> an {@link Device}.
 	 * This means the active status is set to false.
 	 * @param device
+	 * @return true if Device could be soft deleted, false otherwise.
 	 */
 	public boolean softDeleteDevice(Device device) {
 		long id = device.getId();

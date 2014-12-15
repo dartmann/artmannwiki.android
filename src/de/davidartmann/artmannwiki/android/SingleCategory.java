@@ -131,7 +131,7 @@ public class SingleCategory extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.single_category, menu);
+        getMenuInflater().inflate(R.menu.single_entity_search, menu);
         return true;
     }
 

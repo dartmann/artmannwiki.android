@@ -110,6 +110,7 @@ public class LoginManager {
 	 * Method to <u>soft delete</u> an {@link Login}.
 	 * This means the active status is set to false.
 	 * @param login
+	 * @return true if Login could be soft deleted, false otherwise.
 	 */
 	public boolean softDeleteLogin(Login login) {
 		long id = login.getId();

@@ -121,6 +121,7 @@ public class EmailManager {
 	 * Method to <u>soft delete</u> an {@link Email}.
 	 * This means the active status is set to false.
 	 * @param email
+	 * @return true if Email could be soft deleted, false otherwise.
 	 */
 	public boolean softDeleteEmail(Email email) {
 		long id = email.getId();

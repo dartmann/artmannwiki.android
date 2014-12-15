@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -83,27 +82,39 @@ public class CategoryListSearch extends Activity {
 	private void checkWhichKindOfEntity(Object o) {
 		if (selectedSpinnerItem.equals(values[0])) {
 			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
-			intent.putExtra("account", (Account) o);
+			Account a = (Account) o;
+			intent.putExtra("account", a);
+			intent.putExtra("entityId", a.getId());
             startActivity(intent);
 		} else if (selectedSpinnerItem.equals(values[1])) {
 			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
-			intent.putExtra("device", (Device) o);
+			Device d = (Device) o;
+			intent.putExtra("device", d);
+			intent.putExtra("entityId", d.getId());
             startActivity(intent);
 		} else if (selectedSpinnerItem.equals(values[2])) {
 			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
-			intent.putExtra("email", (Email) o);
+			Email e = (Email) o;
+			intent.putExtra("email", e);
+			intent.putExtra("entityId", e.getId());
             startActivity(intent);
 		} else if (selectedSpinnerItem.equals(values[3])) {
 			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
-			intent.putExtra("insurance", (Insurance) o);
+			Insurance i = (Insurance) o;
+			intent.putExtra("insurance", i);
+			intent.putExtra("entityId", i.getId());
             startActivity(intent);
 		} else if (selectedSpinnerItem.equals(values[4])) {
 			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
-			intent.putExtra("login", (Login) o);
+			Login l = (Login) o;
+			intent.putExtra("login", l);
+			intent.putExtra("entityId", l.getId());
             startActivity(intent);
 		} else if (selectedSpinnerItem.equals(values[5])) {
 			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
-			intent.putExtra("miscellaneous", (Miscellaneous) o);
+			Miscellaneous m = (Miscellaneous) o;
+			intent.putExtra("miscellaneous", m);
+			intent.putExtra("entityId", m.getId());
             startActivity(intent);
 		}
 		
@@ -199,7 +210,7 @@ public class CategoryListSearch extends Activity {
         loginManager.addLogin(login);
         
         Miscellaneous miscellaneous = new Miscellaneous("kasdfsdfajklsdfajklö", "asasdasdasdasdasd");
-        miscellaneous.setActive(false);
+        miscellaneous.setActive(true);
         miscellaneousManager.addMiscellaneous(miscellaneous);
 	}
 

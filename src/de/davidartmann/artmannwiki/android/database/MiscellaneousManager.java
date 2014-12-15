@@ -108,6 +108,7 @@ public class MiscellaneousManager {
 	 * Method to <u>soft delete</u> an {@link Miscellaneous}.
 	 * This means the active status is set to false.
 	 * @param miscellaneous
+	 * @return true if Miscellaneous could be soft deleted, false otherwise.
 	 */
 	public boolean softDeleteLogin(Miscellaneous miscellaneous) {
 		long id = miscellaneous.getId();

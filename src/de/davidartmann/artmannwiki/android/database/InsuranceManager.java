@@ -124,6 +124,7 @@ public class InsuranceManager {
 	 * Method to <u>soft delete</u> an {@link Insurance}.
 	 * This means the active status is set to false.
 	 * @param insurance
+	 * @return true if Insurance could be soft deleted, false otherwise.
 	 */
 	public boolean softDeleteEmail(Insurance insurance) {
 		long id = insurance.getId();
