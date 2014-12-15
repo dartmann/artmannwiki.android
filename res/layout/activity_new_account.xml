@@ -1,5 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_new_device"
+    android:id="@+id/activity_new_account"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -8,41 +8,42 @@
     android:paddingBottom="@dimen/activity_vertical_margin">
 
     <EditText
-        android:id="@+id/new_device_edittext_device"
-        android:hint="@string/action_new_device"
+        android:id="@+id/activity_new_account_edittext_owner"
+        android:hint="@string/hint_owner"
+        android:maxLength="25"
         android:inputType="text|textMultiLine"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
     <EditText
-        android:id="@+id/new_device_edittext_number"
+        android:id="@+id/activity_new_account_edittext_iban"
         android:inputType="numberSigned"
-        android:layout_below="@id/new_device_edittext_device"
-        android:hint="@string/hint_number"
+        android:layout_below="@id/activity_new_account_edittext_owner"
+        android:hint="@string/hint_iban"
         android:maxLength="25"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
     <EditText
-        android:id="@+id/new_device_edittext_pin"
-        android:inputType="number|numberPassword"
-        android:layout_below="@+id/new_device_edittext_number"
-        android:hint="@string/hint_pin"
-        android:maxLength="4"
+        android:id="@+id/activity_new_account_edittext_bic"
+        android:inputType="numberSigned"
+        android:layout_below="@+id/activity_new_account_edittext_iban"
+        android:hint="@string/hint_bic"
+        android:maxLength="25"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
     <EditText
-        android:id="@+id/new_device_edittext_puk"
-        android:inputType="number|numberPassword"
-        android:maxLength="8"
-        android:layout_below="@+id/new_device_edittext_pin"
-        android:hint="@string/hint_puk"
+        android:id="@+id/activity_new_account_edittext_pin"
+        android:inputType="textPassword"
+        android:maxLength="20"
+        android:layout_below="@+id/activity_new_account_edittext_bic"
+        android:hint="@string/hint_pin"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
     <Button
-        android:id="@+id/new_device_button_save"
-        android:layout_below="@+id/new_device_edittext_puk"
-        android:background="@layout/button_save"
+        android:id="@+id/activity_new_account_button_save"
+        android:layout_below="@+id/activity_new_account_edittext_pin"
         android:layout_marginTop="20dip"
         android:text="@string/action_save"
+        android:background="@layout/button_save"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 

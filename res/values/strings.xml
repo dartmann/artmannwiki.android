@@ -5,12 +5,14 @@
     <string name="app_name">ArtmannWiki</string>
     <string name="title_activity_choice">ArtmannWiki</string>
     <string name="categories">Kategorien</string>
+    <string name="title_activity_new_account">Neuer Account</string>
+    <string name="title_activity_new_device">Neues Handy/Tablet</string>
+    <string name="title_activity_new_insurance">Neue Versicherung</string>
     <string name="title_activity_new_entity">Neuer Eintrag</string>
     <string name="title_activity_new_login">Neuer Login</string>
-    <string name="title_activity_new_device">Neues Handy/Tablet</string>
+    <string name="title_activity_new_miscellaneous">Neue Notiz</string>
     <string name="title_activity_new_mail">Neue E-Mail</string>
-    <string name="title_activity_single_category">SingleCategory</string>
-    <string name="title_activity_single_entity"></string>
+    <string name="title_activity_single_category">Einzelkategorie</string>
     <string name="action_sign_in">Anmelden</string>
     <string name="action_settings">Einstellungen</string>
     <string name="action_quit">Beenden</string>
@@ -25,7 +27,18 @@
     <string name="action_hint_mail">E-Mail</string>
     <string name="prompt_saved_succesfully">Eintrag erfolgreich gespeichert</string>
     <string name="prompt_all_fields_must_be_filled">Jedes Feld muss ausgefüllt sein</string>
+    <string name="prompt_fill_this_field">Bitte ausfüllen</string>
     <string name="text_required_fields">Die gekennzeichneten Felder(*) sind Pflichtfelder!</string>
+    
+    <!-- New Account -->
+	<string name="hint_owner">Eigentümer</string>
+	<string name="hint_iban">Iban</string>
+	<string name="hint_bic">Bic</string>
+	
+	<!-- New Insurance -->
+	<string name="hint_name">Name</string>
+	<string name="hint_kind">Art</string>
+	<string name="hint_membershipId">Mitgliedsnummer</string>
 
     <!-- Spezifisch -->
     <string name="action_choice_new_input">Wiki Eintrag erstellen</string>
@@ -37,8 +50,7 @@
     <string name="prompt_password_invalid">Passwort ungültig</string>
     <string name="prompt_password_unidentical">Passwort nicht identisch</string>
     <string name="prompt_password_too_short">Passwort zu kurz</string>
-    <string name="prompt_new_login_info_required">Info- und Benutzerfeld wird benötigt</string>
-    <string name="hint_new_login_info">Für was wird der Login verwendet?</string>
+    <string name="hint_new_login_info">Beschreibung</string>
     <string name="prompt_categorylist_spinner">Wähle eine Kategorie</string>
     <string name="account">Bankkonto</string>
     <string name="device">Gerät</string>

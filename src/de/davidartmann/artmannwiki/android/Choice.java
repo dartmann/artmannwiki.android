@@ -36,7 +36,7 @@ public class Choice extends Activity {
         wikiNewEntityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            	Intent intent = new Intent(getBaseContext(), CategorieListSave.class);
+            	Intent intent = new Intent(getBaseContext(), CategoryListSave.class);
                 startActivity(intent);
             }
         });

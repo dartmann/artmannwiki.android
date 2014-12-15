@@ -1,11 +1,12 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_categorylist_save"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:orientation="vertical"
     android:padding="6dip"
-    tools:context="de.davidartmann.artmannwiki.android.CategorieListSave" >
+    tools:context="de.davidartmann.artmannwiki.android.CategoryListSave" >
 
     <ImageView
         android:id="@+id/icon"

@@ -30,60 +30,81 @@
             android:parentActivityName="de.davidartmann.artmannwiki.android.Choice" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.artmann.artmannwiki.Choice" />
+                android:value="de.davidartmann.artmannwiki.android.Choice" />
         </activity>
         
         <activity
-            android:name="de.davidartmann.artmannwiki.android.CategorieListSave"
+            android:name="de.davidartmann.artmannwiki.android.CategoryListSave"
             android:label="@string/categories"
             android:parentActivityName="de.davidartmann.artmannwiki.android.Choice" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.artmann.artmannwiki.Choice" />
+                android:value="de.davidartmann.artmannwiki.android.Choice" />
         </activity>
         
         <activity
             android:name="de.davidartmann.artmannwiki.android.SingleEntitySearch"
-            android:label="@string/title_activity_single_entity"
             android:parentActivityName="de.davidartmann.artmannwiki.android.CategoryListSearch" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.davidartmann.artmannwiki.android.CategoryList_search" />
+                android:value="de.davidartmann.artmannwiki.android.CategoryListSearch" />
         </activity>
-        <!--
-        <activity
-            android:name="de.davidartmann.artmannwiki.android.NewLogin"
-            android:label="@string/title_activity_new_login"
-            android:parentActivityName="de.davidartmann.artmannwiki.android.NewEntity" >
+        
+        <!-- NewEntities -->
+        <activity 
+            android:name="de.davidartmann.artmannwiki.android.newentities.NewAccount"
+            android:label="@string/title_activity_new_account"
+            android:parentActivityName="de.davidartmann.artmannwiki.android.CategoryListSave">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.artmann.artmannwiki.NewEntity" />
+                android:value="de.davidartmann.artmannwiki.android.CategoryListSave" />
         </activity>
-        <activity
-            android:name="de.davidartmann.artmannwiki.android.NewDevice"
+        
+        <activity 
+            android:name="de.davidartmann.artmannwiki.android.newentities.NewDevice"
             android:label="@string/title_activity_new_device"
-            android:parentActivityName="de.davidartmann.artmannwiki.android.NewEntity" >
+            android:parentActivityName="de.davidartmann.artmannwiki.android.CategoryListSave">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.artmann.artmannwiki.NewEntity" />
+                android:value="de.davidartmann.artmannwiki.android.CategoryListSave" />
         </activity>
-        <activity
-            android:name="de.davidartmann.artmannwiki.android.NewMail"
+        
+        <activity 
+            android:name="de.davidartmann.artmannwiki.android.newentities.NewInsurance"
+            android:label="@string/title_activity_new_insurance"
+            android:parentActivityName="de.davidartmann.artmannwiki.android.CategoryListSave">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.davidartmann.artmannwiki.android.CategoryListSave" />
+        </activity>
+        
+        <activity 
+            android:name="de.davidartmann.artmannwiki.android.newentities.NewLogin"
+            android:label="@string/title_activity_new_login"
+            android:parentActivityName="de.davidartmann.artmannwiki.android.CategoryListSave">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.davidartmann.artmannwiki.android.CategoryListSave" />
+        </activity>
+        
+        <activity 
+            android:name="de.davidartmann.artmannwiki.android.newentities.NewMail"
             android:label="@string/title_activity_new_mail"
-            android:parentActivityName="de.davidartmann.artmannwiki.android.NewEntity" >
+            android:parentActivityName="de.davidartmann.artmannwiki.android.CategoryListSave">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.artmann.artmannwiki.NewEntity" />
+                android:value="de.davidartmann.artmannwiki.android.CategoryListSave" />
         </activity>
-        <activity
-            android:name="de.davidartmann.artmannwiki.android.SingleCategory"
-            android:label="@string/title_activity_single_category"
-            android:parentActivityName="de.davidartmann.artmannwiki.android.CategorieList" >
+        
+        <activity 
+            android:name="de.davidartmann.artmannwiki.android.newentities.NewMiscellaneous"
+            android:label="@string/title_activity_new_miscellaneous"
+            android:parentActivityName="de.davidartmann.artmannwiki.android.CategoryListSave">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.artmann.artmannwiki.CategorieList" />
+                android:value="de.davidartmann.artmannwiki.android.CategoryListSave" />
         </activity>
-         -->
+         <!-- END NewEntities -->
+         
     </application>
-
 </manifest>
