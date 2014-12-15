@@ -115,4 +115,6 @@ public class LoginMain extends Activity {
         	}
         });;
     }
+    
+    //TODO implement onResume()?!
 }

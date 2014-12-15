@@ -25,7 +25,7 @@
         </activity>
         
         <activity 
-            android:name="de.davidartmann.artmannwiki.android.CategoryList_search"
+            android:name="de.davidartmann.artmannwiki.android.CategoryListSearch"
             android:label="@string/categories"
             android:parentActivityName="de.davidartmann.artmannwiki.android.Choice" >
             <meta-data
@@ -34,7 +34,7 @@
         </activity>
         
         <activity
-            android:name="de.davidartmann.artmannwiki.android.CategorieList_save"
+            android:name="de.davidartmann.artmannwiki.android.CategorieListSave"
             android:label="@string/categories"
             android:parentActivityName="de.davidartmann.artmannwiki.android.Choice" >
             <meta-data
@@ -45,7 +45,7 @@
         <activity
             android:name="de.davidartmann.artmannwiki.android.SingleEntitySearch"
             android:label="@string/title_activity_single_entity"
-            android:parentActivityName="de.davidartmann.artmannwiki.android.CategoryList_search" >
+            android:parentActivityName="de.davidartmann.artmannwiki.android.CategoryListSearch" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.davidartmann.artmannwiki.android.CategoryList_search" />

@@ -14,7 +14,7 @@ import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.adapter.CategoryListSaveArrayAdapter;
 
 
-public class CategorieList_save extends ListActivity {
+public class CategorieListSave extends ListActivity {
 	private List<String> listValues = new ArrayList<String>();
 	private CategoryListSaveArrayAdapter categoryListAdapter;
 

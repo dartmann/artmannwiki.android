@@ -5,7 +5,7 @@
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:orientation="vertical"
     android:padding="6dip"
-    tools:context="de.davidartmann.artmannwiki.android.CategorieList_save" >
+    tools:context="de.davidartmann.artmannwiki.android.CategorieListSave" >
 
     <ImageView
         android:id="@+id/icon"

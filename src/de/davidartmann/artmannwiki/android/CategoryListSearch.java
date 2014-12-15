@@ -28,7 +28,7 @@ import de.davidartmann.artmannwiki.android.model.Insurance;
 import de.davidartmann.artmannwiki.android.model.Login;
 import de.davidartmann.artmannwiki.android.model.Miscellaneous;
 
-public class CategoryList_search extends Activity {
+public class CategoryListSearch extends Activity {
 	private Spinner spinner;
 	private ListView listView;
 	private AccountManager accountManager;
@@ -79,13 +79,32 @@ public class CategoryList_search extends Activity {
 		});
 	}
 
+	// helper method to check which kind of item was clicked
 	private void checkWhichKindOfEntity(Object o) {
-		if (selectedSpinnerItem.equals(values[1])) {
+		if (selectedSpinnerItem.equals(values[0])) {
 			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
 			intent.putExtra("account", (Account) o);
             startActivity(intent);
-		} else {
-			System.out.println("Nicht Bankkonto!");
+		} else if (selectedSpinnerItem.equals(values[1])) {
+			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
+			intent.putExtra("device", (Device) o);
+            startActivity(intent);
+		} else if (selectedSpinnerItem.equals(values[2])) {
+			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
+			intent.putExtra("email", (Email) o);
+            startActivity(intent);
+		} else if (selectedSpinnerItem.equals(values[3])) {
+			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
+			intent.putExtra("insurance", (Insurance) o);
+            startActivity(intent);
+		} else if (selectedSpinnerItem.equals(values[4])) {
+			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
+			intent.putExtra("login", (Login) o);
+            startActivity(intent);
+		} else if (selectedSpinnerItem.equals(values[5])) {
+			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
+			intent.putExtra("miscellaneous", (Miscellaneous) o);
+            startActivity(intent);
 		}
 		
 	}
@@ -103,42 +122,45 @@ public class CategoryList_search extends Activity {
 		});
 	}
 
+	//TODO: implement the viewholder pattern
 	private void showSelectedEntities(String s) {
 		if (s.equals("Bankkonto")) {
-			selectedSpinnerItem = values[1];
+			selectedSpinnerItem = values[0];
 			accountManager.openReadable();
 			List<Account> accountList = accountManager.getAllAccounts();
 			ArrayAdapter<Account> accountAdapter = new ArrayAdapter<Account>(this, android.R.layout.simple_list_item_1, accountList);
 			listView.setAdapter(accountAdapter);
 			accountAdapter.notifyDataSetChanged();
 		} else if(s.equals("Gerät")) {
-			//selectedSpinnerItem = values[2];
+			selectedSpinnerItem = values[1];
 			deviceManager.openReadable();
 			List<Device> deviceList = deviceManager.getAllDevices();
 			ArrayAdapter<Device> deviceAdapter = new ArrayAdapter<Device>(this, android.R.layout.simple_list_item_1, deviceList);
 			listView.setAdapter(deviceAdapter);
 			deviceAdapter.notifyDataSetChanged();
 		} else if (s.equals("E-Mail")) {
-			//selectedSpinnerItem = values[3];
+			selectedSpinnerItem = values[2];
 			emailManager.openReadable();
 			List<Email> emailList = emailManager.getAllEmails();
 			ArrayAdapter<Email> emailAdapter = new ArrayAdapter<Email>(this, android.R.layout.simple_list_item_1, emailList);
 			listView.setAdapter(emailAdapter);
 			emailAdapter.notifyDataSetChanged();
 		} else if (s.equals("Versicherung")) {
-			//selectedSpinnerItem = values[4];
+			selectedSpinnerItem = values[3];
 			insuranceManager.openReadable();
 			List<Insurance> insuranceList = insuranceManager.getAllInsurances();
 			ArrayAdapter<Insurance> insuranceAdapter = new ArrayAdapter<Insurance>(this, android.R.layout.simple_list_item_1, insuranceList);
 			listView.setAdapter(insuranceAdapter);
 			insuranceAdapter.notifyDataSetChanged();
 		} else if (s.equals("Login")) {
+			selectedSpinnerItem = values[4];
 			loginManager.openReadable();
 			List<Login> loginList = loginManager.getAllLogins();
 			ArrayAdapter<Login> loginAdapter = new ArrayAdapter<Login>(this, android.R.layout.simple_list_item_1, loginList);
 			listView.setAdapter(loginAdapter);
 			loginAdapter.notifyDataSetChanged();
 		} else if (s.equals("Diverse/Notizen")) {
+			selectedSpinnerItem = values[5];
 			miscellaneousManager.openReadable();
 			List<Miscellaneous> miscellaneousList = miscellaneousManager.getAllMiscellaneous();
 			ArrayAdapter<Miscellaneous> miscArrayAdapter = new ArrayAdapter<Miscellaneous>(this, android.R.layout.simple_list_item_1, miscellaneousList);
@@ -154,7 +176,7 @@ public class CategoryList_search extends Activity {
 		insuranceManager.openWritable();
 		loginManager.openWritable();
 		miscellaneousManager.openWritable();
-		for(int i = 0; i<100; i++) {
+		for(int i = 0; i<10; i++) {
 			Account account = new Account(String.valueOf(i), "123456123", "BYLADMNIEA", "1234");
 	        account.setActive(true);
 	        accountManager.addAccount(account);

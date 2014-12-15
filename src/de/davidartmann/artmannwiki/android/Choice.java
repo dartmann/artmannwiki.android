@@ -29,14 +29,14 @@ public class Choice extends Activity {
         wikiSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            	Intent intent = new Intent(getBaseContext(), CategoryList_search.class);
+            	Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
                 startActivity(intent);
             }
         });
         wikiNewEntityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            	Intent intent = new Intent(getBaseContext(), CategorieList_save.class);
+            	Intent intent = new Intent(getBaseContext(), CategorieListSave.class);
                 startActivity(intent);
             }
         });
