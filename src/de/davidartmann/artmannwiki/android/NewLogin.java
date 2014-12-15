@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import checkIfDeletable.DBManager;
-import checkIfDeletable.Entity;
 import de.artmann.artmannwiki.R;
 
 
@@ -35,8 +33,8 @@ public class NewLogin extends Activity {
                 String info = infoEditText.getText().toString().trim();
 
                 if ((password.equals(passwordRepeat))&&((!username.isEmpty())&&(!info.isEmpty()))) {
-                    DBManager dbManager = new DBManager(NewLogin.this);
-                    dbManager.addLogin(new Entity(username, password, info));
+                    //DBManager dbManager = new DBManager(NewLogin.this);
+                    //dbManager.addLogin(new Entity(username, password, info));
                     Toast.makeText(getApplicationContext(), R.string.prompt_saved_succesfully, Toast.LENGTH_SHORT).show();
                 }
                 else if (!(password.equals(passwordRepeat))){

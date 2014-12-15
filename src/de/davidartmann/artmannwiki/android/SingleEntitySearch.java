@@ -31,7 +31,7 @@ public class SingleEntitySearch extends Activity {
 		secretTextView = (TextView) findViewById(R.id.activity_search_singleentity_textview_secrets);
 		// fill components
 		setTitle(a.getOwner());
-		normalTextView.setText(a.fullString());
+		normalTextView.setText(a.getNormalData());
 		// little security enhancement, only display critical data, when button is clicked
 		button.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

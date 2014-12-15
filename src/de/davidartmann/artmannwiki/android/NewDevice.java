@@ -1,8 +1,5 @@
 package de.davidartmann.artmannwiki.android;
 
-import checkIfDeletable.DBManager;
-import checkIfDeletable.Entity;
-import de.artmann.artmannwiki.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import de.artmann.artmannwiki.R;
 
 
 public class NewDevice extends Activity {
@@ -33,8 +31,8 @@ public class NewDevice extends Activity {
                 String pin = pinEdittext.getText().toString().trim();
                 String puk = pukEdittext.getText().toString().trim();
                 if (!(device.isEmpty()&&(number.isEmpty())&&(pin.isEmpty())&&(puk.isEmpty()))) {
-                    DBManager dbManager = new DBManager(NewDevice.this);
-                    dbManager.addDevice(new Entity(device, number, pin, puk));
+                    //DBManager dbManager = new DBManager(NewDevice.this);
+                    //dbManager.addDevice(new Entity(device, number, pin, puk));
                     Toast.makeText(getApplicationContext(), R.string.prompt_saved_succesfully, Toast.LENGTH_SHORT).show();
                 }
                 else {

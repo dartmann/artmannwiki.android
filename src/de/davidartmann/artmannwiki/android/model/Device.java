@@ -1,5 +1,7 @@
 package de.davidartmann.artmannwiki.android.model;
 
+import java.io.Serializable;
+
 /**
  * 
  * This class stands for a Device. E.g. for a Tablet or a Smartphone/Handy.
@@ -12,7 +14,9 @@ package de.davidartmann.artmannwiki.android.model;
  * 	<li>puk ({@link String})</li>
  * </ul>
  */
-public class Device extends SoftDeleteEntity {
+public class Device extends SoftDeleteEntity implements Serializable{
+
+	private static final long serialVersionUID = 4956317953917710351L;
 
 	private String name;
 	

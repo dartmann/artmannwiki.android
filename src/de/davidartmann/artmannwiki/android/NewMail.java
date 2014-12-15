@@ -1,8 +1,5 @@
 package de.davidartmann.artmannwiki.android;
 
-import checkIfDeletable.DBManager;
-import checkIfDeletable.Entity;
-import de.artmann.artmannwiki.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import de.artmann.artmannwiki.R;
 
 
 public class NewMail extends Activity {
@@ -31,8 +29,8 @@ public class NewMail extends Activity {
                 String password = passworEditText.getText().toString().trim();
                 String passwordRepeat = passwordRepeatEditText.getText().toString().trim();
                 if (!(mail.isEmpty()&&password.isEmpty()&&passwordRepeat.isEmpty()) && (password.equals(passwordRepeat))) {
-                    DBManager dbManager = new DBManager(NewMail.this);
-                    dbManager.addEmail(new Entity(mail, password));
+                    //DBManager dbManager = new DBManager(NewMail.this);
+                    //dbManager.addEmail(new Entity(mail, password));
                     Toast.makeText(getApplicationContext(), R.string.prompt_saved_succesfully, Toast.LENGTH_SHORT).show();
                 }
                 else if (!(mail.isEmpty()&&password.isEmpty()&&passwordRepeat.isEmpty()) && !(password.equals(passwordRepeat))) {

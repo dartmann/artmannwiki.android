@@ -1,5 +1,7 @@
 package de.davidartmann.artmannwiki.android.model;
 
+import java.io.Serializable;
+
 /**
  * 
  * This class stands for a Login Account. E.g. for a Webinterface(FritzBox) or a Windows Account.
@@ -11,7 +13,9 @@ package de.davidartmann.artmannwiki.android.model;
  * 	<li>description ({@link String})</li>
  * </ul>
  */
-public class Login extends SoftDeleteEntity {
+public class Login extends SoftDeleteEntity implements Serializable{
+
+	private static final long serialVersionUID = 7379339242394769596L;
 
 	private String username;
 	
@@ -64,6 +68,10 @@ public class Login extends SoftDeleteEntity {
 	
 	public String toString() {
 		return "Benutzername: "+username;
+	}
+	
+	public String getNormalData() {
+		return "Benutzername: "+username+"\n"+"Beschreibung: "+description;
 	}
 	
 }

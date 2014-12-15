@@ -1,5 +1,7 @@
 package de.davidartmann.artmannwiki.android.model;
 
+import java.io.Serializable;
+
 /**
  * 
  * This class stands for an everything what needs not more than an text and an appropriate description.
@@ -10,7 +12,9 @@ package de.davidartmann.artmannwiki.android.model;
  * 	<li>description ({@link String})</li>
  * </ul>
  */
-public class Miscellaneous extends SoftDeleteEntity {
+public class Miscellaneous extends SoftDeleteEntity implements Serializable{
+
+	private static final long serialVersionUID = 6373173434826200023L;
 
 	private String text;
 	

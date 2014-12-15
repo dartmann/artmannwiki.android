@@ -1,9 +1,5 @@
 package de.davidartmann.artmannwiki.android;
 
-import java.util.ArrayList;
-
-import checkIfDeletable.DBManager;
-import checkIfDeletable.Entity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 import de.artmann.artmannwiki.R;
 
 
@@ -30,6 +25,7 @@ public class SingleCategory extends Activity {
         Intent intent = getIntent();
         String category = intent.getStringExtra("category");
         setTitle(category);
+        /*
         DBManager dbManager = new DBManager(SingleCategory.this);
         TableLayout tableLayout = (TableLayout) findViewById(R.id.single_category_tablelayout);
         ArrayList<Entity> allEntitiesArrayList = dbManager.getAllEntities();
@@ -70,13 +66,15 @@ public class SingleCategory extends Activity {
 
                 }
             }
+            
         }
         catch (Exception e) {}
+        */
     }
 
     private void fillFirstRowWithData(String category) {
         TableLayout tableLayout = (TableLayout) findViewById(R.id.single_category_tablelayout);
-        DBManager dbManager = new DBManager(this);
+        //DBManager dbManager = new DBManager(this);
         TableRow tableRow = new TableRow(this);
         TableRow.LayoutParams rowLayoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         tableRow.setLayoutParams(rowLayoutParams);
@@ -84,6 +82,7 @@ public class SingleCategory extends Activity {
         tableRow.setBackgroundColor(Color.LTGRAY);
         tableRow.setPadding(0,0,0,2);
 
+        /*
         if (category.equals(dbManager.getKategorieLogin())) {
             TextView textView = new TextView(this);
             textView.setPadding(0,0,10,0);
@@ -125,6 +124,7 @@ public class SingleCategory extends Activity {
             textView2.setText("Passwort");   textView2.setTextSize(18);   tableRow.addView(textView2);
         }
         tableLayout.addView(tableRow);
+        */
     }
 
 

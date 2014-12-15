@@ -1,5 +1,7 @@
 package de.davidartmann.artmannwiki.android.model;
 
+import java.io.Serializable;
+
 /**
  * 
  * This class stands for an insurance. E.g. for a social insurance or a health insurance.
@@ -11,7 +13,9 @@ package de.davidartmann.artmannwiki.android.model;
  * 	<li>membershipId ({@link String})</li>
  * </ul>
  */
-public class Insurance extends SoftDeleteEntity {
+public class Insurance extends SoftDeleteEntity implements Serializable{
+
+	private static final long serialVersionUID = -3593844011412240043L;
 
 	private String name;
 	
@@ -64,6 +68,10 @@ public class Insurance extends SoftDeleteEntity {
 	
 	public String toString() {
 		return "Name: "+name+"\n"+"Art: "+kind;
+	}
+	
+	public String getNormalData() {
+		return "Name: "+name+"\n"+"Art: "+kind+"\n"+"Mitgliedsnummer: "+membershipId;
 	}
 	
 }

@@ -1,5 +1,7 @@
 package de.davidartmann.artmannwiki.android.model;
 
+import java.io.Serializable;
+
 /**
  * 
  * This class stands for an Email Account. E.g. for Gmail or Yahoo.
@@ -10,7 +12,9 @@ package de.davidartmann.artmannwiki.android.model;
  * 	<li>password ({@link String})</li>
  * </ul>
  */
-public class Email extends SoftDeleteEntity {
+public class Email extends SoftDeleteEntity implements Serializable{
+
+	private static final long serialVersionUID = -5077951977755806399L;
 
 	private String emailaddress;
 	
