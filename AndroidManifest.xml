@@ -33,7 +33,6 @@
                 android:value="de.artmann.artmannwiki.Choice" />
         </activity>
         
-         
         <activity
             android:name="de.davidartmann.artmannwiki.android.CategorieList_save"
             android:label="@string/categories"
@@ -43,15 +42,15 @@
                 android:value="de.artmann.artmannwiki.Choice" />
         </activity>
         
-        <!--
         <activity
-            android:name="de.davidartmann.artmannwiki.android.NewEntity"
-            android:label="@string/title_activity_new_entity"
-            android:parentActivityName="de.davidartmann.artmannwiki.android.Choice" >
+            android:name="de.davidartmann.artmannwiki.android.SingleEntitySearch"
+            android:label="@string/title_activity_single_entity"
+            android:parentActivityName="de.davidartmann.artmannwiki.android.CategoryList_search" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.artmann.artmannwiki.Choice" />
+                android:value="de.davidartmann.artmannwiki.android.CategoryList_search" />
         </activity>
+        <!--
         <activity
             android:name="de.davidartmann.artmannwiki.android.NewLogin"
             android:label="@string/title_activity_new_login"

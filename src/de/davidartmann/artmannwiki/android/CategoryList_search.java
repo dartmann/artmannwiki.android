@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -35,13 +38,15 @@ public class CategoryList_search extends Activity {
 	private LoginManager loginManager;
 	private MiscellaneousManager miscellaneousManager;
 	private List<String> spinnerItems;
+	private String selectedSpinnerItem;
+	private String[] values;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_categorylist_search);
 		// customize the spinner
 		spinnerItems = new ArrayList<String>();
-		String[] values = new String[] {"Bankkonto", "Gerät", "E-Mail", "Versicherung", "Login", "Diverse/Notizen"};
+		values = new String[] {"Bankkonto", "Gerät", "E-Mail", "Versicherung", "Login", "Diverse/Notizen"};
 		for(String s : values) {
         	spinnerItems.add(s);
         }
@@ -56,13 +61,33 @@ public class CategoryList_search extends Activity {
 		spinner = (Spinner) findViewById(R.id.activity_categorylist_search_spinner);
 		listView = (ListView) findViewById(R.id.activity_categorylist_search_listview);
 		// add features
-		//TODO: customize the spinner (images like the save list)
+			//TODO: customize the spinner (images like the save list)
 		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.custom_spinner, spinnerItems);
-		//spinnerAdapter.setDropDownViewResource(R.layout.custom_spinner);
 		spinner.setAdapter(spinnerAdapter);
 		addSpinnerOnItemSelectListener();
-		//TODO delete if testing finished
+		addListViewOnItemClickListener();
+			//TODO delete if testing finished
 		makeTestData();
+	}
+	
+	private void addListViewOnItemClickListener() {
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position,	long id) {
+				Object o = listView.getItemAtPosition(position);
+				checkWhichKindOfEntity(o);
+			}
+		});
+	}
+
+	private void checkWhichKindOfEntity(Object o) {
+		if (selectedSpinnerItem.equals(values[1])) {
+			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
+			intent.putExtra("account", (Account) o);
+            startActivity(intent);
+		} else {
+			System.out.println("Nicht Bankkonto!");
+		}
+		
 	}
 
 	private void addSpinnerOnItemSelectListener() {
@@ -80,24 +105,28 @@ public class CategoryList_search extends Activity {
 
 	private void showSelectedEntities(String s) {
 		if (s.equals("Bankkonto")) {
+			selectedSpinnerItem = values[1];
 			accountManager.openReadable();
 			List<Account> accountList = accountManager.getAllAccounts();
 			ArrayAdapter<Account> accountAdapter = new ArrayAdapter<Account>(this, android.R.layout.simple_list_item_1, accountList);
 			listView.setAdapter(accountAdapter);
 			accountAdapter.notifyDataSetChanged();
 		} else if(s.equals("Gerät")) {
+			//selectedSpinnerItem = values[2];
 			deviceManager.openReadable();
 			List<Device> deviceList = deviceManager.getAllDevices();
 			ArrayAdapter<Device> deviceAdapter = new ArrayAdapter<Device>(this, android.R.layout.simple_list_item_1, deviceList);
 			listView.setAdapter(deviceAdapter);
 			deviceAdapter.notifyDataSetChanged();
 		} else if (s.equals("E-Mail")) {
+			//selectedSpinnerItem = values[3];
 			emailManager.openReadable();
 			List<Email> emailList = emailManager.getAllEmails();
 			ArrayAdapter<Email> emailAdapter = new ArrayAdapter<Email>(this, android.R.layout.simple_list_item_1, emailList);
 			listView.setAdapter(emailAdapter);
 			emailAdapter.notifyDataSetChanged();
 		} else if (s.equals("Versicherung")) {
+			//selectedSpinnerItem = values[4];
 			insuranceManager.openReadable();
 			List<Insurance> insuranceList = insuranceManager.getAllInsurances();
 			ArrayAdapter<Insurance> insuranceAdapter = new ArrayAdapter<Insurance>(this, android.R.layout.simple_list_item_1, insuranceList);
@@ -125,10 +154,11 @@ public class CategoryList_search extends Activity {
 		insuranceManager.openWritable();
 		loginManager.openWritable();
 		miscellaneousManager.openWritable();
-		
-		Account account = new Account("Meister Eder", "123456123", "BYLADMNIEA", "1234");
-        account.setActive(true);
-        accountManager.addAccount(account);
+		for(int i = 0; i<100; i++) {
+			Account account = new Account(String.valueOf(i), "123456123", "BYLADMNIEA", "1234");
+	        account.setActive(true);
+	        accountManager.addAccount(account);
+		}		
         
         Device device = new Device("Handy123", "017526661654", "1234", "13245678");
         device.setActive(true);

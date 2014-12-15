@@ -1,5 +1,7 @@
 package de.davidartmann.artmannwiki.android.model;
 
+import java.io.Serializable;
+
 /**
  * 
  * This class stands for a Bank Account. E.g. for Sparkasse or DiBa.
@@ -13,7 +15,9 @@ package de.davidartmann.artmannwiki.android.model;
  * </ul>
  *
  */
-public class Account extends SoftDeleteEntity {
+public class Account extends SoftDeleteEntity implements Serializable{
+
+	private static final long serialVersionUID = 6224508889742851291L;
 
 	private String owner;
 	
@@ -81,4 +85,7 @@ public class Account extends SoftDeleteEntity {
 		return "Eigentümer: " + owner+"\n"+"IBAN: " + iban;
 	}
 	
+	public String fullString() {
+		return "Eigentümer: " + owner+"\n"+"IBAN: " + iban+"\n"+"BIC: "+bic;
+	}
 }

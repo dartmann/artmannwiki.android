@@ -10,6 +10,7 @@
     <string name="title_activity_new_device">Neues Handy/Tablet</string>
     <string name="title_activity_new_mail">Neue E-Mail</string>
     <string name="title_activity_single_category">SingleCategory</string>
+    <string name="title_activity_single_entity"></string>
     <string name="action_sign_in">Anmelden</string>
     <string name="action_settings">Einstellungen</string>
     <string name="action_quit">Beenden</string>
@@ -44,6 +45,7 @@
 	<string name="insurance">Versicherung</string>
 	<string name="login">Login</string>
 	<string name="miscellaneous">Diverse/Notizen</string>
+	<string name="activity_search_singleentity_textview_button">Zeige kritische Daten</string>
     
     <!-- Farben -->
     <drawable name="white">#ffffff</drawable>
