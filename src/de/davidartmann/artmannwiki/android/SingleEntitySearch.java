@@ -51,7 +51,7 @@ public class SingleEntitySearch extends Activity {
 		// style the button
 		//button.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
 		//button.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xFFAA0000));
-		button.setBackgroundResource(R.layout.button_sensible);
+
 		// get the clicked Object deserialized
 		intent = getIntent();
 		performCheckOfIntentExtra(intent);

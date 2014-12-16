@@ -70,7 +70,7 @@ public class CategoryListSaveArrayAdapter extends ArrayAdapter<String> {
 		    } else if(s.equals("Login")) {
 		    	viewHolder.imageView.setImageResource(R.drawable.login);
 		    } else if(s.equals("Diverse/Notizen")) {
-		    	viewHolder.imageView.setImageResource(R.drawable.misc1);
+		    	viewHolder.imageView.setImageResource(R.drawable.miscellaneous);
 		    } else {
 		    	viewHolder.imageView.setImageResource(R.drawable.question);
 		    }

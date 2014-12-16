@@ -4,14 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Spinner;
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.database.AccountManager;
@@ -39,6 +45,7 @@ public class CategoryListSearch extends Activity {
 	private List<String> spinnerItems;
 	private String selectedSpinnerItem;
 	private String[] values;
+	private ArrayAdapter<Account> accountAdapter;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -139,7 +146,7 @@ public class CategoryListSearch extends Activity {
 			selectedSpinnerItem = values[0];
 			accountManager.openReadable();
 			List<Account> accountList = accountManager.getAllAccounts();
-			ArrayAdapter<Account> accountAdapter = new ArrayAdapter<Account>(this, android.R.layout.simple_list_item_1, accountList);
+			/*ArrayAdapter<Account> */accountAdapter = new ArrayAdapter<Account>(this, android.R.layout.simple_list_item_1, accountList);
 			listView.setAdapter(accountAdapter);
 			accountAdapter.notifyDataSetChanged();
 		} else if(s.equals("Gerät")) {
@@ -228,5 +235,47 @@ public class CategoryListSearch extends Activity {
 		super.onResume();
 	}
 
-	
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.categorie_list_search, menu);
+		MenuItem menuItem = menu.findItem(R.id.menu_categorylist_action_search);
+		SearchView searchView = (SearchView) menuItem.getActionView();
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		if (searchManager != null) {
+			searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		}
+		// show only icon by default
+		searchView.setIconifiedByDefault(true);
+		searchView.setQueryHint(getString(R.string.categorylist_hint_search));
+		addOnQueryTextListener(searchView);
+		return true;
+        //return super.onCreateOptionsMenu(menu);
+	}
+
+	//TODO: test filter
+	private void addOnQueryTextListener(SearchView searchView) {
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+			
+			public boolean onQueryTextSubmit(String s) {
+				CategoryListSearch.this.accountAdapter.getFilter().filter(s);
+				return true;
+			}
+			
+			public boolean onQueryTextChange(String s) {
+				CategoryListSearch.this.accountAdapter.getFilter().filter(s);
+				return true;
+			}
+		});
+		
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+        switch (id) {
+		case R.id.menu_categorylist_action_search:
+			return true;
+		default:
+			break;
+		}
+        return super.onOptionsItemSelected(item);
+	}
 }

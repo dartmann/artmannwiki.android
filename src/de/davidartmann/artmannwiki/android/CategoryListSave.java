@@ -3,7 +3,6 @@ package de.davidartmann.artmannwiki.android;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +14,9 @@ import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.adapter.CategoryListSaveArrayAdapter;
 import de.davidartmann.artmannwiki.android.newentities.NewAccount;
 import de.davidartmann.artmannwiki.android.newentities.NewDevice;
+import de.davidartmann.artmannwiki.android.newentities.NewEmail;
 import de.davidartmann.artmannwiki.android.newentities.NewInsurance;
 import de.davidartmann.artmannwiki.android.newentities.NewLogin;
-import de.davidartmann.artmannwiki.android.newentities.NewEmail;
 import de.davidartmann.artmannwiki.android.newentities.NewMiscellaneous;
 
 

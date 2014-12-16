@@ -17,6 +17,7 @@
         style="?android:textAppearanceSmall"
         android:layout_marginTop="20dip"
         android:layout_height="wrap_content"
+        android:background="@layout/button_sensible"
         android:layout_gravity="center"
         android:layout_width="wrap_content" />
     

@@ -47,8 +47,7 @@ public class Choice extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         // not necessary, so commented
-    	//getMenuInflater().inflate(R.menu.choice, menu);
-        //return true;
+    	getMenuInflater().inflate(R.menu.choice, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -58,6 +57,24 @@ public class Choice extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        return id == R.id.action_settings || super.onOptionsItemSelected(item);
+        switch (id) {
+		case R.id.menu_choice_action_sync:
+			return true;
+		case R.id.menu_choice_action_exit:
+			finish();
+	        Runtime.getRuntime().addShutdownHook(new Thread() {
+	        	@Override
+	        	public void run() {
+	        		Intent intent = new Intent(Intent.ACTION_MAIN);
+	        		intent.addCategory(Intent.CATEGORY_HOME);
+	        		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	        		startActivity(intent);
+	        	}
+	        });;
+			return true;
+		default:
+			break;
+		}
+        return super.onOptionsItemSelected(item);
     }
 }

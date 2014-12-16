@@ -18,6 +18,7 @@
     <string name="action_quit">Beenden</string>
     <string name="action_save">Speichern</string>
     <string name="action_delete">Löschen</string>
+    <string name="action_sync">Synchronisieren</string>
     <string name="hint_password">Passwort</string>
     <string name="hint_username">Benutzername</string>
     <string name="hint_password_repeat">Passwort wiederholen</string>
@@ -30,26 +31,31 @@
     <string name="prompt_fill_this_field">Bitte ausfüllen</string>
     <string name="text_required_fields">Die gekennzeichneten Felder(*) sind Pflichtfelder!</string>
     
-    <!-- New Account -->
+    <!-- NewAccount -->
 	<string name="hint_owner">Eigentümer</string>
 	<string name="hint_iban">Iban</string>
 	<string name="hint_bic">Bic</string>
 	
-	<!-- New Insurance -->
+	<!-- NewDevice -->
+	<string name="action_new_device">Handy/Tablet</string>
+	
+	<!-- NewInsurance -->
 	<string name="hint_name">Name</string>
 	<string name="hint_kind">Art</string>
 	<string name="hint_membershipId">Mitgliedsnummer</string>
 	
-	<!-- New Miscellaneous -->
+	<!-- NewMiscellaneous -->
 	<string name="hint_text">Text</string>
 	<string name="hint_description">Beschreibung</string>
+	
+	<!-- CategoryListSearch -->
+	<string name="categorylist_action_search">Suche</string>
+	<string name="categorylist_hint_search">Volltextsuche</string>
 
     <!-- Spezifisch -->
     <string name="action_choice_new_input">Wiki Eintrag erstellen</string>
     <string name="action_choice_search">Wiki durchsuchen</string>
-    <string name="action_new_entity_question">Was soll eingetragen werden?</string>
-    <string name="action_new_entity_login">Login</string>
-    <string name="action_new_device">Handy/Tablet</string>
+    
     <string name="prompt_register">Bitte ein Passwort ihrer Wahl eingeben.\nMindestens 6 Zeichen sind erfolderlich.</string>
     <string name="prompt_password_invalid">Passwort ungültig</string>
     <string name="prompt_password_unidentical">Passwort nicht identisch</string>

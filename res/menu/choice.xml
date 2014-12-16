@@ -1,19 +1,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:artmannwiki="http://schemas.android.com/apk/res-auto" >
+    <!-- xmlns:tools="http://schemas.android.com/tools"
     tools:context="de.artmann.artmannwiki.Choice" >
-    
-    <item android:id="@+id/action_websearch"
-          android:icon="@drawable/action_search"
-          android:title="@string/action_websearch"
-          android:showAsAction="ifRoom|withText" />
-    
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+     -->
+    <item android:id="@+id/menu_choice_action_sync"
+        android:icon="@drawable/sync2"
+        android:menuCategory="container"
+        android:title="@string/action_sync"
         android:orderInCategory="100"
-        android:showAsAction="never" />
+        android:showAsAction="ifRoom|withText" />
     
-    <item android:id="@+id/action_exit"
+    <item android:id="@+id/menu_choice_action_exit"
         android:title="@string/action_quit"
+        android:menuCategory="container"
+        android:icon="@drawable/exit1"
         android:orderInCategory="200"
-        android:showAsAction="never" />
+        android:showAsAction="ifRoom|withText" />
 </menu>

@@ -101,10 +101,13 @@ public class LoginMain extends Activity {
         return id == R.id.action_settings || id == R.id.action_exit || super.onOptionsItemSelected(item);
     }
 
-    @Override
     protected void onPause() {
         super.onPause();
-        finish();
+    	exit();
+    }
+
+	private void exit() {
+		finish();
         Runtime.getRuntime().addShutdownHook(new Thread() {
         	@Override
         	public void run() {
@@ -113,8 +116,10 @@ public class LoginMain extends Activity {
         		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         		startActivity(intent);
         	}
-        });;
-    }
-    
-    //TODO implement onResume()?!
+        });
+	}
+
+	protected void onResume() {
+		super.onResume();
+	}
 }
