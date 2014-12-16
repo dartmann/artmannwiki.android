@@ -15,7 +15,7 @@ import de.davidartmann.artmannwiki.android.database.EmailManager;
 import de.davidartmann.artmannwiki.android.model.Email;
 
 
-public class NewMail extends Activity {
+public class NewEmail extends Activity {
 	
 	private EditText emailEditText;
 	private EditText passwordEditText;
@@ -26,7 +26,7 @@ public class NewMail extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_mail);
+        setContentView(R.layout.activity_new_email);
         //find components
         emailEditText = (EditText) findViewById(R.id.new_mail_edittext_mailadress);
         passwordEditText = (EditText) findViewById(R.id.new_mail_edittext_password);

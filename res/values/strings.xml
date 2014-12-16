@@ -39,6 +39,10 @@
 	<string name="hint_name">Name</string>
 	<string name="hint_kind">Art</string>
 	<string name="hint_membershipId">Mitgliedsnummer</string>
+	
+	<!-- New Miscellaneous -->
+	<string name="hint_text">Text</string>
+	<string name="hint_description">Beschreibung</string>
 
     <!-- Spezifisch -->
     <string name="action_choice_new_input">Wiki Eintrag erstellen</string>

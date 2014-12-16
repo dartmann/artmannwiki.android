@@ -17,7 +17,7 @@ import de.davidartmann.artmannwiki.android.newentities.NewAccount;
 import de.davidartmann.artmannwiki.android.newentities.NewDevice;
 import de.davidartmann.artmannwiki.android.newentities.NewInsurance;
 import de.davidartmann.artmannwiki.android.newentities.NewLogin;
-import de.davidartmann.artmannwiki.android.newentities.NewMail;
+import de.davidartmann.artmannwiki.android.newentities.NewEmail;
 import de.davidartmann.artmannwiki.android.newentities.NewMiscellaneous;
 
 
@@ -46,7 +46,7 @@ public class CategoryListSave extends ListActivity {
 			Intent intent = new Intent(getBaseContext(), NewDevice.class);
 			startActivity(intent);
 		} else if(s.equals(values[2])) {
-			Intent intent = new Intent(getBaseContext(), NewMail.class);
+			Intent intent = new Intent(getBaseContext(), NewEmail.class);
 			startActivity(intent);
 		} else if(s.equals(values[3])) {
 			Intent intent = new Intent(getBaseContext(), NewInsurance.class);

@@ -88,7 +88,7 @@
         </activity>
         
         <activity 
-            android:name="de.davidartmann.artmannwiki.android.newentities.NewMail"
+            android:name="de.davidartmann.artmannwiki.android.newentities.NewEmail"
             android:label="@string/title_activity_new_mail"
             android:parentActivityName="de.davidartmann.artmannwiki.android.CategoryListSave">
             <meta-data
