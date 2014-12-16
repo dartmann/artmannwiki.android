@@ -25,6 +25,12 @@ import de.davidartmann.artmannwiki.android.model.Email;
 import de.davidartmann.artmannwiki.android.model.Insurance;
 import de.davidartmann.artmannwiki.android.model.Login;
 import de.davidartmann.artmannwiki.android.model.Miscellaneous;
+import de.davidartmann.artmannwiki.android.newentities.NewAccount;
+import de.davidartmann.artmannwiki.android.newentities.NewDevice;
+import de.davidartmann.artmannwiki.android.newentities.NewEmail;
+import de.davidartmann.artmannwiki.android.newentities.NewInsurance;
+import de.davidartmann.artmannwiki.android.newentities.NewLogin;
+import de.davidartmann.artmannwiki.android.newentities.NewMiscellaneous;
 
 public class SingleEntitySearch extends Activity {
 	
@@ -48,10 +54,6 @@ public class SingleEntitySearch extends Activity {
 		normalTextView = (TextView) findViewById(R.id.activity_search_singleentity_textview_normal);
 		button = (Button) findViewById(R.id.activity_search_singleentity_textview_button);
 		secretTextView = (TextView) findViewById(R.id.activity_search_singleentity_textview_secrets);
-		// style the button
-		//button.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
-		//button.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xFFAA0000));
-
 		// get the clicked Object deserialized
 		intent = getIntent();
 		performCheckOfIntentExtra(intent);
@@ -176,11 +178,74 @@ public class SingleEntitySearch extends Activity {
 		case R.id.single_entity_action_delete:
 			checkTypeAndSoftDelete();
 			return true;
+		case R.id.single_entity_action_edit:
+			openEditActivity();
+			return true;
 		default:
 			break;
 		}
         return super.onOptionsItemSelected(item);
     }
+
+	private void openEditActivity() {
+		switch (intentSerializableExtra) {
+		case 0:
+			if (intent.getSerializableExtra("account") != null) {
+				Account a = (Account) intent.getSerializableExtra("account");
+				Intent intent = new Intent(getBaseContext(), NewAccount.class);
+				intent.putExtra("account", a);
+				intent.putExtra("update", true);
+				startActivity(intent);
+			}
+			break;
+		case 1:
+			if (intent.getSerializableExtra("device") != null) {
+				Device d = (Device) intent.getSerializableExtra("device");
+				Intent intent = new Intent(getBaseContext(), NewDevice.class);
+				intent.putExtra("device", d);
+				intent.putExtra("update", true);
+				startActivity(intent);
+			}
+			break;
+		case 2:
+			if (intent.getSerializableExtra("email") != null) {
+				Email e = (Email) intent.getSerializableExtra("email");
+				Intent intent = new Intent(getBaseContext(), NewEmail.class);
+				intent.putExtra("email", e);
+				intent.putExtra("update", true);
+				startActivity(intent);
+			}
+			break;
+		case 3:
+			if (intent.getSerializableExtra("insurance") != null) {
+				Insurance i = (Insurance) intent.getSerializableExtra("insurance");
+				Intent intent = new Intent(getBaseContext(), NewInsurance.class);
+				intent.putExtra("insurance", i);
+				intent.putExtra("update", true);
+				startActivity(intent);
+			}
+			break;
+		case 4:
+			if (intent.getSerializableExtra("login") != null) {
+				Login l = (Login) intent.getSerializableExtra("login");
+				Intent intent = new Intent(getBaseContext(), NewLogin.class);
+				intent.putExtra("login", l);
+				intent.putExtra("update", true);
+				startActivity(intent);
+			}
+			break;
+		case 5:
+			if (intent.getSerializableExtra("miscellaneous") != null) {
+				Miscellaneous m = (Miscellaneous) intent.getSerializableExtra("miscellaneous");
+				Intent intent = new Intent(getBaseContext(), NewMiscellaneous.class);
+				intent.putExtra("miscellaneous", m);
+				intent.putExtra("update", true);
+				startActivity(intent);
+			}
+		default:
+			break;
+		}
+	}
 
 	private void checkTypeAndSoftDelete() {
 		switch (intentSerializableExtra) {
@@ -190,10 +255,9 @@ public class SingleEntitySearch extends Activity {
 				.setMessage("Sind Sie sicher?\nDas Bankkonto wird mit Bestätigung gelöscht")
 				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
+						Account a = (Account) intent.getSerializableExtra("account");
 						accountManager = new AccountManager(SingleEntitySearch.this);
 						accountManager.openWritable();
-						long id = intent.getLongExtra("entityId", 0);
-						Account a = accountManager.getAccountById(id);
 						deletedSuccessfully = accountManager.softDeleteAccount(a);
 						accountManager.close();
 						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
@@ -213,10 +277,9 @@ public class SingleEntitySearch extends Activity {
 				.setMessage("Sind Sie sicher?\nDas Gerät wird mit Bestätigung gelöscht")
 				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
+						Device d = (Device) intent.getSerializableExtra("device");
 						deviceManager = new DeviceManager(SingleEntitySearch.this);
 						deviceManager.openWritable();
-						long id = intent.getLongExtra("entityId", 0);
-						Device d = deviceManager.getDeviceById(id);
 						deletedSuccessfully = deviceManager.softDeleteDevice(d);
 						deviceManager.close();
 						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
@@ -236,10 +299,9 @@ public class SingleEntitySearch extends Activity {
 				.setMessage("Sind Sie sicher?\nDie E-Mail wird mit Bestätigung gelöscht")
 				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
+						Email e = (Email) intent.getSerializableExtra("email");
 						emailManager = new EmailManager(SingleEntitySearch.this);
 						emailManager.openWritable();
-						long id = intent.getLongExtra("entityId", 0);
-						Email e = emailManager.getEmailById(id);
 						deletedSuccessfully = emailManager.softDeleteEmail(e);
 						emailManager.close();
 						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
@@ -259,10 +321,9 @@ public class SingleEntitySearch extends Activity {
 				.setMessage("Sind Sie sicher?\nDie Versicherung wird mit Bestätigung gelöscht")
 				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
+						Insurance i = (Insurance) intent.getSerializableExtra("insurance");
 						insuranceManager = new InsuranceManager(SingleEntitySearch.this);
 						insuranceManager.openWritable();
-						long id = intent.getLongExtra("entityId", 0);
-						Insurance i = insuranceManager.getInsuranceById(id);
 						deletedSuccessfully = insuranceManager.softDeleteEmail(i);
 						insuranceManager.close();
 						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
@@ -282,10 +343,9 @@ public class SingleEntitySearch extends Activity {
 				.setMessage("Sind Sie sicher?\nDer Login wird mit Bestätigung gelöscht")
 				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
+						Login l = (Login) intent.getSerializableExtra("login");
 						loginManager = new LoginManager(SingleEntitySearch.this);
 						loginManager.openWritable();
-						long id = intent.getLongExtra("entityId", 0);
-						Login l = loginManager.getLoginById(id);
 						deletedSuccessfully = loginManager.softDeleteLogin(l);
 						loginManager.close();
 						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
@@ -305,10 +365,9 @@ public class SingleEntitySearch extends Activity {
 				.setMessage("Sind Sie sicher?\nDie Notiz wird mit Bestätigung gelöscht")
 				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
+						Miscellaneous m = (Miscellaneous) intent.getSerializableExtra("miscellaneous");
 						miscellaneousManager = new MiscellaneousManager(SingleEntitySearch.this);
 						miscellaneousManager.openWritable();
-						long id = intent.getLongExtra("entityId", 0);
-						Miscellaneous m = miscellaneousManager.getMiscellaneousById(id);
 						deletedSuccessfully = miscellaneousManager.softDeleteLogin(m);
 						miscellaneousManager.close();
 						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);

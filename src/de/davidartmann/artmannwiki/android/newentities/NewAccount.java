@@ -36,12 +36,45 @@ public class NewAccount extends Activity {
 		saveButton = (Button) findViewById(R.id.activity_new_account_button_save);
 		pleaseFillField = "Bitte ausfüllen";
 		
+		checkIfUpdate();
+		
 		saveButton.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				validate(ownerEditText, ibanEditText, bicEditText, pinEditText);
+				if (getIntent().getBooleanExtra("update", false)) {
+					updateAccount();
+				} else {
+					validate(ownerEditText, ibanEditText, bicEditText, pinEditText);
+				}
 			}
 		});
+	}
+
+	// store the new data
+	protected void updateAccount() {
+		Account a = (Account) getIntent().getSerializableExtra("account");
+		a.setOwner(ownerEditText.getText().toString().trim());
+		a.setIban(ibanEditText.getText().toString().trim());
+		a.setBic(bicEditText.getText().toString().trim());
+		a.setPin(pinEditText.getText().toString().trim());
+		a.setLastUpdate(new Date());
+		accountManager = new AccountManager(this);
+		accountManager.openWritable();
+		accountManager.updateAccount(a);
+		accountManager.close();
+		Toast.makeText(this, "Bankkonto erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+		goBackToMain();
+	}
+
+	// fill the fields with the data of the account to update
+	private void checkIfUpdate() {
+		if (getIntent().getSerializableExtra("account") != null) {
+			Account a = (Account) getIntent().getSerializableExtra("account");
+			ownerEditText.setText(a.getOwner());
+			ibanEditText.setText(a.getIban());
+			bicEditText.setText(a.getBic());
+			pinEditText.setText(a.getPin());
+		}
 	}
 
 	protected void validate(EditText ownerEditText2, EditText ibanEditText2, EditText bicEditText2, EditText pinEditText2) {

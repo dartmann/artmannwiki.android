@@ -1,5 +1,6 @@
 package de.davidartmann.artmannwiki.android.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,8 +15,10 @@ import java.util.Date;
  * 	<li>createTime ({@link Date})</li>
  * </ul>
  */
-public class BaseEntity {
+public class BaseEntity implements Serializable{
 	
+	private static final long serialVersionUID = 5812478337945783960L;
+
 	private long id;
 	
 	private Date lastUpdate;

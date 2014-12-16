@@ -36,15 +36,70 @@ public class NewLogin extends Activity {
         saveButton = (Button) findViewById(R.id.activity_new_login_button_save);
         pleaseFillField = "Bitte ausfüllen";
         
+        checkIfUpdate();
+        
         saveButton.setOnClickListener(new View.OnClickListener() {
             
             public void onClick(View view) {
-                validate(usernameEditText, passwordEditText, passwordRepeatEditText, descriptionEditText);
+            	if (getIntent().getBooleanExtra("update", false)) {
+					updateLogin();
+				} else {
+					validate(usernameEditText, passwordEditText, passwordRepeatEditText, descriptionEditText);
+				}
             }
         });
     }
 
-    protected void validate(EditText usernameEditText2, EditText passwordEditText2, EditText passwordRepeatEditText2, EditText descriptionEditText2) {
+    protected void updateLogin() {
+    	Boolean success = false;
+    	Login l = (Login) getIntent().getSerializableExtra("login");
+    	String username = usernameEditText.getText().toString().trim();
+    	if (!username.isEmpty()) {
+			l.setUsername(username);
+		} else {
+			usernameEditText.setError(pleaseFillField);
+		}
+    	String pw = passwordEditText.getText().toString().trim();
+    	String pw2 = passwordRepeatEditText.getText().toString().trim();
+    	// logins without pw, also possible
+    	if (/*!pw.isEmpty() && !pw2.isEmpty() &&*/ pw.equals(pw2)) {
+			l.setPassword(pw);
+			success = true;
+		} else {
+			/*
+			if (pw.isEmpty()) {
+				passwordEditText.setError(pleaseFillField);
+			}
+			if (pw2.isEmpty()) {
+				passwordRepeatEditText.setError(pleaseFillField);
+			}
+			*/
+			if (!pw.equals(pw2)) {
+				Toast.makeText(this, R.string.prompt_password_unidentical, Toast.LENGTH_SHORT).show();
+			}
+		}
+		if (success) {
+			l.setLastUpdate(new Date());
+			loginManager = new LoginManager(this);
+			loginManager.openWritable();
+			loginManager.updateLogin(l);
+			loginManager.close();
+			Toast.makeText(this, "Login erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+			goBackToMain();
+		}
+	}
+
+	private void checkIfUpdate() {
+    	if (getIntent().getSerializableExtra("login") != null) {
+			Login l = (Login) getIntent().getSerializableExtra("login");
+			usernameEditText.setText(l.getUsername());
+			passwordEditText.setText(l.getPassword());
+			//TODO: check if this feature is wanted
+			//passwordEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+		}
+	}
+
+	protected void validate(EditText usernameEditText2, EditText passwordEditText2, EditText passwordRepeatEditText2, EditText descriptionEditText2) {
     	String username = usernameEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
         String passwordRepeat = passwordRepeatEditText.getText().toString().trim();

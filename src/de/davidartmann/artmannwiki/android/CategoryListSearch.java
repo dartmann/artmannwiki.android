@@ -2,6 +2,7 @@ package de.davidartmann.artmannwiki.android;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -46,6 +47,11 @@ public class CategoryListSearch extends Activity {
 	private String selectedSpinnerItem;
 	private String[] values;
 	private ArrayAdapter<Account> accountAdapter;
+	private ArrayAdapter<Device> deviceAdapter;
+	private ArrayAdapter<Email> emailAdapter;
+	private ArrayAdapter<Insurance> insuranceAdapter;
+	private ArrayAdapter<Login> loginAdapter;
+	private ArrayAdapter<Miscellaneous> miscArrayAdapter;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -91,37 +97,31 @@ public class CategoryListSearch extends Activity {
 			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
 			Account a = (Account) o;
 			intent.putExtra("account", a);
-			intent.putExtra("entityId", a.getId());
             startActivity(intent);
 		} else if (selectedSpinnerItem.equals(values[1])) {
 			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
 			Device d = (Device) o;
 			intent.putExtra("device", d);
-			intent.putExtra("entityId", d.getId());
             startActivity(intent);
 		} else if (selectedSpinnerItem.equals(values[2])) {
 			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
 			Email e = (Email) o;
 			intent.putExtra("email", e);
-			intent.putExtra("entityId", e.getId());
             startActivity(intent);
 		} else if (selectedSpinnerItem.equals(values[3])) {
 			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
 			Insurance i = (Insurance) o;
 			intent.putExtra("insurance", i);
-			intent.putExtra("entityId", i.getId());
             startActivity(intent);
 		} else if (selectedSpinnerItem.equals(values[4])) {
 			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
 			Login l = (Login) o;
 			intent.putExtra("login", l);
-			intent.putExtra("entityId", l.getId());
             startActivity(intent);
 		} else if (selectedSpinnerItem.equals(values[5])) {
 			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
 			Miscellaneous m = (Miscellaneous) o;
 			intent.putExtra("miscellaneous", m);
-			intent.putExtra("entityId", m.getId());
             startActivity(intent);
 		}
 		
@@ -146,42 +146,42 @@ public class CategoryListSearch extends Activity {
 			selectedSpinnerItem = values[0];
 			accountManager.openReadable();
 			List<Account> accountList = accountManager.getAllAccounts();
-			/*ArrayAdapter<Account> */accountAdapter = new ArrayAdapter<Account>(this, android.R.layout.simple_list_item_1, accountList);
+			accountAdapter = new ArrayAdapter<Account>(this, android.R.layout.simple_list_item_1, accountList);
 			listView.setAdapter(accountAdapter);
 			accountAdapter.notifyDataSetChanged();
 		} else if(s.equals("Gerät")) {
 			selectedSpinnerItem = values[1];
 			deviceManager.openReadable();
 			List<Device> deviceList = deviceManager.getAllDevices();
-			ArrayAdapter<Device> deviceAdapter = new ArrayAdapter<Device>(this, android.R.layout.simple_list_item_1, deviceList);
+			deviceAdapter = new ArrayAdapter<Device>(this, android.R.layout.simple_list_item_1, deviceList);
 			listView.setAdapter(deviceAdapter);
 			deviceAdapter.notifyDataSetChanged();
 		} else if (s.equals("E-Mail")) {
 			selectedSpinnerItem = values[2];
 			emailManager.openReadable();
 			List<Email> emailList = emailManager.getAllEmails();
-			ArrayAdapter<Email> emailAdapter = new ArrayAdapter<Email>(this, android.R.layout.simple_list_item_1, emailList);
+			emailAdapter = new ArrayAdapter<Email>(this, android.R.layout.simple_list_item_1, emailList);
 			listView.setAdapter(emailAdapter);
 			emailAdapter.notifyDataSetChanged();
 		} else if (s.equals("Versicherung")) {
 			selectedSpinnerItem = values[3];
 			insuranceManager.openReadable();
 			List<Insurance> insuranceList = insuranceManager.getAllInsurances();
-			ArrayAdapter<Insurance> insuranceAdapter = new ArrayAdapter<Insurance>(this, android.R.layout.simple_list_item_1, insuranceList);
+			insuranceAdapter = new ArrayAdapter<Insurance>(this, android.R.layout.simple_list_item_1, insuranceList);
 			listView.setAdapter(insuranceAdapter);
 			insuranceAdapter.notifyDataSetChanged();
 		} else if (s.equals("Login")) {
 			selectedSpinnerItem = values[4];
 			loginManager.openReadable();
 			List<Login> loginList = loginManager.getAllLogins();
-			ArrayAdapter<Login> loginAdapter = new ArrayAdapter<Login>(this, android.R.layout.simple_list_item_1, loginList);
+			loginAdapter = new ArrayAdapter<Login>(this, android.R.layout.simple_list_item_1, loginList);
 			listView.setAdapter(loginAdapter);
 			loginAdapter.notifyDataSetChanged();
 		} else if (s.equals("Diverse/Notizen")) {
 			selectedSpinnerItem = values[5];
 			miscellaneousManager.openReadable();
 			List<Miscellaneous> miscellaneousList = miscellaneousManager.getAllMiscellaneous();
-			ArrayAdapter<Miscellaneous> miscArrayAdapter = new ArrayAdapter<Miscellaneous>(this, android.R.layout.simple_list_item_1, miscellaneousList);
+			miscArrayAdapter = new ArrayAdapter<Miscellaneous>(this, android.R.layout.simple_list_item_1, miscellaneousList);
 			listView.setAdapter(miscArrayAdapter);
 			miscArrayAdapter.notifyDataSetChanged();
 		}
@@ -194,31 +194,31 @@ public class CategoryListSearch extends Activity {
 		insuranceManager.openWritable();
 		loginManager.openWritable();
 		miscellaneousManager.openWritable();
-		for(int i = 0; i<10; i++) {
+		for(int i = 0; i<5; i++) {
 			Account account = new Account(String.valueOf(i), "123456123", "BYLADMNIEA", "1234");
 	        account.setActive(true);
 	        accountManager.addAccount(account);
-		}		
-        
-        Device device = new Device("Handy123", "017526661654", "1234", "13245678");
-        device.setActive(true);
-        deviceManager.addDevice(device);
-        
-        Email email = new Email("blafoo@test.de", "jklsadfjklsdafjklö");
-        email.setActive(true);
-        emailManager.addEmail(email);
-        
-        Insurance insurance = new Insurance("testversicherung", "bscheiser", "321321321321");
-        insurance.setActive(true);
-        insuranceManager.addInsurance(insurance);
-        
-        Login login = new Login("administrator", "123superSecure@123!", "admintestuser");
-        login.setActive(true);
-        loginManager.addLogin(login);
-        
-        Miscellaneous miscellaneous = new Miscellaneous("kasdfsdfajklsdfajklö", "asasdasdasdasdasd");
-        miscellaneous.setActive(true);
-        miscellaneousManager.addMiscellaneous(miscellaneous);
+	        
+	        Device device = new Device("String.valueOf(i)", "017526661654", "1234", "13245678");
+	        device.setActive(true);
+	        deviceManager.addDevice(device);
+	        
+	        Email email = new Email(String.valueOf(i)+"@test.de", "jklsadfjklsdafjklö");
+	        email.setActive(true);
+	        emailManager.addEmail(email);
+	        
+	        Insurance insurance = new Insurance(String.valueOf(i), "bscheiser", "321321321321");
+	        insurance.setActive(true);
+	        insuranceManager.addInsurance(insurance);
+	        
+	        Login login = new Login(String.valueOf(i), "123superSecure@123!", "admintestuser");
+	        login.setActive(true);
+	        loginManager.addLogin(login);
+	        
+	        Miscellaneous miscellaneous = new Miscellaneous(UUID.randomUUID().toString(), "asasdasdasdasdasd");
+	        miscellaneous.setActive(true);
+	        miscellaneousManager.addMiscellaneous(miscellaneous);
+		}
 	}
 
 	protected void onPause() {
@@ -251,21 +251,36 @@ public class CategoryListSearch extends Activity {
         //return super.onCreateOptionsMenu(menu);
 	}
 
-	//TODO: test filter
 	private void addOnQueryTextListener(SearchView searchView) {
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
 			
 			public boolean onQueryTextSubmit(String s) {
-				CategoryListSearch.this.accountAdapter.getFilter().filter(s);
+				checkSpinnerItemAndFilter(s);
 				return true;
 			}
 			
 			public boolean onQueryTextChange(String s) {
-				CategoryListSearch.this.accountAdapter.getFilter().filter(s);
+				checkSpinnerItemAndFilter(s);
 				return true;
 			}
 		});
 		
+	}
+
+	protected void checkSpinnerItemAndFilter(String s) {
+		if (selectedSpinnerItem.equals(values[0])) {
+			CategoryListSearch.this.accountAdapter.getFilter().filter(s);
+		} else if (selectedSpinnerItem.equals(values[1])) {
+			CategoryListSearch.this.deviceAdapter.getFilter().filter(s);
+		} else if (selectedSpinnerItem.equals(values[2])) {
+			CategoryListSearch.this.emailAdapter.getFilter().filter(s);
+		} else if (selectedSpinnerItem.equals(values[3])) {
+			CategoryListSearch.this.insuranceAdapter.getFilter().filter(s);
+		} else if (selectedSpinnerItem.equals(values[4])) {
+			CategoryListSearch.this.loginAdapter.getFilter().filter(s);
+		} else if (selectedSpinnerItem.equals(values[5])) {
+			CategoryListSearch.this.miscArrayAdapter.getFilter().filter(s);
+		}
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {

@@ -1,5 +1,7 @@
 package de.davidartmann.artmannwiki.android.model;
 
+import java.io.Serializable;
+
 /**
  * 
  * This class is the is for entities which should be able to get soft deleted.
@@ -10,7 +12,9 @@ package de.davidartmann.artmannwiki.android.model;
  * 	<li>active ({@link Boolean})</li>
  * </ul>
  */
-public class SoftDeleteEntity extends BaseEntity {
+public class SoftDeleteEntity extends BaseEntity implements Serializable{
+	
+	private static final long serialVersionUID = 3504378201032484301L;
 	
 	private boolean active;
 

@@ -20,7 +20,7 @@
         android:layout_below="@+id/new_mail_edittext_mailadress"
         android:hint="@string/hint_password"
         android:maxLength="35"
-        android:inputType="textVisiblePassword"
+        android:inputType="textPassword"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
     <EditText
@@ -28,7 +28,7 @@
         android:layout_below="@+id/new_mail_edittext_password"
         android:hint="@string/hint_password_repeat"
         android:maxLength="35"
-        android:inputType="textVisiblePassword"
+        android:inputType="textPassword"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
     <Button

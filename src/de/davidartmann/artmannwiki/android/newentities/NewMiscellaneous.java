@@ -2,10 +2,6 @@ package de.davidartmann.artmannwiki.android.newentities;
 
 import java.util.Date;
 
-import de.artmann.artmannwiki.R;
-import de.davidartmann.artmannwiki.android.Choice;
-import de.davidartmann.artmannwiki.android.database.MiscellaneousManager;
-import de.davidartmann.artmannwiki.android.model.Miscellaneous;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +9,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import de.artmann.artmannwiki.R;
+import de.davidartmann.artmannwiki.android.Choice;
+import de.davidartmann.artmannwiki.android.database.MiscellaneousManager;
+import de.davidartmann.artmannwiki.android.model.Miscellaneous;
 
 public class NewMiscellaneous extends Activity {
 
@@ -31,12 +31,39 @@ public class NewMiscellaneous extends Activity {
 		saveButton = (Button) findViewById(R.id.activity_new_miscellaneous_button_save);
 		pleaseFillField = "Bitte ausfüllen";
 		
+		checkIfUpdate();
+		
 		saveButton.setOnClickListener(new View.OnClickListener() {
         	
             public void onClick(View view) {
-                validate(textEditText, descriptionEditText);
+            	if (getIntent().getBooleanExtra("update", false)) {
+					updateMiscellaneous();
+				} else {
+					validate(textEditText, descriptionEditText);
+				}
             }
         });
+	}
+
+	protected void updateMiscellaneous() {
+		Miscellaneous m = (Miscellaneous) getIntent().getSerializableExtra("miscellaneous");
+		m.setDescription(descriptionEditText.getText().toString().trim());
+		m.setLastUpdate(new Date());
+		m.setText(textEditText.getText().toString().trim());
+		miscellaneousManager = new MiscellaneousManager(this);
+		miscellaneousManager.openWritable();
+		miscellaneousManager.updateMiscellaneous(m);
+		miscellaneousManager.close();
+		Toast.makeText(this, "Notiz erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+		goBackToMain();
+	}
+
+	private void checkIfUpdate() {
+		if (getIntent().getSerializableExtra("miscellaneous") != null) {
+			Miscellaneous m = (Miscellaneous) getIntent().getSerializableExtra("miscellaneous");
+			textEditText.setText(m.getText());
+			descriptionEditText.setText(m.getDescription());
+		}
 	}
 
 	protected void validate(EditText textEditText2,	EditText descriptionEditText2) {

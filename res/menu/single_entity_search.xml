@@ -2,9 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="de.artmann.artmannwiki.SingleCategory" >
     
+    <item android:id="@+id/single_entity_action_edit"
+        android:icon="@drawable/edit"
+        android:title="@string/action_edit"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom|withText" />
+    
     <item android:id="@+id/single_entity_action_delete"
         android:icon="@drawable/trash"
         android:title="@string/action_delete"
-        android:orderInCategory="100"
+        android:orderInCategory="200"
         android:showAsAction="ifRoom|withText" />
 </menu>

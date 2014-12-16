@@ -4,16 +4,17 @@
     tools:context="de.artmann.artmannwiki.Choice" >
      -->
     <item android:id="@+id/menu_choice_action_sync"
-        android:icon="@drawable/sync2"
+        android:icon="@drawable/sync"
         android:menuCategory="container"
         android:title="@string/action_sync"
         android:orderInCategory="100"
         android:showAsAction="ifRoom|withText" />
     
+    <!-- Close the app not necessary? -->
     <item android:id="@+id/menu_choice_action_exit"
         android:title="@string/action_quit"
         android:menuCategory="container"
-        android:icon="@drawable/exit1"
+        android:icon="@drawable/exit"
         android:orderInCategory="200"
-        android:showAsAction="ifRoom|withText" />
+        android:showAsAction="never" />
 </menu>

@@ -33,17 +33,71 @@ public class NewEmail extends Activity {
         passwordRepeatEditText = (EditText) findViewById(R.id.new_mail_edittext_password_repeat);
         saveButton = (Button) findViewById(R.id.new_mail_button_save);
         pleaseFillField = "Bitte ausfüllen";
+        
+        checkIfUpdate();
 
         saveButton.setOnClickListener(new View.OnClickListener() {
         	
             public void onClick(View view) {
-                validate(emailEditText, passwordEditText, passwordRepeatEditText);
+            	if (getIntent().getBooleanExtra("update", false)) {
+					updateEmail();
+				} else {
+					validate(emailEditText, passwordEditText, passwordRepeatEditText);
+				}
             }
         });
     }
 
 
-    protected void validate(EditText emailEditText2, EditText passwordEditText2, EditText passwordRepeatEditText2) {
+    protected void updateEmail() {
+		Boolean success = false;
+    	Email e = (Email) getIntent().getSerializableExtra("email");
+		String email = emailEditText.getText().toString().trim();
+		if (!email.isEmpty()) {
+			e.setEmailaddress(email);
+		} else {
+			emailEditText.setError(pleaseFillField);
+		}
+		String pw = passwordEditText.getText().toString().trim();
+		String pw2 = passwordRepeatEditText.getText().toString().trim();
+		if (!pw.isEmpty() && !pw2.isEmpty() && pw.equals(pw2)) {
+			e.setPassword(pw);
+			success = true;
+		} else {
+			if (pw.isEmpty()) {
+				passwordEditText.setError(pleaseFillField);
+			}
+			if (pw2.isEmpty()) {
+				passwordRepeatEditText.setError(pleaseFillField);
+			}
+			if (!pw.equals(pw2)) {
+				Toast.makeText(this, R.string.prompt_password_unidentical, Toast.LENGTH_SHORT).show();
+			}
+		}
+		if (success) {
+			e.setLastUpdate(new Date());
+			emailManager = new EmailManager(this);
+			emailManager.openWritable();
+			emailManager.updateEmail(e);
+			emailManager.close();
+			Toast.makeText(this, "E-Mail erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+			goBackToMain();
+		}
+	}
+
+
+	private void checkIfUpdate() {
+		if (getIntent().getSerializableExtra("email") != null) {
+			Email e = (Email) getIntent().getSerializableExtra("email");
+			emailEditText.setText(e.getEmailaddress());
+			passwordEditText.setText(e.getPassword());
+			//TODO: check if this feature is wanted
+			//passwordEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+		}
+	}
+
+
+	protected void validate(EditText emailEditText2, EditText passwordEditText2, EditText passwordRepeatEditText2) {
     	String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
         String passwordRepeat = passwordRepeatEditText.getText().toString().trim();

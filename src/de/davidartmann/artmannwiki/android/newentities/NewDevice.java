@@ -36,16 +36,49 @@ public class NewDevice extends Activity {
         saveButton = (Button) findViewById(R.id.new_device_button_save);
         pleaseFillField = "Bitte ausfüllen";
 
+        checkIfUpdate();
+        
         saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
+            
             public void onClick(View view) {
-                validate(deviceEditText, numberEditText, pinEditText, pukEditText);
+            	if (getIntent().getBooleanExtra("update", false)) {
+            		updateDevice();
+				} else {
+					validate(deviceEditText, numberEditText, pinEditText, pukEditText);
+				}
             }
         });
     }
 
 
-    protected void validate(EditText deviceEditText2, EditText numberEditText2,	EditText pinEditText2, EditText pukEditText2) {
+    protected void updateDevice() {
+		Device d = (Device) getIntent().getSerializableExtra("device");
+		d.setLastUpdate(new Date());
+		d.setName(deviceEditText.getText().toString().trim());
+		d.setNumber(numberEditText.getText().toString().trim());
+		d.setPin(pinEditText.getText().toString().trim());
+		d.setPuk(pukEditText.getText().toString().trim());
+		deviceManager = new DeviceManager(this);
+		deviceManager.openWritable();
+		deviceManager.updateDevice(d);
+		deviceManager.close();
+		Toast.makeText(this, "Gerät erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+		goBackToMain();
+	}
+
+
+	private void checkIfUpdate() {
+    	if (getIntent().getSerializableExtra("device") != null) {
+			Device d = (Device) getIntent().getSerializableExtra("device");
+			deviceEditText.setText(d.getName());
+			numberEditText.setText(d.getNumber());
+			pinEditText.setText(d.getPin());
+			pukEditText.setText(d.getPuk());
+		}
+	}
+
+
+	protected void validate(EditText deviceEditText2, EditText numberEditText2,	EditText pinEditText2, EditText pukEditText2) {
     	String device = deviceEditText.getText().toString().trim();
         String number = numberEditText.getText().toString().trim();
         String pin = pinEditText.getText().toString().trim();
