@@ -56,4 +56,14 @@ public class DBManager extends SQLiteOpenHelper {
         onCreate(db);
 	}
 
+	/**
+	 * This method is called before onCreate(), onUpgrade(), onDowngrade(), or onOpen() are called
+	 * This method should only call methods that configure the parameters of the database connection, 
+	 * such as executing PRAGMA statements.
+	 */
+	//TODO: realize the SQLCipher init here
+	public void onConfigure(SQLiteDatabase db) {
+		super.onConfigure(db);
+	}
+
 }
