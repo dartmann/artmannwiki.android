@@ -47,13 +47,16 @@ public class DBManager extends SQLiteOpenHelper {
 		Log.w(DBManager.class.getName(),
 		        "Upgrading database from version " + oldVersion + " to "
 		            + newVersion + ", which will destroy all old data");
-		db.execSQL(AccountManager.upgradeAccountTable());
-		db.execSQL(DeviceManager.upgradeDeviceTable());
-		db.execSQL(EmailManager.upgradeEmailTable());
-		db.execSQL(InsuranceManager.upgradeEmailTable());
-		db.execSQL(LoginManager.upgradeLoginTable());
-		db.execSQL(MiscellaneousManager.upgradeMiscellaneousTable());
-        onCreate(db);
+		// only update if new version is higher
+		if (oldVersion < newVersion) {
+			db.execSQL(AccountManager.upgradeAccountTable());
+			db.execSQL(DeviceManager.upgradeDeviceTable());
+			db.execSQL(EmailManager.upgradeEmailTable());
+			db.execSQL(InsuranceManager.upgradeEmailTable());
+			db.execSQL(LoginManager.upgradeLoginTable());
+			db.execSQL(MiscellaneousManager.upgradeMiscellaneousTable());
+	        onCreate(db);
+		}
 	}
 
 	/**
