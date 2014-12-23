@@ -7,13 +7,11 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteDatabase;
 import de.davidartmann.artmannwiki.android.model.Account;
 
 /**
- * 
  * {@link Account} model helper class.
- *
  */
 public class AccountManager {
 	
@@ -45,27 +43,29 @@ public class AccountManager {
 	 * @param context
 	 */
 	public AccountManager(Context c) {
+		// first init the db libraries with the context
+		SQLiteDatabase.loadLibs(c);
 		dbManager = new DBManager(c);
 	}
 	
 	public void openWritable() {
-		db = dbManager.getWritableDatabase();
+		db = dbManager.getWritableDatabase(DBManager.SQLITECIPHER_SECRET);
 	}
 	
 	public void openReadable() {
-		db = dbManager.getReadableDatabase();
+		db = dbManager.getReadableDatabase(DBManager.SQLITECIPHER_SECRET);
 	}
 	
 	public void close() {
 		dbManager.close();
 	}
 
-	//gets called from the DBManager#onCreate()
+	// gets called from the DBManager#onCreate()
 	public static String createAccountTable() {
 		return CREATE_TABLE_ACCOUNT;
 	}
 	
-	//gets called from the DBManager#onUpdate()
+	// gets called from the DBManager#onUpdate()
 	public static String upgradeAccountTable() {
 		return "DROP TABLE IF EXISTS" + TABLE_ACCOUNT;
 	}
@@ -77,7 +77,7 @@ public class AccountManager {
 	 */
 	public Account getAccountById(long id) {
 		Cursor cursor = db.query(TABLE_ACCOUNT, null, DBManager.COLUMN_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
-		//always place the cursor to the first element, before accessing
+		// always place the cursor to the first element, before accessing
 		cursor.moveToFirst();
 		Account account = accountFromCursor(cursor);
 		cursor.close();

@@ -7,13 +7,11 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteDatabase;
 import de.davidartmann.artmannwiki.android.model.Device;
 
 /**
- * 
  * {@link Device} model helper class
- *
  */
 public class DeviceManager {
 
@@ -40,30 +38,32 @@ public class DeviceManager {
 	
 	/**
 	 * Constructor with the actual context for the DBManager
-	 * @param context
+	 * @param c
 	 */
-	public DeviceManager(Context context) {
-		dbManager = new DBManager(context);
+	public DeviceManager(Context c) {
+		// first init the db libraries with the context
+		SQLiteDatabase.loadLibs(c);
+		dbManager = new DBManager(c);
 	}
 	
 	public void openWritable() {
-		db = dbManager.getWritableDatabase();
+		db = dbManager.getWritableDatabase(DBManager.SQLITECIPHER_SECRET);
 	}
 	
 	public void openReadable() {
-		db = dbManager.getReadableDatabase();
+		db = dbManager.getReadableDatabase(DBManager.SQLITECIPHER_SECRET);
 	}
 	
 	public void close() {
 		dbManager.close();
 	}
 	
-	//gets called from the DBManager#onCreate()
+	// gets called from the DBManager#onCreate()
 	public static String createDeviceTable() {
 		return CREATE_TABLE_DEVICE;
 	}
 	
-	//gets called from the DBManager#onUpdate()
+	// gets called from the DBManager#onUpdate()
 	public static String upgradeDeviceTable() {
 		return "DROP TABLE IF EXISTS" + TABLE_DEVICE;
 	}
@@ -75,7 +75,7 @@ public class DeviceManager {
 	 */
 	public Device getDeviceById(long id) {
 		Cursor cursor = db.query(TABLE_DEVICE, null, DBManager.COLUMN_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
-		//always place the cursor to the first element, before accessing
+		// always place the cursor to the first element, before accessing
 		cursor.moveToFirst();
 		Device device = deviceFromCursor(cursor);
 		cursor.close();

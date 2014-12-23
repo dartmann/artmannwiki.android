@@ -1,8 +1,8 @@
 package de.davidartmann.artmannwiki.android.database;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteOpenHelper;
 import android.util.Log;
 
 /**
@@ -17,11 +17,14 @@ public class DBManager extends SQLiteOpenHelper {
 	private static final int DB_VERSION = 1;
     private static final String DB_NAME = "artmannwiki.db";
     
-    //public columan names, for every entity the same
+    // public column names, for every entity the same
     public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_CREATETIME = "create_time";
 	public static final String COLUMN_LASTUPDATE = "last_update";
 	public static final String COLUMN_ACTIVE = "active";
+	
+	// TODO: init the db with user input instead of this dirty little secret
+	public static final String SQLITECIPHER_SECRET = "secret";
 
 
 	public DBManager(Context context) {
@@ -57,16 +60,6 @@ public class DBManager extends SQLiteOpenHelper {
 			db.execSQL(MiscellaneousManager.upgradeMiscellaneousTable());
 	        onCreate(db);
 		}
-	}
-
-	/**
-	 * This method is called before onCreate(), onUpgrade(), onDowngrade(), or onOpen() are called
-	 * This method should only call methods that configure the parameters of the database connection, 
-	 * such as executing PRAGMA statements.
-	 */
-	//TODO: realize the SQLCipher init here
-	public void onConfigure(SQLiteDatabase db) {
-		super.onConfigure(db);
 	}
 
 }

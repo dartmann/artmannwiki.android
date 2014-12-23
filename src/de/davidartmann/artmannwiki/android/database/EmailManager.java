@@ -7,13 +7,11 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteDatabase;
 import de.davidartmann.artmannwiki.android.model.Email;
 
 /**
- * 
  * {@link Email} model helper class
- *
  */
 public class EmailManager {
 	
@@ -36,30 +34,32 @@ public class EmailManager {
 	
 	/**
 	 * Constructor with the actual context for the DBManager
-	 * @param context
+	 * @param c
 	 */
-	public EmailManager(Context context) {
-		dbManager = new DBManager(context);
+	public EmailManager(Context c) {
+		// first init the db libraries with the context
+		SQLiteDatabase.loadLibs(c);
+		dbManager = new DBManager(c);
 	}
 	
 	public void openWritable() {
-		db = dbManager.getWritableDatabase();
+		db = dbManager.getWritableDatabase(DBManager.SQLITECIPHER_SECRET);
 	}
 	
 	public void openReadable() {
-		db = dbManager.getReadableDatabase();
+		db = dbManager.getReadableDatabase(DBManager.SQLITECIPHER_SECRET);
 	}
 	
 	public void close() {
 		dbManager.close();
 	}
 	
-	//gets called from the DBManager#onCreate()
+	// gets called from the DBManager#onCreate()
 	public static String createEmailTable() {
 		return CREATE_TABLE_EMAIL;
 	}
 	
-	//gets called from the DBManager#onUpdate()
+	// gets called from the DBManager#onUpdate()
 	public static String upgradeEmailTable() {
 		return "DROP TABLE IF EXISTS" + TABLE_EMAIL;
 	}
@@ -71,7 +71,7 @@ public class EmailManager {
 	 */
 	public Email getEmailById(long id) {
 		Cursor cursor = db.query(TABLE_EMAIL, null, DBManager.COLUMN_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
-		//always place the cursor to the first element, before accessing
+		// always place the cursor to the first element, before accessing
 		cursor.moveToFirst();
 		Email email = emailFromCursor(cursor);
 		cursor.close();

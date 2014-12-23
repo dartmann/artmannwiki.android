@@ -7,7 +7,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteDatabase;
 import de.davidartmann.artmannwiki.android.model.Login;
 
 /**
@@ -41,27 +41,29 @@ public class LoginManager {
 	 * @param context
 	 */
 	public LoginManager(Context c) {
+		// first init the db libraries with the context
+		SQLiteDatabase.loadLibs(c);
 		dbManager = new DBManager(c);
 	}
 	
 	public void openWritable() {
-		db = dbManager.getWritableDatabase();
+		db = dbManager.getWritableDatabase(DBManager.SQLITECIPHER_SECRET);
 	}
 	
 	public void openReadable() {
-		db = dbManager.getReadableDatabase();
+		db = dbManager.getReadableDatabase(DBManager.SQLITECIPHER_SECRET);
 	}
 	
 	public void close() {
 		dbManager.close();
 	}
 
-	//gets called from the DBManager#onCreate()
+	// gets called from the DBManager#onCreate()
 	public static String createLoginTable() {
 		return CREATE_TABLE_LOGIN;
 	}
 	
-	//gets called from the DBManager#onUpdate()
+	// gets called from the DBManager#onUpdate()
 	public static String upgradeLoginTable() {
 		return "DROP TABLE IF EXISTS" + TABLE_LOGIN;
 	}
@@ -73,7 +75,7 @@ public class LoginManager {
 	 */
 	public Login getLoginById(long id) {
 		Cursor cursor = db.query(TABLE_LOGIN, null, DBManager.COLUMN_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
-		//always place the cursor to the first element, before accessing
+		// always place the cursor to the first element, before accessing
 		cursor.moveToFirst();
 		Login login = loginFromCursor(cursor);
 		cursor.close();

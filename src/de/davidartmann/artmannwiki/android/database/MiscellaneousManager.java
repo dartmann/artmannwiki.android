@@ -7,7 +7,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteDatabase;
 import de.davidartmann.artmannwiki.android.model.Miscellaneous;
 
 /**
@@ -39,15 +39,17 @@ public class MiscellaneousManager {
 	 * @param context
 	 */
 	public MiscellaneousManager(Context c) {
+		// first init the db libraries with the context
+		SQLiteDatabase.loadLibs(c);
 		dbManager = new DBManager(c);
 	}
 	
 	public void openWritable() {
-		db = dbManager.getWritableDatabase();
+		db = dbManager.getWritableDatabase(DBManager.SQLITECIPHER_SECRET);
 	}
 	
 	public void openReadable() {
-		db = dbManager.getReadableDatabase();
+		db = dbManager.getReadableDatabase(DBManager.SQLITECIPHER_SECRET);
 	}
 	
 	public void close() {
