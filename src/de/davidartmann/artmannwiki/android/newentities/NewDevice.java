@@ -59,7 +59,7 @@ public class NewDevice extends Activity {
 		d.setPin(pinEditText.getText().toString().trim());
 		d.setPuk(pukEditText.getText().toString().trim());
 		deviceManager = new DeviceManager(this);
-		deviceManager.openWritable();
+		deviceManager.openWritable(this);
 		deviceManager.updateDevice(d);
 		deviceManager.close();
 		Toast.makeText(this, "Gerät erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
@@ -101,7 +101,7 @@ public class NewDevice extends Activity {
 			d.setActive(true);
 			d.setCreateTime(new Date());
 			deviceManager = new DeviceManager(this);
-			deviceManager.openWritable();
+			deviceManager.openWritable(this);
 			deviceManager.addDevice(d);
 			deviceManager.close();
 			Toast.makeText(this, "Gerät erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();

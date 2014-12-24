@@ -81,7 +81,7 @@ public class NewLogin extends Activity {
 		if (success) {
 			l.setLastUpdate(new Date());
 			loginManager = new LoginManager(this);
-			loginManager.openWritable();
+			loginManager.openWritable(this);
 			loginManager.updateLogin(l);
 			loginManager.close();
 			Toast.makeText(this, "Login erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
@@ -126,7 +126,7 @@ public class NewLogin extends Activity {
         	l.setActive(true);
         	l.setCreateTime(new Date());
         	loginManager = new LoginManager(this);
-        	loginManager.openWritable();
+        	loginManager.openWritable(this);
         	loginManager.addLogin(l);
         	loginManager.close();
         	Toast.makeText(this, "Login erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();

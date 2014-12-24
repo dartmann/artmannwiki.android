@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
+import de.davidartmann.artmannwiki.android.LoginMain;
 import de.davidartmann.artmannwiki.android.model.Email;
 import de.davidartmann.artmannwiki.android.model.Insurance;
 
@@ -47,12 +48,16 @@ public class InsuranceManager {
 		dbManager = new DBManager(c);
 	}
 	
-	public void openWritable() {
-		db = dbManager.getWritableDatabase(DBManager.SQLITECIPHER_SECRET);
+	public void openWritable(Context c) {
+		String s = c.getSharedPreferences(LoginMain.PREFS_NAME, 0).getString(LoginMain.PREFS_ATTR, "");
+		//db = dbManager.getWritableDatabase(DBManager.SQLITECIPHER_SECRET);
+		db = dbManager.getWritableDatabase(s);
 	}
 	
-	public void openReadable() {
-		db = dbManager.getReadableDatabase(DBManager.SQLITECIPHER_SECRET);
+	public void openReadable(Context c) {
+		String s = c.getSharedPreferences(LoginMain.PREFS_NAME, 0).getString(LoginMain.PREFS_ATTR, "");
+		//db = dbManager.getReadableDatabase(DBManager.SQLITECIPHER_SECRET);
+		db = dbManager.getReadableDatabase(s);
 	}
 	
 	public void close() {

@@ -55,7 +55,7 @@ public class NewInsurance extends Activity {
 		i.setMembershipId(membershipIdEditText.getText().toString().trim());
 		i.setName(nameEditText.getText().toString().trim());
 		insuranceManager = new InsuranceManager(this);
-		insuranceManager.openWritable();
+		insuranceManager.openWritable(this);
 		insuranceManager.updateInsurance(i);
 		insuranceManager.close();
 		Toast.makeText(this, "Versicherung erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
@@ -90,7 +90,7 @@ public class NewInsurance extends Activity {
 			i.setActive(true);
 			i.setCreateTime(new Date());
 			insuranceManager = new InsuranceManager(this);
-			insuranceManager.openWritable();
+			insuranceManager.openWritable(this);
 			insuranceManager.addInsurance(i);
 			insuranceManager.close();
 			Toast.makeText(this, "Versicherung erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();

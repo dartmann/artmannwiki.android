@@ -144,42 +144,43 @@ public class CategoryListSearch extends Activity {
 	private void showSelectedEntities(String s) {
 		if (s.equals("Bankkonto")) {
 			selectedSpinnerItem = values[0];
-			accountManager.openReadable();
+			//TODO testing
+			accountManager.openReadable(this);
 			List<Account> accountList = accountManager.getAllAccounts();
 			accountAdapter = new ArrayAdapter<Account>(this, android.R.layout.simple_list_item_1, accountList);
 			listView.setAdapter(accountAdapter);
 			accountAdapter.notifyDataSetChanged();
 		} else if(s.equals("Gerät")) {
 			selectedSpinnerItem = values[1];
-			deviceManager.openReadable();
+			deviceManager.openReadable(this);
 			List<Device> deviceList = deviceManager.getAllDevices();
 			deviceAdapter = new ArrayAdapter<Device>(this, android.R.layout.simple_list_item_1, deviceList);
 			listView.setAdapter(deviceAdapter);
 			deviceAdapter.notifyDataSetChanged();
 		} else if (s.equals("E-Mail")) {
 			selectedSpinnerItem = values[2];
-			emailManager.openReadable();
+			emailManager.openReadable(this);
 			List<Email> emailList = emailManager.getAllEmails();
 			emailAdapter = new ArrayAdapter<Email>(this, android.R.layout.simple_list_item_1, emailList);
 			listView.setAdapter(emailAdapter);
 			emailAdapter.notifyDataSetChanged();
 		} else if (s.equals("Versicherung")) {
 			selectedSpinnerItem = values[3];
-			insuranceManager.openReadable();
+			insuranceManager.openReadable(this);
 			List<Insurance> insuranceList = insuranceManager.getAllInsurances();
 			insuranceAdapter = new ArrayAdapter<Insurance>(this, android.R.layout.simple_list_item_1, insuranceList);
 			listView.setAdapter(insuranceAdapter);
 			insuranceAdapter.notifyDataSetChanged();
 		} else if (s.equals("Login")) {
 			selectedSpinnerItem = values[4];
-			loginManager.openReadable();
+			loginManager.openReadable(this);
 			List<Login> loginList = loginManager.getAllLogins();
 			loginAdapter = new ArrayAdapter<Login>(this, android.R.layout.simple_list_item_1, loginList);
 			listView.setAdapter(loginAdapter);
 			loginAdapter.notifyDataSetChanged();
 		} else if (s.equals("Diverse/Notizen")) {
 			selectedSpinnerItem = values[5];
-			miscellaneousManager.openReadable();
+			miscellaneousManager.openReadable(this);
 			List<Miscellaneous> miscellaneousList = miscellaneousManager.getAllMiscellaneous();
 			miscArrayAdapter = new ArrayAdapter<Miscellaneous>(this, android.R.layout.simple_list_item_1, miscellaneousList);
 			listView.setAdapter(miscArrayAdapter);
@@ -187,13 +188,14 @@ public class CategoryListSearch extends Activity {
 		}
 	}
 	
-	private void makeTestData() {		
-		accountManager.openWritable();
-		deviceManager.openWritable();
-		emailManager.openWritable();
-		insuranceManager.openWritable();
-		loginManager.openWritable();
-		miscellaneousManager.openWritable();
+	private void makeTestData() {
+		//TODO testing
+		accountManager.openWritable(this);
+		deviceManager.openWritable(this);
+		emailManager.openWritable(this);
+		insuranceManager.openWritable(this);
+		loginManager.openWritable(this);
+		miscellaneousManager.openWritable(this);
 		for(int i = 0; i<5; i++) {
 			Account account = new Account(String.valueOf(i), "123456123", "BYLADMNIEA", "1234");
 	        account.setActive(true);

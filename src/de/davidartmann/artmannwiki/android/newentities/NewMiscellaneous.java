@@ -51,7 +51,7 @@ public class NewMiscellaneous extends Activity {
 		m.setLastUpdate(new Date());
 		m.setText(textEditText.getText().toString().trim());
 		miscellaneousManager = new MiscellaneousManager(this);
-		miscellaneousManager.openWritable();
+		miscellaneousManager.openWritable(this);
 		miscellaneousManager.updateMiscellaneous(m);
 		miscellaneousManager.close();
 		Toast.makeText(this, "Notiz erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
@@ -81,7 +81,7 @@ public class NewMiscellaneous extends Activity {
 			m.setActive(true);
 			m.setCreateTime(new Date());
 			miscellaneousManager = new MiscellaneousManager(this);
-			miscellaneousManager.openWritable();
+			miscellaneousManager.openWritable(this);
 			miscellaneousManager.addMiscellaneous(m);
 			miscellaneousManager.close();
 			Toast.makeText(this, "Text erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();

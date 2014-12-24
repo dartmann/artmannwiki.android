@@ -16,22 +16,22 @@ import android.widget.Toast;
 import de.artmann.artmannwiki.R;
 
 public class LoginMain extends Activity {
-    //-----------------------------------------------------------------------------------
-    private static final String PREFS_NAME = "sprefsfile_artmannwiki";
-    //-----------------------------------------------------------------------------------
+
+    public static final String PREFS_NAME = "sprefsfile_artmannwiki";
+    public static final String PREFS_ATTR = "pStr";
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //-----------------------------------------------------------------------------------
         final EditText passwordField = (EditText) findViewById(R.id.login_password_field);
         final EditText passwordField2 = (EditText) findViewById(R.id.login_password_field_2);
         Button loginButton = (Button) findViewById(R.id.login_button);
         final TextView textView = (TextView) findViewById(R.id.login_textview);
         final SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, 0);    //0 == Activity.MODE_PRIVATE
         final SharedPreferences.Editor editor = sharedPreferences.edit();
-        //-----------------------------------------------------------------------------------
-        String passwd = sharedPreferences.getString("passwordString", "");
+
+        String passwd = sharedPreferences.getString(PREFS_ATTR, "");
         textView.setText(passwd);
         if(passwd.equals("")) {
             passwordField2.setVisibility(View.VISIBLE);
@@ -40,15 +40,15 @@ public class LoginMain extends Activity {
         else {
             passwordField2.setVisibility(View.GONE);
         }
-        //-----------------------------------------------------------------------------------
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                String passwdSp = sharedPreferences.getString("passwordString", "");
+                String passwdSp = sharedPreferences.getString(PREFS_ATTR, "");
                 String passField1 = passwordField.getText().toString().trim();
                 String passField2 = passwordField2.getText().toString().trim();
                 if(passwdSp.equals("")) {
                     if((passField1.equals(passField2)) && (passField1.length()>=6)) {
-                        editor.putString("passwordString",passwordField.getText().toString()).apply();
+                        editor.putString(PREFS_ATTR, passField1).apply();
                         Toast.makeText(LoginMain.this, "Erfolgreiche erste Anmeldung", Toast.LENGTH_SHORT).show();
                         //setContentView(R.layout.activity_main_wiki);
                         Intent intent = new Intent(getBaseContext(), Choice.class);

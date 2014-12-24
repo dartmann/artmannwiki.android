@@ -253,7 +253,8 @@ public class SingleEntitySearch extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						Account a = (Account) intent.getSerializableExtra("account");
 						accountManager = new AccountManager(SingleEntitySearch.this);
-						accountManager.openWritable();
+						//TODO testing
+						accountManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = accountManager.softDeleteAccount(a);
 						accountManager.close();
 						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
@@ -275,7 +276,7 @@ public class SingleEntitySearch extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						Device d = (Device) intent.getSerializableExtra("device");
 						deviceManager = new DeviceManager(SingleEntitySearch.this);
-						deviceManager.openWritable();
+						deviceManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = deviceManager.softDeleteDevice(d);
 						deviceManager.close();
 						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
@@ -297,7 +298,7 @@ public class SingleEntitySearch extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						Email e = (Email) intent.getSerializableExtra("email");
 						emailManager = new EmailManager(SingleEntitySearch.this);
-						emailManager.openWritable();
+						emailManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = emailManager.softDeleteEmail(e);
 						emailManager.close();
 						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
@@ -319,7 +320,7 @@ public class SingleEntitySearch extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						Insurance i = (Insurance) intent.getSerializableExtra("insurance");
 						insuranceManager = new InsuranceManager(SingleEntitySearch.this);
-						insuranceManager.openWritable();
+						insuranceManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = insuranceManager.softDeleteEmail(i);
 						insuranceManager.close();
 						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
@@ -341,7 +342,7 @@ public class SingleEntitySearch extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						Login l = (Login) intent.getSerializableExtra("login");
 						loginManager = new LoginManager(SingleEntitySearch.this);
-						loginManager.openWritable();
+						loginManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = loginManager.softDeleteLogin(l);
 						loginManager.close();
 						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
@@ -363,7 +364,7 @@ public class SingleEntitySearch extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						Miscellaneous m = (Miscellaneous) intent.getSerializableExtra("miscellaneous");
 						miscellaneousManager = new MiscellaneousManager(SingleEntitySearch.this);
-						miscellaneousManager.openWritable();
+						miscellaneousManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = miscellaneousManager.softDeleteLogin(m);
 						miscellaneousManager.close();
 						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);

@@ -22,10 +22,6 @@ public class DBManager extends SQLiteOpenHelper {
 	public static final String COLUMN_CREATETIME = "create_time";
 	public static final String COLUMN_LASTUPDATE = "last_update";
 	public static final String COLUMN_ACTIVE = "active";
-	
-	// TODO: init the db with user input instead of this dirty little secret
-	public static final String SQLITECIPHER_SECRET = "secret";
-
 
 	public DBManager(Context context) {
         super(context, DB_NAME, null, DB_VERSION);

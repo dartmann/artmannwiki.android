@@ -77,7 +77,7 @@ public class NewEmail extends Activity {
 		if (success) {
 			e.setLastUpdate(new Date());
 			emailManager = new EmailManager(this);
-			emailManager.openWritable();
+			emailManager.openWritable(this);
 			emailManager.updateEmail(e);
 			emailManager.close();
 			Toast.makeText(this, "E-Mail erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
@@ -116,7 +116,7 @@ public class NewEmail extends Activity {
         	e.setActive(true);
         	e.setCreateTime(new Date());
         	emailManager = new EmailManager(this);
-        	emailManager.openWritable();
+        	emailManager.openWritable(this);
         	emailManager.addEmail(e);
         	emailManager.close();
         	Toast.makeText(this, "E-Mail erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();

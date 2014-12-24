@@ -59,7 +59,8 @@ public class NewAccount extends Activity {
 		a.setPin(pinEditText.getText().toString().trim());
 		a.setLastUpdate(new Date());
 		accountManager = new AccountManager(this);
-		accountManager.openWritable();
+		//TODO testing
+		accountManager.openWritable(this);
 		accountManager.updateAccount(a);
 		accountManager.close();
 		Toast.makeText(this, "Bankkonto erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
@@ -100,7 +101,8 @@ public class NewAccount extends Activity {
 			a.setActive(true);
 			a.setCreateTime(new Date());
 			accountManager = new AccountManager(this);
-			accountManager.openWritable();
+			//TODO testing
+			accountManager.openWritable(this);
 			accountManager.addAccount(a);
 			accountManager.close();
 			Toast.makeText(this, "Bankkonto erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
