@@ -31,6 +31,7 @@ public class DeviceManager {
 		      + DBManager.COLUMN_ACTIVE + " integer not null,"
 		      + DBManager.COLUMN_CREATETIME + " datetime not null,"
 		      + DBManager.COLUMN_LASTUPDATE + " datetime,"
+		      + DBManager.COLUMN_BACKEND_ID + " integer,"
 		      + COLUMN_NAME + " text not null,"
 		      + COLUMN_NUMBER + " text not null,"
 		      + COLUMN_PIN + " text not null,"

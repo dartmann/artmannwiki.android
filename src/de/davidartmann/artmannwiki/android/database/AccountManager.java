@@ -33,6 +33,7 @@ public class AccountManager {
 		      + DBManager.COLUMN_ACTIVE + " integer not null,"
 		      + DBManager.COLUMN_CREATETIME + " datetime not null,"
 		      + DBManager.COLUMN_LASTUPDATE + " datetime,"
+		      + DBManager.COLUMN_BACKEND_ID + " integer,"
 		      + COLUMN_OWNER + " text not null,"
 		      + COLUMN_IBAN + " text not null,"
 		      + COLUMN_BIC + " text not null,"

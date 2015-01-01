@@ -29,6 +29,7 @@ public class EmailManager {
 		      + DBManager.COLUMN_ACTIVE + " integer not null,"
 		      + DBManager.COLUMN_CREATETIME + " datetime not null,"
 		      + DBManager.COLUMN_LASTUPDATE + " datetime,"
+		      + DBManager.COLUMN_BACKEND_ID + " integer,"
 		      + COLUMN_EMAILADDRESS + " text not null,"
 		      + COLUMN_PASSWORD + " text not null"
 		      +");";

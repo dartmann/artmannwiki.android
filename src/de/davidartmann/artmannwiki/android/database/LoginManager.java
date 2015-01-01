@@ -32,6 +32,7 @@ public class LoginManager {
 		      + DBManager.COLUMN_ACTIVE + " integer not null,"
 		      + DBManager.COLUMN_CREATETIME + " datetime not null,"
 		      + DBManager.COLUMN_LASTUPDATE + " datetime,"
+		      + DBManager.COLUMN_BACKEND_ID + " integer,"
 		      + COLUMN_USERNAME + " text not null,"
 		      + COLUMN_PASSWORD + " text not null,"
 		      + COLUMN_DESCRIPTION + " text not null"

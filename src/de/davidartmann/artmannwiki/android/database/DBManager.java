@@ -22,6 +22,7 @@ public class DBManager extends SQLiteOpenHelper {
 	public static final String COLUMN_CREATETIME = "create_time";
 	public static final String COLUMN_LASTUPDATE = "last_update";
 	public static final String COLUMN_ACTIVE = "active";
+	public static final String COLUMN_BACKEND_ID = "backend_id";
 
 	public DBManager(Context context) {
         super(context, DB_NAME, null, DB_VERSION);

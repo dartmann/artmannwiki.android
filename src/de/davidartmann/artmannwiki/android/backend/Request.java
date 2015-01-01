@@ -2,6 +2,7 @@ package de.davidartmann.artmannwiki.android.backend;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -11,9 +12,16 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import de.davidartmann.artmannwiki.android.Choice;
+import de.davidartmann.artmannwiki.android.LoginMain;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 public class Request extends AsyncTask<String, String, String> {
+	
+	private ProgressDialog progressDialog;
+    InputStream inputStream = null;
+    String result = ""; 
 
 	@Override
 	protected String doInBackground(String... uri) {
@@ -48,7 +56,6 @@ public class Request extends AsyncTask<String, String, String> {
 
 	@Override
 	protected void onPreExecute() {
-		// TODO Auto-generated method stub
 		super.onPreExecute();
 	}
 

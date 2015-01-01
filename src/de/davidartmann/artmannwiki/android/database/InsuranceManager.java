@@ -33,6 +33,7 @@ public class InsuranceManager {
 		      + DBManager.COLUMN_ACTIVE + " integer not null,"
 		      + DBManager.COLUMN_CREATETIME + " datetime not null,"
 		      + DBManager.COLUMN_LASTUPDATE + " datetime,"
+		      + DBManager.COLUMN_BACKEND_ID + " integer,"
 		      + COLUMN_NAME + " text not null,"
 		      + COLUMN_KIND + " text not null,"
 		      + COLUMN_MEMBERSHIPID + " text not null"
