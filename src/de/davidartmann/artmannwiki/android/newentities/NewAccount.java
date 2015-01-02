@@ -25,6 +25,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.Choice;
+import de.davidartmann.artmannwiki.android.backend.BackendConstants;
 import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
 import de.davidartmann.artmannwiki.android.database.AccountManager;
 import de.davidartmann.artmannwiki.android.model.Account;
@@ -65,8 +66,10 @@ public class NewAccount extends Activity {
 	}
 	
 	/**
-	 * Method to send the created account to the backend.
+	 * Method to send the created or updated account to the backend.
+	 * Via a Volley {@link JsonObjectRequest}
 	 * @param a ({@link Account})
+	 * @param url ({@link String})
 	 */
 	private void createOrUpdateInBackend(final Account a, String url) {
 		JSONObject jAccount = new JSONObject();
@@ -84,13 +87,13 @@ public class NewAccount extends Activity {
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
 		               try {
-		                   	VolleyLog.v("Response:%n %s", response.toString(4));
-		                   	accountManager = new AccountManager(NewAccount.this);
-		           			accountManager.openWritable(NewAccount.this);
-		           			accountManager.addBackendId(a.getId(), response.getLong("id"));
-		           			accountManager.close();
+		            	   VolleyLog.v("Response:%n %s", response.toString(4));
+		            	   accountManager = new AccountManager(NewAccount.this);
+		            	   accountManager.openWritable(NewAccount.this);
+		            	   accountManager.addBackendId(a.getId(), response.getLong("id"));
+		            	   accountManager.close();
 		               } catch (JSONException e) {
-		                   e.printStackTrace();
+		            	   e.printStackTrace();
 		               }
 		           }
 			}, new Response.ErrorListener() {
@@ -98,13 +101,13 @@ public class NewAccount extends Activity {
 				public void onErrorResponse(VolleyError error) {
 					VolleyLog.e("Error: ", error.getMessage());					
 				}
-			}) {
-		       public Map<String, String> getHeaders() throws AuthFailureError {
-		           HashMap<String, String> headers = new HashMap<String, String>();
-		           headers.put("artmannwiki_headerkey", "blafoo");
-		           headers.put("Content-Type", "application/json");
-		           return headers;
-		       }
+			}) 	{
+		       	public Map<String, String> getHeaders() throws AuthFailureError {
+		           	HashMap<String, String> headers = new HashMap<String, String>();
+		           	headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+		       		headers.put(BackendConstants.CONTENT_TYPE, BackendConstants.APPLICATION_JSON);
+		       		return headers;
+		       	}
 		};
 		VolleyRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
 	}
@@ -152,7 +155,7 @@ public class NewAccount extends Activity {
 	}
 
 	/**
-	 * Method to fill the EditText fields with data. If update is needed.
+	 * Method to fill the EditText fields with data. If editing was chosen before.
 	 */
 	private void checkIfUpdate() {
 		if (getIntent().getSerializableExtra("account") != null) {

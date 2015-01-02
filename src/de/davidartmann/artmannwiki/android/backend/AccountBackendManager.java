@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -17,11 +18,24 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import de.davidartmann.artmannwiki.android.database.AccountManager;
 import de.davidartmann.artmannwiki.android.model.Account;
-import de.davidartmann.artmannwiki.android.newentities.NewAccount;
 
 public class AccountBackendManager extends Application{
 	
 	private AccountManager accountManager;
+	private static Context mCtx;
+	
+	private AccountBackendManager(Context c) {
+		mCtx = c;
+	}
+	
+	private static AccountBackendManager sInstance;
+	
+	public static synchronized AccountBackendManager getInstance(Context c) {
+		if (sInstance != null) {
+			sInstance = new AccountBackendManager(c);
+		}
+		return sInstance;
+	}
 
 	/**
 	 * Method to send the created account to the backend.
@@ -65,5 +79,6 @@ public class AccountBackendManager extends Application{
 		           return headers;
 		       }
 		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
 	}
 }

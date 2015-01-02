@@ -17,12 +17,10 @@ public class VolleyRequestQueue extends Application{
 	 * Private constructor
 	 */
 	private VolleyRequestQueue(Context c) {
-		mCtx = c;
 		mRequestQueue = getRequestQueue();
+		mCtx = c;
 	}
 	
-	
-    
     /**
      * A singleton instance of the application class for easy access in other places
      */
@@ -46,7 +44,6 @@ public class VolleyRequestQueue extends Application{
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
         }
-
         return mRequestQueue;
     }
 

@@ -1,5 +1,18 @@
 package de.davidartmann.artmannwiki.android;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,6 +26,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.artmann.artmannwiki.R;
+import de.davidartmann.artmannwiki.android.backend.BackendConstants;
+import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
 import de.davidartmann.artmannwiki.android.database.AccountManager;
 import de.davidartmann.artmannwiki.android.database.DeviceManager;
 import de.davidartmann.artmannwiki.android.database.EmailManager;
@@ -256,8 +271,8 @@ public class SingleEntitySearch extends Activity {
 						accountManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = accountManager.softDeleteAccount(a);
 						accountManager.close();
-						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
-						startActivity(intent);
+						softDeleteInBackend(a, "http://213.165.81.7:8080/ArtmannWiki/rest/account/delete/"+a.getBackendId());
+						goBackToCategoryListSearch();
 						if (deletedSuccessfully) {
 							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 						} else {
@@ -278,8 +293,7 @@ public class SingleEntitySearch extends Activity {
 						deviceManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = deviceManager.softDeleteDevice(d);
 						deviceManager.close();
-						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
-						startActivity(intent);
+						goBackToCategoryListSearch();
 						if (deletedSuccessfully) {
 							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 						} else {
@@ -300,8 +314,7 @@ public class SingleEntitySearch extends Activity {
 						emailManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = emailManager.softDeleteEmail(e);
 						emailManager.close();
-						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
-						startActivity(intent);
+						goBackToCategoryListSearch();
 						if (deletedSuccessfully) {
 							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 						} else {
@@ -322,8 +335,7 @@ public class SingleEntitySearch extends Activity {
 						insuranceManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = insuranceManager.softDeleteEmail(i);
 						insuranceManager.close();
-						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
-						startActivity(intent);
+						goBackToCategoryListSearch();
 						if (deletedSuccessfully) {
 							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 						} else {
@@ -344,8 +356,7 @@ public class SingleEntitySearch extends Activity {
 						loginManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = loginManager.softDeleteLogin(l);
 						loginManager.close();
-						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
-						startActivity(intent);
+						goBackToCategoryListSearch();
 						if (deletedSuccessfully) {
 							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 						} else {
@@ -366,8 +377,7 @@ public class SingleEntitySearch extends Activity {
 						miscellaneousManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = miscellaneousManager.softDeleteLogin(m);
 						miscellaneousManager.close();
-						Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
-						startActivity(intent);
+						goBackToCategoryListSearch();
 						if (deletedSuccessfully) {
 							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 						} else {
@@ -380,6 +390,43 @@ public class SingleEntitySearch extends Activity {
 		default:
 			break;
 		}
+	}
+	
+	private void softDeleteInBackend(final Account a, String url) {
+		JSONObject jAccount = new JSONObject();
+		try {
+			jAccount.put("active", a.isActive());
+			jAccount.put("owner", a.getOwner());
+			jAccount.put("iban", a.getIban());
+			jAccount.put("bic", a.getBic());
+			jAccount.put("pin", a.getPin());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE, url, jAccount, 
+				new Response.Listener<JSONObject>() {
+					public void onResponse(JSONObject response) {
+						// void controller, so nothing to do here
+		           	}
+				}, 	new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						VolleyLog.e("Error: ", error.getMessage());					
+					}
+				}) 	{
+			       	public Map<String, String> getHeaders() throws AuthFailureError {
+			       		HashMap<String, String> headers = new HashMap<String, String>();
+			       		headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+			       		headers.put(BackendConstants.CONTENT_TYPE, BackendConstants.APPLICATION_JSON);
+			       		return headers;
+			       	}
+			};
+			VolleyRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
+	}
+	
+	private void goBackToCategoryListSearch() {
+		Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
+		startActivity(intent);
 	}
 
 	protected void onPause() {
