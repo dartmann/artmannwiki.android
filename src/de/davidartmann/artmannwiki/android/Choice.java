@@ -87,20 +87,16 @@ public class Choice extends Activity {
 
 
 	public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // not necessary, so commented
     	getMenuInflater().inflate(R.menu.choice, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
 		case R.id.menu_choice_action_sync:
+			//TODO: clean up
 			fireHttpRequest();
 			return true;
 		case R.id.menu_choice_action_exit:
@@ -122,6 +118,7 @@ public class Choice extends Activity {
     }
 
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void fireHttpRequest() {
 		// Instantiate the RequestQueue.
 		RequestQueue queue = Volley.newRequestQueue(this);
@@ -131,7 +128,6 @@ public class Choice extends Activity {
 		StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
 		            new Response.Listener() {
 		    public void onResponse(Object response) {
-		        // Display the first 500 characters of the response string.
 		    	requestresult.setText((String) response);
 		    }
 		}, new Response.ErrorListener() {

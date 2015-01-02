@@ -233,5 +233,42 @@ public class AccountManager {
 		values.put(COLUMN_PIN, account.getPin());
 		return values;
 	}
+	
+	/**
+	 * Helper method, because the {@link SQLiteDatabase} insert method needs ContentValues.
+	 * This only stands for the backendId which is returned from the backend when storing a new entity.
+	 * So the synchronization can check relations between local entities and the ones in the backend.
+	 * @param account
+	 * @return {@link ContentValues}
+	 */
+	public ContentValues fillContenValuesWithNewAccountBackendId(Account account) {
+		ContentValues values = new ContentValues();
+		values.put(DBManager.COLUMN_ACTIVE, account.isActive() == false ? 0 : 1);
+		values.put(DBManager.COLUMN_BACKEND_ID, account.getBackendId());
+		values.put(COLUMN_OWNER, account.getOwner());
+		values.put(COLUMN_IBAN, account.getIban());
+		values.put(COLUMN_BIC, account.getBic());
+		values.put(COLUMN_PIN, account.getPin());
+		return values;
+	}
+	
+	
+	/**
+	 * Method to add the backendId to an {@link Account}, when its stored in the backend.
+	 * @param id
+	 * @param backendId
+	 * @return {@link Account}
+	 */
+	public Account addBackendId(Long id, Long backendId) {
+		Account a = getAccountById(id);
+		a.setBackendId(backendId);
+		ContentValues contentValues = fillContenValuesWithNewAccountBackendId(a);
+		db.update(TABLE_ACCOUNT, contentValues, DBManager.COLUMN_ID + "=" + id, null);
+		Cursor cursor = db.query(TABLE_ACCOUNT, null, DBManager.COLUMN_ID + "=" + id, null, null, null, null);
+		cursor.moveToFirst();
+		Account returnAccount = accountFromCursor(cursor);
+		cursor.close();
+		return returnAccount;
+	}
 
 }

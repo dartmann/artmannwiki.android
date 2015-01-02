@@ -1,11 +1,12 @@
 package de.davidartmann.artmannwiki.android.newentities;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-import de.artmann.artmannwiki.R;
-import de.davidartmann.artmannwiki.android.Choice;
-import de.davidartmann.artmannwiki.android.database.AccountManager;
-import de.davidartmann.artmannwiki.android.model.Account;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,19 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import de.artmann.artmannwiki.R;
+import de.davidartmann.artmannwiki.android.Choice;
+import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
+import de.davidartmann.artmannwiki.android.database.AccountManager;
+import de.davidartmann.artmannwiki.android.model.Account;
 
 public class NewAccount extends Activity {
 	
@@ -50,7 +64,53 @@ public class NewAccount extends Activity {
 		});
 	}
 
-	// store the new data
+	/**
+	 * Method to send the created account to the backend.
+	 * @param a ({@link Account})
+	 */
+	private void createInBackend(final Account a) {
+		String url = "http://213.165.81.7:8080/ArtmannWiki/rest/account/post/add";
+		JSONObject jAccount = new JSONObject();
+		try {
+			jAccount.put("active", a.isActive());
+			jAccount.put("owner", a.getOwner());
+			jAccount.put("iban", a.getIban());
+			jAccount.put("bic", a.getBic());
+			jAccount.put("pin", a.getPin());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		System.out.println(jAccount.toString());
+		
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jAccount, 
+			new Response.Listener<JSONObject>() {
+				public void onResponse(JSONObject response) {
+		               try {
+		                   	VolleyLog.v("Response:%n %s", response.toString(4));
+		                   	accountManager = new AccountManager(NewAccount.this);
+		           			accountManager.openWritable(NewAccount.this);
+		           			accountManager.addBackendId(a.getId(), response.getLong("id"));
+		               } catch (JSONException e) {
+		                   e.printStackTrace();
+		               }
+		           }
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					VolleyLog.e("Error: ", error.getMessage());					
+				}
+			}) {
+		       public Map<String, String> getHeaders() throws AuthFailureError {
+		           HashMap<String, String> headers = new HashMap<String, String>();
+		           headers.put("artmannwiki_headerkey", "blafoo");
+		           headers.put("Content-Type", "application/json");
+		           return headers;
+		       }
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
+	}
+
+	// TODO: validation necessary, because when text is removed null values could be stored
 	protected void updateAccount() {
 		Account a = (Account) getIntent().getSerializableExtra("account");
 		a.setOwner(ownerEditText.getText().toString().trim());
@@ -59,7 +119,6 @@ public class NewAccount extends Activity {
 		a.setPin(pinEditText.getText().toString().trim());
 		a.setLastUpdate(new Date());
 		accountManager = new AccountManager(this);
-		//TODO testing
 		accountManager.openWritable(this);
 		accountManager.updateAccount(a);
 		accountManager.close();
@@ -101,10 +160,10 @@ public class NewAccount extends Activity {
 			a.setActive(true);
 			a.setCreateTime(new Date());
 			accountManager = new AccountManager(this);
-			//TODO testing
 			accountManager.openWritable(this);
-			accountManager.addAccount(a);
+			a = accountManager.addAccount(a);
 			accountManager.close();
+			createInBackend(a);
 			Toast.makeText(this, "Bankkonto erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
