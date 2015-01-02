@@ -392,6 +392,12 @@ public class SingleEntitySearch extends Activity {
 		}
 	}
 	
+	/**
+	 * Method to <i>softdelete</i> an {@link Account} in the backend.
+	 * -> Update it to inactive.
+	 * @param a ({@link Account})
+	 * @param url ({@link String})
+	 */
 	private void softDeleteInBackend(final Account a, String url) {
 		JSONObject jAccount = new JSONObject();
 		try {

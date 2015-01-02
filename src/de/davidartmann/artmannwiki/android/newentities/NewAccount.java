@@ -159,11 +159,14 @@ public class NewAccount extends Activity {
 	 */
 	private void checkIfUpdate() {
 		if (getIntent().getSerializableExtra("account") != null) {
+			setTitle("Bankkonto aktualisieren");
 			Account a = (Account) getIntent().getSerializableExtra("account");
 			ownerEditText.setText(a.getOwner());
 			ibanEditText.setText(a.getIban());
 			bicEditText.setText(a.getBic());
 			pinEditText.setText(a.getPin());
+		} else {
+			setTitle("Neues Bankkonto");
 		}
 	}
 
