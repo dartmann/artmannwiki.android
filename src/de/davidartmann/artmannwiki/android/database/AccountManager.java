@@ -24,9 +24,8 @@ public class AccountManager {
 	private static final String COLUMN_IBAN = "iban";
 	private static final String COLUMN_BIC = "bic";
 	private static final String COLUMN_PIN = "pin";
-//	private String[] ALL_COLUMNS = { DBManager.COLUMN_ID, DBManager.COLUMN_ACTIVE, 
-//			DBManager.COLUMN_CREATETIME, DBManager.COLUMN_LASTUPDATE, COLUMN_OWNER, COLUMN_IBAN, COLUMN_BIC, COLUMN_PIN };
 	
+	// If you change those don't forget to change the other relevant method (accountFromCursor)
 	private static final String CREATE_TABLE_ACCOUNT = "create table "
 		      + TABLE_ACCOUNT + "(" 
 		      + DBManager.COLUMN_ID + " integer primary key autoincrement,"
@@ -195,10 +194,11 @@ public class AccountManager {
 		account.setActive(cursor.getInt(1) == 0 ? false : true);
 		account.setCreateTime(new Date(cursor.getLong(2)));
 		account.setLastUpdate(new Date(cursor.getLong(3)));
-		account.setOwner(cursor.getString(4));
-		account.setIban(cursor.getString(5));
-		account.setBic(cursor.getString(6));
-		account.setPin(cursor.getString(7));
+		account.setBackendId(cursor.getLong(4));
+		account.setOwner(cursor.getString(5));
+		account.setIban(cursor.getString(6));
+		account.setBic(cursor.getString(7));
+		account.setPin(cursor.getString(8));
 		return account;
 	}
 	

@@ -56,7 +56,7 @@ public class NewAccount extends Activity {
 			
 			public void onClick(View v) {
 				if (getIntent().getBooleanExtra("update", false)) {
-					updateAccount();
+					updateAccount(ownerEditText, ibanEditText, bicEditText, pinEditText);
 				} else {
 					validate(ownerEditText, ibanEditText, bicEditText, pinEditText);
 				}
@@ -80,7 +80,6 @@ public class NewAccount extends Activity {
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
-		System.out.println(jAccount.toString());
 		
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jAccount, 
 			new Response.Listener<JSONObject>() {
@@ -110,20 +109,46 @@ public class NewAccount extends Activity {
 		VolleyRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
 	}
 
-	// TODO: validation necessary, because when text is removed null values could be stored
-	protected void updateAccount() {
-		Account a = (Account) getIntent().getSerializableExtra("account");
-		a.setOwner(ownerEditText.getText().toString().trim());
-		a.setIban(ibanEditText.getText().toString().trim());
-		a.setBic(bicEditText.getText().toString().trim());
-		a.setPin(pinEditText.getText().toString().trim());
-		a.setLastUpdate(new Date());
-		accountManager = new AccountManager(this);
-		accountManager.openWritable(this);
-		accountManager.updateAccount(a);
-		accountManager.close();
-		Toast.makeText(this, "Bankkonto erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
-		goBackToMain();
+	/**
+	 * Method to update an existing {@link Account}
+	 * @param ownerEditText2
+	 * @param ibanEditText2
+	 * @param bicEditText2
+	 * @param pinEditText2
+	 */
+	private void updateAccount(EditText ownerEditText2, EditText ibanEditText2, EditText bicEditText2, EditText pinEditText2) {
+		String owner = ownerEditText2.getText().toString().trim();
+		String iban = ibanEditText2.getText().toString().trim();
+		String bic = bicEditText2.getText().toString().trim();
+		String pin = pinEditText2.getText().toString().trim();
+		
+		if (owner.isEmpty()) {
+			ownerEditText2.setError(pleaseFillField);
+		}
+		if (iban.isEmpty()) {
+			ibanEditText2.setError(pleaseFillField);
+		}
+		if (bic.isEmpty()) {
+			bicEditText2.setError(pleaseFillField);
+		}
+		if (pin.isEmpty()) {
+			pinEditText2.setError(pleaseFillField);
+		}
+		if (!owner.isEmpty() && !iban.isEmpty() && !bic.isEmpty() && !pin.isEmpty()) {
+			Account a = (Account) getIntent().getSerializableExtra("account");
+			a.setOwner(ownerEditText.getText().toString().trim());
+			a.setIban(ibanEditText.getText().toString().trim());
+			a.setBic(bicEditText.getText().toString().trim());
+			a.setPin(pinEditText.getText().toString().trim());
+			a.setLastUpdate(new Date());
+			accountManager = new AccountManager(this);
+			accountManager.openWritable(this);
+			accountManager.updateAccount(a);
+			accountManager.close();
+			//TODO: updateInBackend(a);
+			Toast.makeText(this, "Bankkonto erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+			goBackToMain();
+		}
 	}
 
 	// fill the fields with the data of the account to update
@@ -137,7 +162,7 @@ public class NewAccount extends Activity {
 		}
 	}
 
-	protected void validate(EditText ownerEditText2, EditText ibanEditText2, EditText bicEditText2, EditText pinEditText2) {
+	private void validate(EditText ownerEditText2, EditText ibanEditText2, EditText bicEditText2, EditText pinEditText2) {
 		String owner = ownerEditText2.getText().toString().trim();
 		String iban = ibanEditText2.getText().toString().trim();
 		String bic = bicEditText2.getText().toString().trim();

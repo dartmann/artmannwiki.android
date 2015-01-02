@@ -87,6 +87,10 @@ public class Account extends SoftDeleteEntity implements Serializable{
 		return "Eigentümer: " + owner+"\n"+"IBAN: " + iban;
 	}
 	
+	/**
+	 * Method to return the non sensible informations of the {@link Account}
+	 * @return {@link String}
+	 */
 	public String getNormalData() {
 		return "Eigentümer: " + owner+"\n"+"IBAN: " + iban+"\n"+"BIC: "+bic;
 	}
