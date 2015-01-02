@@ -63,13 +63,12 @@ public class NewAccount extends Activity {
 			}
 		});
 	}
-
+	
 	/**
 	 * Method to send the created account to the backend.
 	 * @param a ({@link Account})
 	 */
-	private void createInBackend(final Account a) {
-		String url = "http://213.165.81.7:8080/ArtmannWiki/rest/account/post/add";
+	private void createOrUpdateInBackend(final Account a, String url) {
 		JSONObject jAccount = new JSONObject();
 		try {
 			jAccount.put("active", a.isActive());
@@ -89,6 +88,7 @@ public class NewAccount extends Activity {
 		                   	accountManager = new AccountManager(NewAccount.this);
 		           			accountManager.openWritable(NewAccount.this);
 		           			accountManager.addBackendId(a.getId(), response.getLong("id"));
+		           			accountManager.close();
 		               } catch (JSONException e) {
 		                   e.printStackTrace();
 		               }
@@ -145,13 +145,15 @@ public class NewAccount extends Activity {
 			accountManager.openWritable(this);
 			accountManager.updateAccount(a);
 			accountManager.close();
-			//TODO: updateInBackend(a);
+			createOrUpdateInBackend(a, "http://213.165.81.7:8080/ArtmannWiki/rest/account/post/update/"+a.getBackendId());
 			Toast.makeText(this, "Bankkonto erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
 	}
 
-	// fill the fields with the data of the account to update
+	/**
+	 * Method to fill the EditText fields with data. If update is needed.
+	 */
 	private void checkIfUpdate() {
 		if (getIntent().getSerializableExtra("account") != null) {
 			Account a = (Account) getIntent().getSerializableExtra("account");
@@ -188,7 +190,7 @@ public class NewAccount extends Activity {
 			accountManager.openWritable(this);
 			a = accountManager.addAccount(a);
 			accountManager.close();
-			createInBackend(a);
+			createOrUpdateInBackend(a, "http://213.165.81.7:8080/ArtmannWiki/rest/account/post/add");
 			Toast.makeText(this, "Bankkonto erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}

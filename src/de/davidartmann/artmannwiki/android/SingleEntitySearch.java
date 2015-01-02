@@ -253,7 +253,6 @@ public class SingleEntitySearch extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						Account a = (Account) intent.getSerializableExtra("account");
 						accountManager = new AccountManager(SingleEntitySearch.this);
-						//TODO testing
 						accountManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = accountManager.softDeleteAccount(a);
 						accountManager.close();
