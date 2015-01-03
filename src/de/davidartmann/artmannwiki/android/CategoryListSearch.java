@@ -1,7 +1,9 @@
 package de.davidartmann.artmannwiki.android;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 import java.util.UUID;
 
 import android.app.Activity;
@@ -17,6 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Spinner;
@@ -78,7 +81,7 @@ public class CategoryListSearch extends Activity {
 		spinner.setAdapter(spinnerAdapter);
 		addSpinnerOnItemSelectListener();
 		addListViewOnItemClickListener();
-		//makeTestData();
+		makeTestData();
 	}
 	
 	private void addListViewOnItemClickListener() {
@@ -133,6 +136,7 @@ public class CategoryListSearch extends Activity {
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				String selectedItem = (String) parent.getItemAtPosition(position);
+				//TODO: add a progressBar here to display progress
 				showSelectedEntities(selectedItem);
 			}
 

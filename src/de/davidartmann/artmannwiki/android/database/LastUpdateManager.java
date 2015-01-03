@@ -58,13 +58,16 @@ public class LastUpdateManager {
 	/**
 	 * Method to get the Timestamp of the last change.
 	 * @param id ({@link Long})
-	 * @return {@link Account}
+	 * @return The time of the last Update as {@link Long} or 0L, when there was no last update before.
 	 */
 	public Long getLastUpdate() {
 		Cursor cursor = db.query(TABLE_LAST_UPDATE, null, DBManager.COLUMN_ID + "=?", new String[] {String.valueOf(1)}, null, null, null);
 		// always place the cursor to the first element, before accessing
 		cursor.moveToFirst();
-		Long l = dateFromCursor(cursor);
+		Long l = 0L;
+		if (cursor.getCount() > 0) {
+			l = dateFromCursor(cursor);
+		}
 		cursor.close();
 		return l;
 	}

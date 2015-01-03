@@ -4,16 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -23,6 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.backend.BackendConstants;
+import de.davidartmann.artmannwiki.android.backend.SyncTask;
 import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
 import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 
@@ -31,7 +31,6 @@ public class Choice extends Activity {
 	
 	private Button wikiSearchButton;
 	private Button wikiNewEntityButton;
-	private TextView requestresult;
 	private LastUpdateManager lastUpdateManager;
 	
     @Override
@@ -46,14 +45,11 @@ public class Choice extends Activity {
         
         wikiSearchButton = (Button) findViewById(R.id.choice_wiki_search);
         wikiNewEntityButton = (Button) findViewById(R.id.choice_wiki_new_entity);
-        requestresult = (TextView) findViewById(R.id.requestresult);
 
         wikiSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
             	Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
-            	//TODO: implement a progressdialog while loading new activity with db content
-            	//startProgressDialog();
                 startActivity(intent);
             }
         });
@@ -67,39 +63,16 @@ public class Choice extends Activity {
         
     }
 
-
-    private void startProgressDialog() {
-    	new AsyncTask<Object, Object, Object>() {
-    		
-    		@Override
-			protected void onPreExecute() {
-    			System.out.println("ASYNCTASK RUNS");
-    			ProgressDialog dialog = new ProgressDialog(Choice.this);
-    			dialog.setTitle("Hinweis");
-		        dialog.setMessage("Entschlüssle Datenbank");
-		        dialog.show();
-			}
-
-			@Override
-			protected Object doInBackground(Object... params) {
-				return null;
-			}
-    		
-    	};	
-	}
-
-
 	public boolean onCreateOptionsMenu(Menu menu) {
     	getMenuInflater().inflate(R.menu.choice, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
 		case R.id.menu_choice_action_sync:
-			getOrSetLastUpdate(Request.Method.POST);
+			checkLastUpdate(Request.Method.GET);
 			return true;
 		case R.id.menu_choice_action_exit:
 			finish();
@@ -121,21 +94,25 @@ public class Choice extends Activity {
 
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void getOrSetLastUpdate(int method) {
+	private void checkLastUpdate(int method) {
 		String url ="http://213.165.81.7:8080/ArtmannWiki/rest/lastupdate";
 
 		StringRequest stringRequest = new StringRequest(method, url,
 		            new Response.Listener() {
 		    public void onResponse(Object response) {
-		    	requestresult.setText((String) response);
+		    	Long responseTime = Long.parseLong((String) response);
 		    	lastUpdateManager = new LastUpdateManager(Choice.this);
-		    	lastUpdateManager.openWritable(Choice.this);
-		    	Long localLastUpdate = lastUpdateManager.setLastUpdate(Long.parseLong((String) response));
+		    	lastUpdateManager.openReadable(Choice.this);
+		    	Long localLastUpdate = lastUpdateManager.getLastUpdate();
+		    	if (responseTime > localLastUpdate) {
+		    		Toast.makeText(Choice.this, "Update wird durchgeführt", Toast.LENGTH_SHORT).show();
+					new SyncTask().execute();
+				}
 		    }
 		}, new Response.ErrorListener() {
 		    @Override
 		    public void onErrorResponse(VolleyError error) {
-		    	requestresult.setText("That didn't work!");
+		    	Log.e("checkLastUpdate", error.toString());
 		    }
 		}) {
 
