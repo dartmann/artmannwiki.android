@@ -3,14 +3,6 @@ package de.davidartmann.artmannwiki.android;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,14 +14,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
 import de.artmann.artmannwiki.R;
+import de.davidartmann.artmannwiki.android.backend.BackendConstants;
+import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
+import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 
 
 public class Choice extends Activity {
 	
-	Button wikiSearchButton;
-	Button wikiNewEntityButton;
-	TextView requestresult;
+	private Button wikiSearchButton;
+	private Button wikiNewEntityButton;
+	private TextView requestresult;
+	private LastUpdateManager lastUpdateManager;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +53,7 @@ public class Choice extends Activity {
             public void onClick(View view) {
             	Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
             	//TODO: implement a progressdialog while loading new activity with db content
-            	startProgressDialog();
+            	//startProgressDialog();
                 startActivity(intent);
             }
         });
@@ -65,16 +68,16 @@ public class Choice extends Activity {
     }
 
 
-    protected void startProgressDialog() {
+    private void startProgressDialog() {
     	new AsyncTask<Object, Object, Object>() {
     		
     		@Override
 			protected void onPreExecute() {
     			System.out.println("ASYNCTASK RUNS");
-    			ProgressDialog Dialog = new ProgressDialog(Choice.this);
-    			Dialog.setTitle("Hinweis");
-		        Dialog.setMessage("Entschlüssle Datenbank");
-		        Dialog.show();
+    			ProgressDialog dialog = new ProgressDialog(Choice.this);
+    			dialog.setTitle("Hinweis");
+		        dialog.setMessage("Entschlüssle Datenbank");
+		        dialog.show();
 			}
 
 			@Override
@@ -96,8 +99,7 @@ public class Choice extends Activity {
         int id = item.getItemId();
         switch (id) {
 		case R.id.menu_choice_action_sync:
-			//TODO: clean up
-			fireHttpRequest();
+			getOrSetLastUpdate(Request.Method.POST);
 			return true;
 		case R.id.menu_choice_action_exit:
 			finish();
@@ -119,16 +121,16 @@ public class Choice extends Activity {
 
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void fireHttpRequest() {
-		// Instantiate the RequestQueue.
-		RequestQueue queue = Volley.newRequestQueue(this);
-		String url ="http://213.165.81.7:8080/ArtmannWiki/rest/login/get/all";
+	private void getOrSetLastUpdate(int method) {
+		String url ="http://213.165.81.7:8080/ArtmannWiki/rest/lastupdate";
 
-		// Request a string response from the provided URL.
-		StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+		StringRequest stringRequest = new StringRequest(method, url,
 		            new Response.Listener() {
 		    public void onResponse(Object response) {
 		    	requestresult.setText((String) response);
+		    	lastUpdateManager = new LastUpdateManager(Choice.this);
+		    	lastUpdateManager.openWritable(Choice.this);
+		    	Long localLastUpdate = lastUpdateManager.setLastUpdate(Long.parseLong((String) response));
 		    }
 		}, new Response.ErrorListener() {
 		    @Override
@@ -139,13 +141,11 @@ public class Choice extends Activity {
 
 			@Override
 			public Map<String, String> getHeaders() throws AuthFailureError {
-				Map<String, String>  params = new HashMap<String, String>();  
-                params.put("artmannwiki_headerkey", "blafoo");
-                return params;  
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+                return headers;  
 			}
-			
 		};
-		// Add the request to the RequestQueue.
-		queue.add(stringRequest);
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(stringRequest);
 	}
 }

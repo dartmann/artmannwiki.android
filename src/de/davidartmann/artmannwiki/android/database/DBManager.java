@@ -38,6 +38,7 @@ public class DBManager extends SQLiteOpenHelper {
 		db.execSQL(InsuranceManager.createInsuranceTable());
 		db.execSQL(LoginManager.createLoginTable());
 		db.execSQL(MiscellaneousManager.createMiscellaneousTable());
+		db.execSQL(LastUpdateManager.createLastUpdateTable());
 	}
 
 	/**
@@ -55,6 +56,7 @@ public class DBManager extends SQLiteOpenHelper {
 			db.execSQL(InsuranceManager.upgradeEmailTable());
 			db.execSQL(LoginManager.upgradeLoginTable());
 			db.execSQL(MiscellaneousManager.upgradeMiscellaneousTable());
+			db.execSQL(LastUpdateManager.upgradeLastUpdateTable());
 	        onCreate(db);
 		}
 	}

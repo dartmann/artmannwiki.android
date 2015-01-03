@@ -78,8 +78,7 @@ public class CategoryListSearch extends Activity {
 		spinner.setAdapter(spinnerAdapter);
 		addSpinnerOnItemSelectListener();
 		addListViewOnItemClickListener();
-			//TODO delete if testing finished
-		makeTestData();
+		//makeTestData();
 	}
 	
 	private void addListViewOnItemClickListener() {
@@ -91,7 +90,10 @@ public class CategoryListSearch extends Activity {
 		});
 	}
 
-	// helper method to check which kind of item was clicked
+	/**
+	 * helper method to check which kind of item was clicked.
+	 * @param o the Entity which was clicked.
+	 */
 	private void checkWhichKindOfEntity(Object o) {
 		if (selectedSpinnerItem.equals(values[0])) {
 			Intent intent = new Intent(getBaseContext(), SingleEntitySearch.class);
@@ -144,7 +146,6 @@ public class CategoryListSearch extends Activity {
 	private void showSelectedEntities(String s) {
 		if (s.equals("Bankkonto")) {
 			selectedSpinnerItem = values[0];
-			//TODO testing
 			accountManager.openReadable(this);
 			List<Account> accountList = accountManager.getAllAccounts();
 			accountAdapter = new ArrayAdapter<Account>(this, android.R.layout.simple_list_item_1, accountList);
@@ -189,7 +190,6 @@ public class CategoryListSearch extends Activity {
 	}
 	
 	private void makeTestData() {
-		//TODO testing
 		accountManager.openWritable(this);
 		deviceManager.openWritable(this);
 		emailManager.openWritable(this);

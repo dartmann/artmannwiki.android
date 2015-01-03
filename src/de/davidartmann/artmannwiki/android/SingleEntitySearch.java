@@ -271,7 +271,7 @@ public class SingleEntitySearch extends Activity {
 						accountManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = accountManager.softDeleteAccount(a);
 						accountManager.close();
-						softDeleteInBackend(a, "http://213.165.81.7:8080/ArtmannWiki/rest/account/delete/"+a.getBackendId());
+						softDeleteInBackend(a, "http://213.165.81.7:8080/ArtmannWiki/rest/account/post/update/"+a.getBackendId());
 						goBackToCategoryListSearch();
 						if (deletedSuccessfully) {
 							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
@@ -401,7 +401,7 @@ public class SingleEntitySearch extends Activity {
 	private void softDeleteInBackend(final Account a, String url) {
 		JSONObject jAccount = new JSONObject();
 		try {
-			jAccount.put("active", a.isActive());
+			jAccount.put("active", false);
 			jAccount.put("owner", a.getOwner());
 			jAccount.put("iban", a.getIban());
 			jAccount.put("bic", a.getBic());
@@ -409,7 +409,7 @@ public class SingleEntitySearch extends Activity {
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
-		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE, url, jAccount, 
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jAccount, 
 				new Response.Listener<JSONObject>() {
 					public void onResponse(JSONObject response) {
 						// void controller, so nothing to do here
