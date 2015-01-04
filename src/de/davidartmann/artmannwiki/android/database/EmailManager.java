@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import net.sqlcipher.database.SQLiteDatabase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import net.sqlcipher.database.SQLiteDatabase;
 import de.davidartmann.artmannwiki.android.LoginMain;
 import de.davidartmann.artmannwiki.android.model.Email;
 
@@ -218,5 +218,40 @@ public class EmailManager {
 		values.put(COLUMN_EMAILADDRESS, email.getEmailaddress());
 		values.put(COLUMN_PASSWORD, email.getPassword());
 		return values;
+	}
+	
+	/**
+	 * Helper method, because the {@link SQLiteDatabase} insert method needs ContentValues.
+	 * This only stands for the backendId which is returned from the backend when storing a new entity.
+	 * So the synchronization can check relations between local entities and the ones in the backend.
+	 * @param email
+	 * @return {@link ContentValues}
+	 */
+	public ContentValues fillContenValuesWithNewEmailBackendId(Email email) {
+		ContentValues values = new ContentValues();
+		values.put(DBManager.COLUMN_ACTIVE, email.isActive() == false ? 0 : 1);
+		values.put(DBManager.COLUMN_BACKEND_ID, email.getBackendId());
+		values.put(COLUMN_EMAILADDRESS, email.getEmailaddress());
+		values.put(COLUMN_PASSWORD, email.getPassword());
+		return values;
+	}
+	
+	
+	/**
+	 * Method to add the backendId to an {@link Email}, when its stored in the backend.
+	 * @param id {@link Long}
+	 * @param backendId {@link Long}
+	 * @return {@link Email}
+	 */
+	public Email addBackendId(Long id, Long backendId) {
+		Email e = getEmailById(id);
+		e.setBackendId(backendId);
+		ContentValues contentValues = fillContenValuesWithNewEmailBackendId(e);
+		db.update(TABLE_EMAIL, contentValues, DBManager.COLUMN_ID + "=" + id, null);
+		Cursor cursor = db.query(TABLE_EMAIL, null, DBManager.COLUMN_ID + "=" + id, null, null, null, null);
+		cursor.moveToFirst();
+		Email returnEmail = emailFromCursor(cursor);
+		cursor.close();
+		return returnEmail;
 	}
 }

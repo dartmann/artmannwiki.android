@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import net.sqlcipher.database.SQLiteDatabase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import net.sqlcipher.database.SQLiteDatabase;
 import de.davidartmann.artmannwiki.android.LoginMain;
 import de.davidartmann.artmannwiki.android.model.Miscellaneous;
 
@@ -207,6 +207,41 @@ public class MiscellaneousManager {
 		values.put(COLUMN_TEXT, miscellaneous.getText());
 		values.put(COLUMN_DESCRIPTION, miscellaneous.getDescription());
 		return values;
+	}
+	
+	/**
+	 * Helper method, because the {@link SQLiteDatabase} insert method needs ContentValues.
+	 * This only stands for the backendId which is returned from the backend when storing a new entity.
+	 * So the synchronization can check relations between local entities and the ones in the backend.
+	 * @param miscellaneous
+	 * @return {@link ContentValues}
+	 */
+	public ContentValues fillContenValuesWithNewMiscellaneousBackendId(Miscellaneous miscellaneous) {
+		ContentValues values = new ContentValues();
+		values.put(DBManager.COLUMN_ACTIVE, miscellaneous.isActive() == false ? 0 : 1);
+		values.put(DBManager.COLUMN_BACKEND_ID, miscellaneous.getBackendId());
+		values.put(COLUMN_TEXT, miscellaneous.getText());
+		values.put(COLUMN_DESCRIPTION, miscellaneous.getDescription());
+		return values;
+	}
+	
+	
+	/**
+	 * Method to add the backendId to an {@link Miscellaneous}, when its stored in the backend.
+	 * @param id {@link Long}
+	 * @param backendId {@link Long}
+	 * @return {@link Miscellaneous}
+	 */
+	public Miscellaneous addBackendId(Long id, Long backendId) {
+		Miscellaneous m = getMiscellaneousById(id);
+		m.setBackendId(backendId);
+		ContentValues contentValues = fillContenValuesWithNewMiscellaneousBackendId(m);
+		db.update(TABLE_MISCELLANEOUS, contentValues, DBManager.COLUMN_ID + "=" + id, null);
+		Cursor cursor = db.query(TABLE_MISCELLANEOUS, null, DBManager.COLUMN_ID + "=" + id, null, null, null, null);
+		cursor.moveToFirst();
+		Miscellaneous returnMiscellaneous = miscellaneousFromCursor(cursor);
+		cursor.close();
+		return returnMiscellaneous;
 	}
 
 }

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import net.sqlcipher.database.SQLiteDatabase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import net.sqlcipher.database.SQLiteDatabase;
 import de.davidartmann.artmannwiki.android.LoginMain;
 import de.davidartmann.artmannwiki.android.model.Login;
 
@@ -212,5 +212,41 @@ public class LoginManager {
 		values.put(COLUMN_PASSWORD, login.getPassword());
 		values.put(COLUMN_DESCRIPTION, login.getDescription());
 		return values;
+	}
+	
+	/**
+	 * Helper method, because the {@link SQLiteDatabase} insert method needs ContentValues.
+	 * This only stands for the backendId which is returned from the backend when storing a new entity.
+	 * So the synchronization can check relations between local entities and the ones in the backend.
+	 * @param login
+	 * @return {@link ContentValues}
+	 */
+	public ContentValues fillContenValuesWithNewLoginBackendId(Login login) {
+		ContentValues values = new ContentValues();
+		values.put(DBManager.COLUMN_ACTIVE, login.isActive() == false ? 0 : 1);
+		values.put(DBManager.COLUMN_BACKEND_ID, login.getBackendId());
+		values.put(COLUMN_USERNAME, login.getUsername());
+		values.put(COLUMN_PASSWORD, login.getPassword());
+		values.put(COLUMN_DESCRIPTION, login.getDescription());
+		return values;
+	}
+	
+	
+	/**
+	 * Method to add the backendId to an {@link Login}, when its stored in the backend.
+	 * @param id {@link Long}
+	 * @param backendId {@link Long}
+	 * @return {@link Login}
+	 */
+	public Login addBackendId(Long id, Long backendId) {
+		Login l = getLoginById(id);
+		l.setBackendId(backendId);
+		ContentValues contentValues = fillContenValuesWithNewLoginBackendId(l);
+		db.update(TABLE_LOGIN, contentValues, DBManager.COLUMN_ID + "=" + id, null);
+		Cursor cursor = db.query(TABLE_LOGIN, null, DBManager.COLUMN_ID + "=" + id, null, null, null, null);
+		cursor.moveToFirst();
+		Login returnLogin = loginFromCursor(cursor);
+		cursor.close();
+		return returnLogin;
 	}
 }

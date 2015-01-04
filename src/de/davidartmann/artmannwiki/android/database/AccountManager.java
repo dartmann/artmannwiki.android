@@ -255,8 +255,8 @@ public class AccountManager {
 	
 	/**
 	 * Method to add the backendId to an {@link Account}, when its stored in the backend.
-	 * @param id
-	 * @param backendId
+	 * @param id {@link Long}
+	 * @param backendId {@link Long}
 	 * @return {@link Account}
 	 */
 	public Account addBackendId(Long id, Long backendId) {

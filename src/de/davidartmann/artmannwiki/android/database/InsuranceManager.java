@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import net.sqlcipher.database.SQLiteDatabase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import net.sqlcipher.database.SQLiteDatabase;
 import de.davidartmann.artmannwiki.android.LoginMain;
 import de.davidartmann.artmannwiki.android.model.Email;
 import de.davidartmann.artmannwiki.android.model.Insurance;
@@ -226,5 +226,41 @@ public class InsuranceManager {
 		values.put(COLUMN_KIND, insurance.getKind());
 		values.put(COLUMN_MEMBERSHIPID, insurance.getMembershipId());
 		return values;
+	}
+	
+	/**
+	 * Helper method, because the {@link SQLiteDatabase} insert method needs ContentValues.
+	 * This only stands for the backendId which is returned from the backend when storing a new entity.
+	 * So the synchronization can check relations between local entities and the ones in the backend.
+	 * @param insurance
+	 * @return {@link ContentValues}
+	 */
+	public ContentValues fillContenValuesWithNewInsuranceBackendId(Insurance insurance) {
+		ContentValues values = new ContentValues();
+		values.put(DBManager.COLUMN_ACTIVE, insurance.isActive() == false ? 0 : 1);
+		values.put(DBManager.COLUMN_BACKEND_ID, insurance.getBackendId());
+		values.put(COLUMN_NAME, insurance.getName());
+		values.put(COLUMN_KIND, insurance.getKind());
+		values.put(COLUMN_MEMBERSHIPID, insurance.getMembershipId());
+		return values;
+	}
+	
+	
+	/**
+	 * Method to add the backendId to an {@link Insurance}, when its stored in the backend.
+	 * @param id {@link Long}
+	 * @param backendId {@link Long}
+	 * @return {@link Insurance}
+	 */
+	public Insurance addBackendId(Long id, Long backendId) {
+		Insurance i = getInsuranceById(id);
+		i.setBackendId(backendId);
+		ContentValues contentValues = fillContenValuesWithNewInsuranceBackendId(i);
+		db.update(TABLE_INSURANCE, contentValues, DBManager.COLUMN_ID + "=" + id, null);
+		Cursor cursor = db.query(TABLE_INSURANCE, null, DBManager.COLUMN_ID + "=" + id, null, null, null, null);
+		cursor.moveToFirst();
+		Insurance returnInsurance = insuranceFromCursor(cursor);
+		cursor.close();
+		return returnInsurance;
 	}
 }
