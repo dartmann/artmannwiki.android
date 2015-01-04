@@ -1,6 +1,10 @@
 package de.davidartmann.artmannwiki.android.newentities;
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,8 +14,18 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.Choice;
+import de.davidartmann.artmannwiki.android.backend.BackendConstants;
+import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
 import de.davidartmann.artmannwiki.android.database.InsuranceManager;
 import de.davidartmann.artmannwiki.android.model.Insurance;
 
@@ -27,7 +41,6 @@ public class NewInsurance extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_insurance);
-		// find components
 		nameEditText = (EditText) findViewById(R.id.activity_new_insurance_edittext_name);
 		kindEditText = (EditText) findViewById(R.id.activity_new_insurance_edittext_kind);
 		membershipIdEditText = (EditText) findViewById(R.id.activity_new_insurance_edittext_membershipId);
@@ -40,38 +53,117 @@ public class NewInsurance extends Activity {
 			
 			public void onClick(View v) {
 				if (getIntent().getBooleanExtra("update", false)) {
-					updateInsurance();
+					updateInsurance(nameEditText, kindEditText, membershipIdEditText);
 				} else {
-				validate(nameEditText, kindEditText, membershipIdEditText);
+					validate(nameEditText, kindEditText, membershipIdEditText);
 				}
 			}
 		});
 	}
-
-	protected void updateInsurance() {
-		Insurance i = (Insurance) getIntent().getSerializableExtra("insurance");
-		i.setKind(kindEditText.getText().toString().trim());
-		i.setLastUpdate(new Date());
-		i.setMembershipId(membershipIdEditText.getText().toString().trim());
-		i.setName(nameEditText.getText().toString().trim());
-		insuranceManager = new InsuranceManager(this);
-		insuranceManager.openWritable(this);
-		insuranceManager.updateInsurance(i);
-		insuranceManager.close();
-		Toast.makeText(this, "Versicherung erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
-		goBackToMain();
+	
+	/**
+	 * Method to send the created or updated insurance to the backend.
+	 * Via a Volley {@link JsonObjectRequest}
+	 * @param i ({@link Insurance})
+	 * @param url ({@link String})
+	 */
+	private void createOrUpdateInBackend(final Insurance i, String url) {
+		JSONObject jInsurance = new JSONObject();
+		try {
+			jInsurance.put("active", i.isActive());
+			jInsurance.put("name", i.getName());
+			jInsurance.put("kind", i.getKind());
+			jInsurance.put("membershipId", i.getMembershipId());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jInsurance, 
+			new Response.Listener<JSONObject>() {
+				public void onResponse(JSONObject response) {
+		               try {
+		            	   VolleyLog.v("Response:%n %s", response.toString(4));
+		            	   insuranceManager = new InsuranceManager(NewInsurance.this);
+		            	   insuranceManager.openWritable(NewInsurance.this);
+		            	   insuranceManager.addBackendId(i.getId(), response.getLong("id"));
+		            	   insuranceManager.close();
+		               } catch (JSONException e) {
+		            	   e.printStackTrace();
+		               }
+		           }
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					VolleyLog.e("Error: ", error.getMessage());					
+				}
+			}) 	{
+		       	public Map<String, String> getHeaders() throws AuthFailureError {
+		           	HashMap<String, String> headers = new HashMap<String, String>();
+		           	headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+		       		headers.put(BackendConstants.CONTENT_TYPE, BackendConstants.APPLICATION_JSON);
+		       		return headers;
+		       	}
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
 	}
 
+	/**
+	 * Method to update an existing {@link Insurance}
+	 * @param nameEditText2
+	 * @param kindEditText2
+	 * @param membershipIdEditText2
+	 */
+	private void updateInsurance(EditText nameEditText2, EditText kindEditText2, EditText membershipIdEditText2) {
+		String name = nameEditText2.getText().toString().trim();
+		String kind = kindEditText2.getText().toString().trim();
+		String membershipId = membershipIdEditText2.getText().toString().trim();
+		
+		if (name.isEmpty()) {
+			nameEditText2.setError(pleaseFillField);
+		}
+		if (kind.isEmpty()) {
+			kindEditText2.setError(pleaseFillField);
+		}
+		if (membershipId.isEmpty()) {
+			membershipIdEditText2.setError(pleaseFillField);
+		}
+		if (!name.isEmpty() && !kind.isEmpty() && !membershipId.isEmpty()) {
+			Insurance i = (Insurance) getIntent().getSerializableExtra("insurance");
+			i.setKind(kind);
+			i.setMembershipId(membershipId);
+			i.setName(name);
+			insuranceManager = new InsuranceManager(this);
+			insuranceManager.openWritable(this);
+			i = insuranceManager.updateInsurance(i);
+			insuranceManager.close();
+			createOrUpdateInBackend(i, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_INSURANCE+i.getBackendId());
+			Toast.makeText(this, "Versicherung erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+			goBackToMain();
+		}
+	}
+
+	/**
+	 * Method to fill the EditText fields with data. If editing was chosen before.
+	 */
 	private void checkIfUpdate() {
 		if (getIntent().getSerializableExtra("insurance") != null) {
+			setTitle("Versicherung aktualisieren");
 			Insurance i = (Insurance) getIntent().getSerializableExtra("insurance");
 			nameEditText.setText(i.getName());
 			kindEditText.setText(i.getKind());
 			membershipIdEditText.setText(i.getMembershipId());
+		} else {
+			setTitle("Neue Versicherung");
 		}
 	}
 
-	protected void validate(EditText nameEditText2, EditText kindEditText2,	EditText membershipIdEditText2) {
+	/**
+	 * Method to create a new {@link Insurance}
+	 * @param nameEditText2
+	 * @param kindEditText2
+	 * @param membershipIdEditText2
+	 */
+	private void validate(EditText nameEditText2, EditText kindEditText2, EditText membershipIdEditText2) {
 		String name = nameEditText2.getText().toString().trim();
 		String kind = kindEditText2.getText().toString().trim();
 		String membershipId = membershipIdEditText2.getText().toString().trim();
@@ -88,11 +180,11 @@ public class NewInsurance extends Activity {
 		if (!name.isEmpty() && !kind.isEmpty() && !membershipId.isEmpty()) {
 			Insurance i = new Insurance(name, kind, membershipId);
 			i.setActive(true);
-			i.setCreateTime(new Date());
 			insuranceManager = new InsuranceManager(this);
 			insuranceManager.openWritable(this);
-			insuranceManager.addInsurance(i);
+			i = insuranceManager.addInsurance(i);
 			insuranceManager.close();
+			createOrUpdateInBackend(i, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_INSURANCE);
 			Toast.makeText(this, "Versicherung erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}

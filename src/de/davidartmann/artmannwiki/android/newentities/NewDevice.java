@@ -1,6 +1,5 @@
 package de.davidartmann.artmannwiki.android.newentities;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +9,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,7 +65,7 @@ public class NewDevice extends Activity {
     }
     
     /**
-	 * Method to send the created or updated account to the backend.
+	 * Method to send the created or updated device to the backend.
 	 * Via a Volley {@link JsonObjectRequest}
 	 * @param d ({@link Device})
 	 * @param url ({@link String})
@@ -139,14 +139,13 @@ public class NewDevice extends Activity {
 		}
         if (!pin.isEmpty() && !number.isEmpty() && !pin.isEmpty() && !puk.isEmpty()) {   
 	    	Device d = (Device) getIntent().getSerializableExtra("device");
-			d.setLastUpdate(new Date());
-			d.setName(deviceEditText.getText().toString().trim());
-			d.setNumber(numberEditText.getText().toString().trim());
-			d.setPin(pinEditText.getText().toString().trim());
-			d.setPuk(pukEditText.getText().toString().trim());
+			d.setName(device);
+			d.setNumber(number);
+			d.setPin(pin);
+			d.setPuk(puk);
 			deviceManager = new DeviceManager(this);
 			deviceManager.openWritable(this);
-			deviceManager.updateDevice(d);
+			d = deviceManager.updateDevice(d);
 			deviceManager.close();
 			createOrUpdateInBackend(d, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_DEVICE+d.getBackendId());
 			Toast.makeText(this, "Gerät erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
@@ -163,7 +162,9 @@ public class NewDevice extends Activity {
     		Device d = (Device) getIntent().getSerializableExtra("device");
 			deviceEditText.setText(d.getName());
 			numberEditText.setText(d.getNumber());
+			pinEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 			pinEditText.setText(d.getPin());
+			pukEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 			pukEditText.setText(d.getPuk());
 		} else {
 			setTitle("Neues Gerät");
@@ -198,7 +199,6 @@ public class NewDevice extends Activity {
         if (!pin.isEmpty() && !number.isEmpty() && !pin.isEmpty() && !puk.isEmpty()) {
 			Device d = new Device(device, number, pin, puk);
 			d.setActive(true);
-			d.setCreateTime(new Date());
 			deviceManager = new DeviceManager(this);
 			deviceManager.openWritable(this);
 			d = deviceManager.addDevice(d);

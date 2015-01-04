@@ -1,6 +1,10 @@
 package de.davidartmann.artmannwiki.android.newentities;
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,8 +13,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.Choice;
+import de.davidartmann.artmannwiki.android.backend.BackendConstants;
+import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
 import de.davidartmann.artmannwiki.android.database.MiscellaneousManager;
 import de.davidartmann.artmannwiki.android.model.Miscellaneous;
 
@@ -25,7 +39,6 @@ public class NewMiscellaneous extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_miscellaneous);
-		//find components
 		textEditText = (EditText) findViewById(R.id.activity_new_miscellaneous_edittext_text);
 		descriptionEditText = (EditText) findViewById(R.id.activity_new_miscellaneous_edittext_description);
 		saveButton = (Button) findViewById(R.id.activity_new_miscellaneous_button_save);
@@ -37,36 +50,108 @@ public class NewMiscellaneous extends Activity {
         	
             public void onClick(View view) {
             	if (getIntent().getBooleanExtra("update", false)) {
-					updateMiscellaneous();
+					updateMiscellaneous(textEditText, descriptionEditText);
 				} else {
-					validate(textEditText, descriptionEditText);
+					createMiscellaneous(textEditText, descriptionEditText);
 				}
             }
         });
 	}
-
-	protected void updateMiscellaneous() {
-		Miscellaneous m = (Miscellaneous) getIntent().getSerializableExtra("miscellaneous");
-		m.setDescription(descriptionEditText.getText().toString().trim());
-		m.setLastUpdate(new Date());
-		m.setText(textEditText.getText().toString().trim());
-		miscellaneousManager = new MiscellaneousManager(this);
-		miscellaneousManager.openWritable(this);
-		miscellaneousManager.updateMiscellaneous(m);
-		miscellaneousManager.close();
-		Toast.makeText(this, "Notiz erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
-		goBackToMain();
+	
+	/**
+	 * Method to send the created or updated account to the backend.
+	 * Via a Volley {@link JsonObjectRequest}
+	 * @param m ({@link Miscellaneous})
+	 * @param url ({@link String})
+	 */
+	private void createOrUpdateInBackend(final Miscellaneous m, String url) {
+		JSONObject jMiscellaneous = new JSONObject();
+		try {
+			jMiscellaneous.put("active", m.isActive());
+			jMiscellaneous.put("text", m.getText());
+			jMiscellaneous.put("description", m.getDescription());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jMiscellaneous, 
+			new Response.Listener<JSONObject>() {
+				public void onResponse(JSONObject response) {
+		               try {
+		            	   VolleyLog.v("Response:%n %s", response.toString(4));
+		            	   miscellaneousManager = new MiscellaneousManager(NewMiscellaneous.this);
+		            	   miscellaneousManager.openWritable(NewMiscellaneous.this);
+		            	   miscellaneousManager.addBackendId(m.getId(), response.getLong("id"));
+		            	   miscellaneousManager.close();
+		               } catch (JSONException e) {
+		            	   e.printStackTrace();
+		               }
+		           }
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					VolleyLog.e("Error: ", error.getMessage());					
+				}
+			}) 	{
+		       	public Map<String, String> getHeaders() throws AuthFailureError {
+		           	HashMap<String, String> headers = new HashMap<String, String>();
+		           	headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+		       		headers.put(BackendConstants.CONTENT_TYPE, BackendConstants.APPLICATION_JSON);
+		       		return headers;
+		       	}
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
 	}
 
-	private void checkIfUpdate() {
-		if (getIntent().getSerializableExtra("miscellaneous") != null) {
+	/**
+	 * Method to update an existing {@link Miscellaneous}
+	 * @param textEditText2
+	 * @param descriptionEditText2
+	 */
+	private void updateMiscellaneous(EditText textEditText2,	EditText descriptionEditText2) {
+		String text = textEditText2.getText().toString().trim();
+		String description = descriptionEditText2.getText().toString().trim();
+		
+		if (text.isEmpty()) {
+			textEditText2.setError(pleaseFillField);
+		}
+		if (description.isEmpty()) {
+			descriptionEditText2.setError(pleaseFillField);
+		}
+		if (!text.isEmpty() && !description.isEmpty()) {
 			Miscellaneous m = (Miscellaneous) getIntent().getSerializableExtra("miscellaneous");
-			textEditText.setText(m.getText());
-			descriptionEditText.setText(m.getDescription());
+			m.setDescription(description);
+			m.setText(text);
+			miscellaneousManager = new MiscellaneousManager(this);
+			miscellaneousManager.openWritable(this);
+			m = miscellaneousManager.updateMiscellaneous(m);
+			miscellaneousManager.close();
+			createOrUpdateInBackend(m, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_MISCELLANEOUS+m.getBackendId());
+			Toast.makeText(this, "Notiz erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+			goBackToMain();
 		}
 	}
 
-	protected void validate(EditText textEditText2,	EditText descriptionEditText2) {
+	/**
+	 * Method to fill the EditText fields with data. If editing was chosen before.
+	 */
+	private void checkIfUpdate() {
+		if (getIntent().getSerializableExtra("miscellaneous") != null) {
+			setTitle("Notiz aktualisieren");
+			Miscellaneous m = (Miscellaneous) getIntent().getSerializableExtra("miscellaneous");
+			textEditText.setText(m.getText());
+			descriptionEditText.setText(m.getDescription());
+		} else {
+			setTitle("Neue Notiz");
+		}
+	}
+
+	/**
+	 * Method to create a new {@link Miscellaneous}
+	 * @param textEditText2
+	 * @param descriptionEditText2
+	 */
+	private void createMiscellaneous(EditText textEditText2,	EditText descriptionEditText2) {
 		String text = textEditText2.getText().toString().trim();
 		String description = descriptionEditText2.getText().toString().trim();
 		
@@ -79,11 +164,11 @@ public class NewMiscellaneous extends Activity {
 		if (!text.isEmpty() && !description.isEmpty()) {
 			Miscellaneous m = new Miscellaneous(text, description);
 			m.setActive(true);
-			m.setCreateTime(new Date());
 			miscellaneousManager = new MiscellaneousManager(this);
 			miscellaneousManager.openWritable(this);
-			miscellaneousManager.addMiscellaneous(m);
+			m = miscellaneousManager.addMiscellaneous(m);
 			miscellaneousManager.close();
+			createOrUpdateInBackend(m, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_MISCELLANEOUS);
 			Toast.makeText(this, "Text erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
         	goBackToMain();
 		}

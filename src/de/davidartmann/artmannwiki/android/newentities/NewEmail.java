@@ -1,6 +1,5 @@
 package de.davidartmann.artmannwiki.android.newentities;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,7 +72,7 @@ public class NewEmail extends Activity {
 		JSONObject jEmail = new JSONObject();
 		try {
 			jEmail.put("active", e.isActive());
-			jEmail.put("email", e.getEmailaddress());
+			jEmail.put("emailaddress", e.getEmailaddress());
 			jEmail.put("password", e.getPassword());
 		} catch (JSONException e1) {
 			e1.printStackTrace();
@@ -86,6 +85,7 @@ public class NewEmail extends Activity {
 		            	   VolleyLog.v("Response:%n %s", response.toString(4));
 		            	   emailManager = new EmailManager(NewEmail.this);
 		            	   emailManager.openWritable(NewEmail.this);
+		            	   System.out.println("Email Id vom Backend: "+e.getId());
 		            	   emailManager.addBackendId(e.getId(), response.getLong("id"));
 		            	   emailManager.close();
 		               } catch (JSONException e) {
@@ -132,10 +132,9 @@ public class NewEmail extends Activity {
         	Email e = (Email) getIntent().getSerializableExtra("email");
         	e.setEmailaddress(email);
         	e.setPassword(password);
-			e.setLastUpdate(new Date());
 			emailManager = new EmailManager(this);
 			emailManager.openWritable(this);
-			emailManager.updateEmail(e);
+			e = emailManager.updateEmail(e);
 			emailManager.close();
 			createOrUpdateInBackend(e, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_EMAIL+e.getBackendId());
 			Toast.makeText(this, "E-Mail erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
@@ -155,8 +154,8 @@ public class NewEmail extends Activity {
 			setTitle("E-Mail aktualisieren");
 			Email e = (Email) getIntent().getSerializableExtra("email");
 			emailEditText.setText(e.getEmailaddress());
-			//TODO: check if this feature is wanted
 			passwordEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+			passwordRepeatEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 			passwordEditText.setText(e.getPassword());
 		} else {
 			setTitle("Neue E-Mail");
@@ -186,10 +185,9 @@ public class NewEmail extends Activity {
         if (!email.isEmpty() && !password.isEmpty() && !passwordRepeat.isEmpty() && (password.equals(passwordRepeat))) {
         	Email e = new Email(email, password);
         	e.setActive(true);
-        	e.setCreateTime(new Date());
         	emailManager = new EmailManager(this);
         	emailManager.openWritable(this);
-        	emailManager.addEmail(e);
+        	e = emailManager.addEmail(e);
         	emailManager.close();
         	createOrUpdateInBackend(e, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_EMAIL);
         	Toast.makeText(this, "E-Mail erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();

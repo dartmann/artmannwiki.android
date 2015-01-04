@@ -79,7 +79,6 @@ public class MiscellaneousManager {
 	 */
 	public Miscellaneous getMiscellaneousById(long id) {
 		Cursor cursor = db.query(TABLE_MISCELLANEOUS, null, DBManager.COLUMN_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
-		//always place the cursor to the first element, before accessing
 		cursor.moveToFirst();
 		Miscellaneous miscellaneous = miscellaneousFromCursor(cursor);
 		cursor.close();
@@ -154,8 +153,8 @@ public class MiscellaneousManager {
 	 * @return {@link Miscellaneous}
 	 */
 	public Miscellaneous updateMiscellaneous(Miscellaneous miscellaneous) {
-		long loginId = miscellaneous.getId();
 		miscellaneous.setLastUpdate(new Date());
+		long loginId = miscellaneous.getId();
 		ContentValues contentValues = fillContentValuesWithUpdatedMiscellaneousData(miscellaneous);
 		db.update(TABLE_MISCELLANEOUS, contentValues, DBManager.COLUMN_ID + "=" + loginId, null);
 		Cursor cursor = db.query(TABLE_MISCELLANEOUS, null, DBManager.COLUMN_ID + "=" + loginId, null, null, null, null);
@@ -176,8 +175,9 @@ public class MiscellaneousManager {
 		miscellaneous.setActive(cursor.getInt(1) == 0 ? false : true);
 		miscellaneous.setCreateTime(new Date(cursor.getLong(2)));
 		miscellaneous.setLastUpdate(new Date(cursor.getLong(3)));
-		miscellaneous.setText(cursor.getString(4));
-		miscellaneous.setDescription(cursor.getString(5));
+		miscellaneous.setBackendId(cursor.getLong(4));
+		miscellaneous.setText(cursor.getString(5));
+		miscellaneous.setDescription(cursor.getString(6));
 		return miscellaneous;
 	}
 	

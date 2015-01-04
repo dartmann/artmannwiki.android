@@ -156,8 +156,8 @@ public class LoginManager {
 	 * @return {@link Login}
 	 */
 	public Login updateLogin(Login login) {
-		long loginId = login.getId();
 		login.setLastUpdate(new Date());
+		long loginId = login.getId();
 		ContentValues contentValues = fillContentValuesWithUpdatedLoginData(login);
 		db.update(TABLE_LOGIN, contentValues, DBManager.COLUMN_ID + "=" + loginId, null);
 		Cursor cursor = db.query(TABLE_LOGIN, null, DBManager.COLUMN_ID + "=" + loginId, null, null, null, null);
@@ -178,9 +178,10 @@ public class LoginManager {
 		login.setActive(cursor.getInt(1) == 0 ? false : true);
 		login.setCreateTime(new Date(cursor.getLong(2)));
 		login.setLastUpdate(new Date(cursor.getLong(3)));
-		login.setUsername(cursor.getString(4));
-		login.setPassword(cursor.getString(5));
-		login.setDescription(cursor.getString(6));
+		login.setBackendId(cursor.getLong(4));
+		login.setUsername(cursor.getString(5));
+		login.setPassword(cursor.getString(6));
+		login.setDescription(cursor.getString(7));
 		return login;
 	}
 	

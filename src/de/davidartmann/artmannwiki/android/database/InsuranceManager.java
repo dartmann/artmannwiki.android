@@ -170,8 +170,8 @@ public class InsuranceManager {
 	 * @return {@link Insurance}
 	 */
 	public Insurance updateInsurance(Insurance insurance) {
-		long insuranceId = insurance.getId();
 		insurance.setLastUpdate(new Date());
+		long insuranceId = insurance.getId();
 		ContentValues contentValues = fillContenValuesWithUpdatedInsuranceData(insurance);
 		db.update(TABLE_INSURANCE, contentValues, DBManager.COLUMN_ID + "=" + insuranceId, null);
 		Cursor cursor = db.query(TABLE_INSURANCE, null, DBManager.COLUMN_ID + "=" + insuranceId, null, null, null, null);
@@ -192,9 +192,10 @@ public class InsuranceManager {
 		insurance.setActive(cursor.getInt(1) == 0 ? false : true);
 		insurance.setCreateTime(new Date(cursor.getLong(2)));
 		insurance.setLastUpdate(new Date(cursor.getLong(3)));
-		insurance.setName(cursor.getString(4));
-		insurance.setKind(cursor.getString(5));
-		insurance.setMembershipId(cursor.getString(6));
+		insurance.setBackendId(cursor.getLong(4));
+		insurance.setName(cursor.getString(5));
+		insurance.setKind(cursor.getString(6));
+		insurance.setMembershipId(cursor.getString(7));
 		return insurance;
 	}
 	

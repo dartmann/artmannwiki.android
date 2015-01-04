@@ -169,8 +169,8 @@ public class DeviceManager {
 	 * @return {@link Device}
 	 */
 	public Device updateDevice(Device device) {
-		long deviceId = device.getId();
 		device.setLastUpdate(new Date());
+		long deviceId = device.getId();
 		ContentValues contentValues = fillContenValuesWithUpdatedDeviceData(device);
 		db.update(TABLE_DEVICE, contentValues, DBManager.COLUMN_ID + "=" + deviceId, null);
 		Cursor cursor = db.query(TABLE_DEVICE, null, DBManager.COLUMN_ID + "=" + deviceId, null, null, null, null);

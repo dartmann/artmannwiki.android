@@ -1,6 +1,5 @@
 package de.davidartmann.artmannwiki.android.newentities;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +9,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -138,14 +138,13 @@ public class NewAccount extends Activity {
 		}
 		if (!owner.isEmpty() && !iban.isEmpty() && !bic.isEmpty() && !pin.isEmpty()) {
 			Account a = (Account) getIntent().getSerializableExtra("account");
-			a.setOwner(ownerEditText.getText().toString().trim());
-			a.setIban(ibanEditText.getText().toString().trim());
-			a.setBic(bicEditText.getText().toString().trim());
-			a.setPin(pinEditText.getText().toString().trim());
-			a.setLastUpdate(new Date());
+			a.setOwner(owner);
+			a.setIban(iban);
+			a.setBic(bic);
+			a.setPin(pin);
 			accountManager = new AccountManager(this);
 			accountManager.openWritable(this);
-			accountManager.updateAccount(a);
+			a = accountManager.updateAccount(a);
 			accountManager.close();
 			createOrUpdateInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_ACCOUNT+a.getBackendId());
 			Toast.makeText(this, "Bankkonto erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
@@ -163,6 +162,7 @@ public class NewAccount extends Activity {
 			ownerEditText.setText(a.getOwner());
 			ibanEditText.setText(a.getIban());
 			bicEditText.setText(a.getBic());
+			pinEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 			pinEditText.setText(a.getPin());
 		} else {
 			setTitle("Neues Bankkonto");
@@ -197,7 +197,6 @@ public class NewAccount extends Activity {
 		if (!owner.isEmpty() && !iban.isEmpty() && !bic.isEmpty() && !pin.isEmpty()) {
 			Account a = new Account(owner,iban, bic, pin);
 			a.setActive(true);
-			a.setCreateTime(new Date());
 			accountManager = new AccountManager(this);
 			accountManager.openWritable(this);
 			a = accountManager.addAccount(a);

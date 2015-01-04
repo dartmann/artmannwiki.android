@@ -165,8 +165,8 @@ public class EmailManager {
 	 * @return {@link Email}
 	 */
 	public Email updateEmail(Email email) {
-		long emailId = email.getId();
 		email.setLastUpdate(new Date());
+		long emailId = email.getId();
 		ContentValues contentValues = fillContenValuesWithUpdatedEmailData(email);
 		db.update(TABLE_EMAIL, contentValues, DBManager.COLUMN_ID + "=" + emailId, null);
 		Cursor cursor = db.query(TABLE_EMAIL, null, DBManager.COLUMN_ID + "=" + emailId, null, null, null, null);
