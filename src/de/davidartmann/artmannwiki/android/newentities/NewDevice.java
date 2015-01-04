@@ -65,12 +65,12 @@ public class NewDevice extends Activity {
     }
     
     /**
-	 * Method to send the created or updated device to the backend.
+	 * Method to send the created device to the backend.
 	 * Via a Volley {@link JsonObjectRequest}
 	 * @param d ({@link Device})
 	 * @param url ({@link String})
 	 */
-	private void createOrUpdateInBackend(final Device d, String url) {
+	private void createInBackend(final Device d, String url) {
 		JSONObject jDevice = new JSONObject();
 		try {
 			jDevice.put("active", d.isActive());
@@ -91,6 +91,49 @@ public class NewDevice extends Activity {
 		            	   deviceManager.openWritable(NewDevice.this);
 		            	   deviceManager.addBackendId(d.getId(), response.getLong("id"));
 		            	   deviceManager.close();
+		               } catch (JSONException e) {
+		            	   e.printStackTrace();
+		               }
+		           }
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					VolleyLog.e("Error: ", error.getMessage());					
+				}
+			}) 	{
+		       	public Map<String, String> getHeaders() throws AuthFailureError {
+		           	HashMap<String, String> headers = new HashMap<String, String>();
+		           	headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+		       		headers.put(BackendConstants.CONTENT_TYPE, BackendConstants.APPLICATION_JSON);
+		       		return headers;
+		       	}
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
+	}
+	
+	/**
+	 * Method to send the updated device to the backend.
+	 * Via a Volley {@link JsonObjectRequest}
+	 * @param d ({@link Device})
+	 * @param url ({@link String})
+	 */
+	private void updateInBackend(final Device d, String url) {
+		JSONObject jDevice = new JSONObject();
+		try {
+			jDevice.put("active", d.isActive());
+			jDevice.put("name", d.getName());
+			jDevice.put("number", d.getNumber());
+			jDevice.put("pin", d.getPin());
+			jDevice.put("puk", d.getPuk());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jDevice, 
+			new Response.Listener<JSONObject>() {
+				public void onResponse(JSONObject response) {
+		               try {
+		            	   VolleyLog.v("Response:%n %s", response.toString(4));
 		               } catch (JSONException e) {
 		            	   e.printStackTrace();
 		               }
@@ -147,7 +190,7 @@ public class NewDevice extends Activity {
 			deviceManager.openWritable(this);
 			d = deviceManager.updateDevice(d);
 			deviceManager.close();
-			createOrUpdateInBackend(d, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_DEVICE+d.getBackendId());
+			updateInBackend(d, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_DEVICE+d.getBackendId());
 			Toast.makeText(this, "Gerät erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
         }
@@ -203,7 +246,7 @@ public class NewDevice extends Activity {
 			deviceManager.openWritable(this);
 			d = deviceManager.addDevice(d);
 			deviceManager.close();
-			createOrUpdateInBackend(d, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_DEVICE);
+			createInBackend(d, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_DEVICE);
 			Toast.makeText(this, "Gerät erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}

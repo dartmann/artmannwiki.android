@@ -271,7 +271,7 @@ public class SingleEntitySearch extends Activity {
 						accountManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = accountManager.softDeleteAccount(a);
 						accountManager.close();
-						softDeleteInBackend(a, "http://213.165.81.7:8080/ArtmannWiki/rest/account/post/update/"+a.getBackendId());
+						softDeleteAccountInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_ACCOUNT+a.getBackendId());
 						goBackToCategoryListSearch();
 						if (deletedSuccessfully) {
 							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
@@ -293,6 +293,7 @@ public class SingleEntitySearch extends Activity {
 						deviceManager.openWritable(SingleEntitySearch.this);
 						deletedSuccessfully = deviceManager.softDeleteDevice(d);
 						deviceManager.close();
+						//softDeleteDeviceInBackend(d, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_DEVICE+d.getBackendId());
 						goBackToCategoryListSearch();
 						if (deletedSuccessfully) {
 							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
@@ -394,11 +395,10 @@ public class SingleEntitySearch extends Activity {
 	
 	/**
 	 * Method to <i>softdelete</i> an {@link Account} in the backend.
-	 * -> Update it to inactive.
 	 * @param a ({@link Account})
 	 * @param url ({@link String})
 	 */
-	private void softDeleteInBackend(final Account a, String url) {
+	private void softDeleteAccountInBackend(final Account a, String url) {
 		JSONObject jAccount = new JSONObject();
 		try {
 			jAccount.put("active", false);
@@ -412,7 +412,11 @@ public class SingleEntitySearch extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jAccount, 
 				new Response.Listener<JSONObject>() {
 					public void onResponse(JSONObject response) {
-						// void controller, so nothing to do here
+						try {
+							VolleyLog.v("Response:%n %s", response.toString(4));
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
 		           	}
 				}, 	new Response.ErrorListener() {
 					@Override

@@ -62,12 +62,12 @@ public class NewInsurance extends Activity {
 	}
 	
 	/**
-	 * Method to send the created or updated insurance to the backend.
+	 * Method to send the created insurance to the backend.
 	 * Via a Volley {@link JsonObjectRequest}
 	 * @param i ({@link Insurance})
 	 * @param url ({@link String})
 	 */
-	private void createOrUpdateInBackend(final Insurance i, String url) {
+	private void createInBackend(final Insurance i, String url) {
 		JSONObject jInsurance = new JSONObject();
 		try {
 			jInsurance.put("active", i.isActive());
@@ -87,6 +87,48 @@ public class NewInsurance extends Activity {
 		            	   insuranceManager.openWritable(NewInsurance.this);
 		            	   insuranceManager.addBackendId(i.getId(), response.getLong("id"));
 		            	   insuranceManager.close();
+		               } catch (JSONException e) {
+		            	   e.printStackTrace();
+		               }
+		           }
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					VolleyLog.e("Error: ", error.getMessage());					
+				}
+			}) 	{
+		       	public Map<String, String> getHeaders() throws AuthFailureError {
+		           	HashMap<String, String> headers = new HashMap<String, String>();
+		           	headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+		       		headers.put(BackendConstants.CONTENT_TYPE, BackendConstants.APPLICATION_JSON);
+		       		return headers;
+		       	}
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
+	}
+	
+	/**
+	 * Method to send the updated insurance to the backend.
+	 * Via a Volley {@link JsonObjectRequest}
+	 * @param i ({@link Insurance})
+	 * @param url ({@link String})
+	 */
+	private void updateInBackend(final Insurance i, String url) {
+		JSONObject jInsurance = new JSONObject();
+		try {
+			jInsurance.put("active", i.isActive());
+			jInsurance.put("name", i.getName());
+			jInsurance.put("kind", i.getKind());
+			jInsurance.put("membershipId", i.getMembershipId());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jInsurance, 
+			new Response.Listener<JSONObject>() {
+				public void onResponse(JSONObject response) {
+		               try {
+		            	   VolleyLog.v("Response:%n %s", response.toString(4));
 		               } catch (JSONException e) {
 		            	   e.printStackTrace();
 		               }
@@ -136,7 +178,7 @@ public class NewInsurance extends Activity {
 			insuranceManager.openWritable(this);
 			i = insuranceManager.updateInsurance(i);
 			insuranceManager.close();
-			createOrUpdateInBackend(i, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_INSURANCE+i.getBackendId());
+			updateInBackend(i, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_INSURANCE+i.getBackendId());
 			Toast.makeText(this, "Versicherung erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
@@ -184,7 +226,7 @@ public class NewInsurance extends Activity {
 			insuranceManager.openWritable(this);
 			i = insuranceManager.addInsurance(i);
 			insuranceManager.close();
-			createOrUpdateInBackend(i, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_INSURANCE);
+			createInBackend(i, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_INSURANCE);
 			Toast.makeText(this, "Versicherung erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}

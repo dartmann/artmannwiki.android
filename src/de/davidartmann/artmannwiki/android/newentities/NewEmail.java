@@ -63,12 +63,12 @@ public class NewEmail extends Activity {
     }
 
     /**
-	 * Method to send the created or updated email to the backend.
+	 * Method to send the created email to the backend.
 	 * Via a Volley {@link JsonObjectRequest}
 	 * @param e ({@link Email})
 	 * @param url ({@link String})
 	 */
-	private void createOrUpdateInBackend(final Email e, String url) {
+	private void createInBackend(final Email e, String url) {
 		JSONObject jEmail = new JSONObject();
 		try {
 			jEmail.put("active", e.isActive());
@@ -85,9 +85,49 @@ public class NewEmail extends Activity {
 		            	   VolleyLog.v("Response:%n %s", response.toString(4));
 		            	   emailManager = new EmailManager(NewEmail.this);
 		            	   emailManager.openWritable(NewEmail.this);
-		            	   System.out.println("Email Id vom Backend: "+e.getId());
 		            	   emailManager.addBackendId(e.getId(), response.getLong("id"));
 		            	   emailManager.close();
+		               } catch (JSONException e) {
+		            	   e.printStackTrace();
+		               }
+		           }
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					VolleyLog.e("Error: ", error.getMessage());					
+				}
+			}) 	{
+		       	public Map<String, String> getHeaders() throws AuthFailureError {
+		           	HashMap<String, String> headers = new HashMap<String, String>();
+		           	headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+		       		headers.put(BackendConstants.CONTENT_TYPE, BackendConstants.APPLICATION_JSON);
+		       		return headers;
+		       	}
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
+	}
+	
+	/**
+	 * Method to send the updated email to the backend.
+	 * Via a Volley {@link JsonObjectRequest}
+	 * @param e ({@link Email})
+	 * @param url ({@link String})
+	 */
+	private void updateInBackend(final Email e, String url) {
+		JSONObject jEmail = new JSONObject();
+		try {
+			jEmail.put("active", e.isActive());
+			jEmail.put("emailaddress", e.getEmailaddress());
+			jEmail.put("password", e.getPassword());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jEmail, 
+			new Response.Listener<JSONObject>() {
+				public void onResponse(JSONObject response) {
+		               try {
+		            	   VolleyLog.v("Response:%n %s", response.toString(4));
 		               } catch (JSONException e) {
 		            	   e.printStackTrace();
 		               }
@@ -136,7 +176,7 @@ public class NewEmail extends Activity {
 			emailManager.openWritable(this);
 			e = emailManager.updateEmail(e);
 			emailManager.close();
-			createOrUpdateInBackend(e, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_EMAIL+e.getBackendId());
+			updateInBackend(e, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_EMAIL+e.getBackendId());
 			Toast.makeText(this, "E-Mail erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
@@ -189,7 +229,7 @@ public class NewEmail extends Activity {
         	emailManager.openWritable(this);
         	e = emailManager.addEmail(e);
         	emailManager.close();
-        	createOrUpdateInBackend(e, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_EMAIL);
+        	createInBackend(e, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_EMAIL);
         	Toast.makeText(this, "E-Mail erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
         	goBackToMain();
         }

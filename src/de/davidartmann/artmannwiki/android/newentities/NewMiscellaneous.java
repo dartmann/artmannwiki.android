@@ -59,12 +59,12 @@ public class NewMiscellaneous extends Activity {
 	}
 	
 	/**
-	 * Method to send the created or updated account to the backend.
+	 * Method to send the created miscellaneous to the backend.
 	 * Via a Volley {@link JsonObjectRequest}
 	 * @param m ({@link Miscellaneous})
 	 * @param url ({@link String})
 	 */
-	private void createOrUpdateInBackend(final Miscellaneous m, String url) {
+	private void createInBackend(final Miscellaneous m, String url) {
 		JSONObject jMiscellaneous = new JSONObject();
 		try {
 			jMiscellaneous.put("active", m.isActive());
@@ -83,6 +83,47 @@ public class NewMiscellaneous extends Activity {
 		            	   miscellaneousManager.openWritable(NewMiscellaneous.this);
 		            	   miscellaneousManager.addBackendId(m.getId(), response.getLong("id"));
 		            	   miscellaneousManager.close();
+		               } catch (JSONException e) {
+		            	   e.printStackTrace();
+		               }
+		           }
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					VolleyLog.e("Error: ", error.getMessage());					
+				}
+			}) 	{
+		       	public Map<String, String> getHeaders() throws AuthFailureError {
+		           	HashMap<String, String> headers = new HashMap<String, String>();
+		           	headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+		       		headers.put(BackendConstants.CONTENT_TYPE, BackendConstants.APPLICATION_JSON);
+		       		return headers;
+		       	}
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
+	}
+	
+	/**
+	 * Method to send the updated account to the backend.
+	 * Via a Volley {@link JsonObjectRequest}
+	 * @param m ({@link Miscellaneous})
+	 * @param url ({@link String})
+	 */
+	private void updateInBackend(final Miscellaneous m, String url) {
+		JSONObject jMiscellaneous = new JSONObject();
+		try {
+			jMiscellaneous.put("active", m.isActive());
+			jMiscellaneous.put("text", m.getText());
+			jMiscellaneous.put("description", m.getDescription());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jMiscellaneous, 
+			new Response.Listener<JSONObject>() {
+				public void onResponse(JSONObject response) {
+		               try {
+		            	   VolleyLog.v("Response:%n %s", response.toString(4));
 		               } catch (JSONException e) {
 		            	   e.printStackTrace();
 		               }
@@ -126,7 +167,7 @@ public class NewMiscellaneous extends Activity {
 			miscellaneousManager.openWritable(this);
 			m = miscellaneousManager.updateMiscellaneous(m);
 			miscellaneousManager.close();
-			createOrUpdateInBackend(m, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_MISCELLANEOUS+m.getBackendId());
+			createInBackend(m, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_MISCELLANEOUS+m.getBackendId());
 			Toast.makeText(this, "Notiz erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
@@ -168,7 +209,7 @@ public class NewMiscellaneous extends Activity {
 			miscellaneousManager.openWritable(this);
 			m = miscellaneousManager.addMiscellaneous(m);
 			miscellaneousManager.close();
-			createOrUpdateInBackend(m, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_MISCELLANEOUS);
+			updateInBackend(m, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_MISCELLANEOUS);
 			Toast.makeText(this, "Text erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
         	goBackToMain();
 		}

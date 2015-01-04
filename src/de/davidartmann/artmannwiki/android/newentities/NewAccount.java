@@ -65,12 +65,12 @@ public class NewAccount extends Activity {
 	}
 	
 	/**
-	 * Method to send the created or updated account to the backend.
+	 * Method to send the created account to the backend.
 	 * Via a Volley {@link JsonObjectRequest}
 	 * @param a ({@link Account})
 	 * @param url ({@link String})
 	 */
-	private void createOrUpdateInBackend(final Account a, String url) {
+	private void createInBackend(final Account a, String url) {
 		JSONObject jAccount = new JSONObject();
 		try {
 			jAccount.put("active", a.isActive());
@@ -91,6 +91,49 @@ public class NewAccount extends Activity {
 		            	   accountManager.openWritable(NewAccount.this);
 		            	   accountManager.addBackendId(a.getId(), response.getLong("id"));
 		            	   accountManager.close();
+		               } catch (JSONException e) {
+		            	   e.printStackTrace();
+		               }
+		           }
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					VolleyLog.e("Error: ", error.getMessage());					
+				}
+			}) 	{
+		       	public Map<String, String> getHeaders() throws AuthFailureError {
+		           	HashMap<String, String> headers = new HashMap<String, String>();
+		           	headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+		       		headers.put(BackendConstants.CONTENT_TYPE, BackendConstants.APPLICATION_JSON);
+		       		return headers;
+		       	}
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
+	}
+	
+	/**
+	 * Method to send the created account to the backend.
+	 * Via a Volley {@link JsonObjectRequest}
+	 * @param a ({@link Account})
+	 * @param url ({@link String})
+	 */
+	private void updateInBackend(final Account a, String url) {
+		JSONObject jAccount = new JSONObject();
+		try {
+			jAccount.put("active", a.isActive());
+			jAccount.put("owner", a.getOwner());
+			jAccount.put("iban", a.getIban());
+			jAccount.put("bic", a.getBic());
+			jAccount.put("pin", a.getPin());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jAccount, 
+			new Response.Listener<JSONObject>() {
+				public void onResponse(JSONObject response) {
+		               try {
+		            	   VolleyLog.v("Response:%n %s", response.toString(4));
 		               } catch (JSONException e) {
 		            	   e.printStackTrace();
 		               }
@@ -146,7 +189,7 @@ public class NewAccount extends Activity {
 			accountManager.openWritable(this);
 			a = accountManager.updateAccount(a);
 			accountManager.close();
-			createOrUpdateInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_ACCOUNT+a.getBackendId());
+			updateInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_ACCOUNT+a.getBackendId());
 			Toast.makeText(this, "Bankkonto erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
@@ -201,7 +244,7 @@ public class NewAccount extends Activity {
 			accountManager.openWritable(this);
 			a = accountManager.addAccount(a);
 			accountManager.close();
-			createOrUpdateInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_ACCOUNT);
+			createInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_ACCOUNT);
 			Toast.makeText(this, "Bankkonto erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
