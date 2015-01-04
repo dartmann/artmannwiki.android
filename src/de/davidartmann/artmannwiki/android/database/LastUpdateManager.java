@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import de.davidartmann.artmannwiki.android.LoginMain;
-import de.davidartmann.artmannwiki.android.model.Account;
 
 public class LastUpdateManager {
 	
