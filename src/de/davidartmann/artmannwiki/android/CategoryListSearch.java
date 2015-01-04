@@ -56,7 +56,6 @@ public class CategoryListSearch extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_categorylist_search);
-		// customize the spinner
 		spinnerItems = new ArrayList<String>();
 		values = new String[] {"Bankkonto", "Gerät", "E-Mail", "Versicherung", "Login", "Diverse/Notizen"};
 		for(String s : values) {
@@ -69,11 +68,9 @@ public class CategoryListSearch extends Activity {
 		insuranceManager = new InsuranceManager(this);
 		loginManager = new LoginManager(this);
 		miscellaneousManager = new MiscellaneousManager(this);
-		// find the components
 		spinner = (Spinner) findViewById(R.id.activity_categorylist_search_spinner);
 		listView = (ListView) findViewById(R.id.activity_categorylist_search_listview);
-		// add features
-			//TODO: customize the spinner (images like the save list)
+		//TODO: customize the spinner (images like the save list)
 		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.custom_spinner, spinnerItems);
 		spinner.setAdapter(spinnerAdapter);
 		addSpinnerOnItemSelectListener();
@@ -143,7 +140,7 @@ public class CategoryListSearch extends Activity {
 		});
 	}
 
-	//TODO: implement the viewholder pattern
+	//TODO: implement the viewholder pattern AND try to put this in a extra thread because it last much too long
 	private void showSelectedEntities(String s) {
 		if (s.equals("Bankkonto")) {
 			selectedSpinnerItem = values[0];

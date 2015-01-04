@@ -3,16 +3,6 @@ package de.davidartmann.artmannwiki.android;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -25,6 +15,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.backend.BackendConstants;
 import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
@@ -54,7 +52,6 @@ public class SingleEntitySearch extends Activity {
 	private TextView secretTextView;
 	private Intent intent;
 	private int intentSerializableExtra;
-	private boolean deletedSuccessfully;
 	private AccountManager accountManager;
 	private DeviceManager deviceManager;
 	private EmailManager emailManager;
@@ -65,7 +62,6 @@ public class SingleEntitySearch extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search_singleentity);
-		// find the activity components
 		normalTextView = (TextView) findViewById(R.id.activity_search_singleentity_textview_normal);
 		button = (Button) findViewById(R.id.activity_search_singleentity_textview_button);
 		secretTextView = (TextView) findViewById(R.id.activity_search_singleentity_textview_secrets);
@@ -267,17 +263,8 @@ public class SingleEntitySearch extends Activity {
 				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						Account a = (Account) intent.getSerializableExtra("account");
-						accountManager = new AccountManager(SingleEntitySearch.this);
-						accountManager.openWritable(SingleEntitySearch.this);
-						deletedSuccessfully = accountManager.softDeleteAccount(a);
-						accountManager.close();
-						softDeleteAccountInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_ACCOUNT+a.getBackendId());
+						softDeleteAccountInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.SOFT_DELETE_ACCOUNT_BY_ID+a.getBackendId());
 						goBackToCategoryListSearch();
-						if (deletedSuccessfully) {
-							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
-						} else {
-							Toast.makeText(getBaseContext(), "Eintrag konnte nicht gelöscht werden", Toast.LENGTH_SHORT).show();
-						}
 					}
 				}).setNegativeButton("Nein", null);
 				alert.show();
@@ -289,17 +276,8 @@ public class SingleEntitySearch extends Activity {
 				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						Device d = (Device) intent.getSerializableExtra("device");
-						deviceManager = new DeviceManager(SingleEntitySearch.this);
-						deviceManager.openWritable(SingleEntitySearch.this);
-						deletedSuccessfully = deviceManager.softDeleteDevice(d);
-						deviceManager.close();
-						//softDeleteDeviceInBackend(d, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_DEVICE+d.getBackendId());
+						softDeleteDeviceInBackend(d, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.SOFT_DELETE_DEVICE_BY_ID+d.getBackendId());
 						goBackToCategoryListSearch();
-						if (deletedSuccessfully) {
-							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
-						} else {
-							Toast.makeText(getBaseContext(), "Eintrag konnte nicht gelöscht werden", Toast.LENGTH_SHORT).show();
-						}
 					}
 				}).setNegativeButton("Nein", null);
 				alert1.show();
@@ -311,16 +289,8 @@ public class SingleEntitySearch extends Activity {
 				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						Email e = (Email) intent.getSerializableExtra("email");
-						emailManager = new EmailManager(SingleEntitySearch.this);
-						emailManager.openWritable(SingleEntitySearch.this);
-						deletedSuccessfully = emailManager.softDeleteEmail(e);
-						emailManager.close();
+						softDeleteEmailInBackend(e, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.SOFT_DELETE_EMAIL_BY_ID+e.getBackendId());
 						goBackToCategoryListSearch();
-						if (deletedSuccessfully) {
-							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
-						} else {
-							Toast.makeText(getBaseContext(), "Eintrag konnte nicht gelöscht werden", Toast.LENGTH_SHORT).show();
-						}
 					}
 				}).setNegativeButton("Nein", null);
 				alert2.show();
@@ -332,16 +302,8 @@ public class SingleEntitySearch extends Activity {
 				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						Insurance i = (Insurance) intent.getSerializableExtra("insurance");
-						insuranceManager = new InsuranceManager(SingleEntitySearch.this);
-						insuranceManager.openWritable(SingleEntitySearch.this);
-						deletedSuccessfully = insuranceManager.softDeleteEmail(i);
-						insuranceManager.close();
+						softDeleteInsuranceInBackend(i, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.SOFT_DELETE_INSURANCE_BY_ID+i.getBackendId());
 						goBackToCategoryListSearch();
-						if (deletedSuccessfully) {
-							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
-						} else {
-							Toast.makeText(getBaseContext(), "Eintrag konnte nicht gelöscht werden", Toast.LENGTH_SHORT).show();
-						}
 					}
 				}).setNegativeButton("Nein", null);
 				alert3.show();
@@ -353,16 +315,8 @@ public class SingleEntitySearch extends Activity {
 				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						Login l = (Login) intent.getSerializableExtra("login");
-						loginManager = new LoginManager(SingleEntitySearch.this);
-						loginManager.openWritable(SingleEntitySearch.this);
-						deletedSuccessfully = loginManager.softDeleteLogin(l);
-						loginManager.close();
+						softDeleteLoginInBackend(l, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.SOFT_DELETE_LOGIN_BY_ID+l.getBackendId());
 						goBackToCategoryListSearch();
-						if (deletedSuccessfully) {
-							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
-						} else {
-							Toast.makeText(getBaseContext(), "Eintrag konnte nicht gelöscht werden", Toast.LENGTH_SHORT).show();
-						}
 					}
 				}).setNegativeButton("Nein", null);
 				alert4.show();
@@ -374,16 +328,8 @@ public class SingleEntitySearch extends Activity {
 				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						Miscellaneous m = (Miscellaneous) intent.getSerializableExtra("miscellaneous");
-						miscellaneousManager = new MiscellaneousManager(SingleEntitySearch.this);
-						miscellaneousManager.openWritable(SingleEntitySearch.this);
-						deletedSuccessfully = miscellaneousManager.softDeleteLogin(m);
-						miscellaneousManager.close();
+						softDeleteMiscellaneousInBackend(m, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.SOFT_DELETE_MISCELLANEOUS_BY_ID+m.getBackendId());
 						goBackToCategoryListSearch();
-						if (deletedSuccessfully) {
-							Toast.makeText(getBaseContext(), "Eintrag erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
-						} else {
-							Toast.makeText(getBaseContext(), "Eintrag konnte nicht gelöscht werden", Toast.LENGTH_SHORT).show();
-						}
 					}
 				}).setNegativeButton("Nein", null);
 				alert5.show();
@@ -399,39 +345,172 @@ public class SingleEntitySearch extends Activity {
 	 * @param url ({@link String})
 	 */
 	private void softDeleteAccountInBackend(final Account a, String url) {
-		JSONObject jAccount = new JSONObject();
-		try {
-			jAccount.put("active", false);
-			jAccount.put("owner", a.getOwner());
-			jAccount.put("iban", a.getIban());
-			jAccount.put("bic", a.getBic());
-			jAccount.put("pin", a.getPin());
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
-		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jAccount, 
-				new Response.Listener<JSONObject>() {
-					public void onResponse(JSONObject response) {
-						try {
-							VolleyLog.v("Response:%n %s", response.toString(4));
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-		           	}
-				}, 	new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						VolleyLog.e("Error: ", error.getMessage());					
-					}
-				}) 	{
-			       	public Map<String, String> getHeaders() throws AuthFailureError {
-			       		HashMap<String, String> headers = new HashMap<String, String>();
-			       		headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
-			       		headers.put(BackendConstants.CONTENT_TYPE, BackendConstants.APPLICATION_JSON);
-			       		return headers;
-			       	}
-			};
-			VolleyRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
+		StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+		            new Response.Listener<String>() {
+		    public void onResponse(String response) {
+		    	accountManager = new AccountManager(SingleEntitySearch.this);
+            	accountManager.openWritable(SingleEntitySearch.this);
+            	accountManager.softDeleteAccount(a);
+            	accountManager.close();
+		    }
+			}, new Response.ErrorListener() {
+		    public void onErrorResponse(VolleyError error) {
+		    	VolleyLog.e("Error: ", error.getMessage());
+				Toast.makeText(SingleEntitySearch.this, "Konnte Konto nicht löschen, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
+		    }
+			}) {
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+                return headers;  
+			}
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(stringRequest);
+	}
+	
+	/**
+	 * Method to <i>softdelete</i> an {@link Device} in the backend.
+	 * @param d ({@link Device})
+	 * @param url ({@link String})
+	 */
+	private void softDeleteDeviceInBackend(final Device d, String url) {
+		StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+		            new Response.Listener<String>() {
+		    public void onResponse(String response) {
+		    	deviceManager = new DeviceManager(SingleEntitySearch.this);
+		    	deviceManager.openWritable(SingleEntitySearch.this);
+		    	deviceManager.softDeleteDevice(d);
+		    	deviceManager.close();
+		    }
+			}, new Response.ErrorListener() {
+		    public void onErrorResponse(VolleyError error) {
+		    	VolleyLog.e("Error: ", error.getMessage());
+				Toast.makeText(SingleEntitySearch.this, "Konnte Gerät nicht löschen, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
+		    }
+			}) {
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+                return headers;  
+			}
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(stringRequest);
+	}
+	
+	/**
+	 * Method to <i>softdelete</i> an {@link Email} in the backend.
+	 * @param e ({@link Email})
+	 * @param url ({@link String})
+	 */
+	private void softDeleteEmailInBackend(final Email e, String url) {
+		StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+		            new Response.Listener<String>() {
+		    public void onResponse(String response) {
+		    	emailManager = new EmailManager(SingleEntitySearch.this);
+		    	emailManager.openWritable(SingleEntitySearch.this);
+		    	emailManager.softDeleteEmail(e);
+		    	emailManager.close();
+		    }
+			}, new Response.ErrorListener() {
+		    public void onErrorResponse(VolleyError error) {
+		    	VolleyLog.e("Error: ", error.getMessage());
+				Toast.makeText(SingleEntitySearch.this, "Konnte E-Mail nicht löschen, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
+		    }
+			}) {
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+                return headers;  
+			}
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(stringRequest);
+	}
+	
+	/**
+	 * Method to <i>softdelete</i> an {@link Insurance} in the backend.
+	 * @param i ({@link Insurance})
+	 * @param url ({@link String})
+	 */
+	private void softDeleteInsuranceInBackend(final Insurance i, String url) {
+		StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+		            new Response.Listener<String>() {
+		    public void onResponse(String response) {
+		    	insuranceManager = new InsuranceManager(SingleEntitySearch.this);
+		    	insuranceManager.openWritable(SingleEntitySearch.this);
+		    	insuranceManager.softDeleteInsurance(i);
+		    	insuranceManager.close();
+		    }
+			}, new Response.ErrorListener() {
+		    public void onErrorResponse(VolleyError error) {
+		    	VolleyLog.e("Error: ", error.getMessage());
+				Toast.makeText(SingleEntitySearch.this, "Konnte Versicherung nicht löschen, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
+		    }
+			}) {
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+                return headers;  
+			}
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(stringRequest);
+	}
+	
+	/**
+	 * Method to <i>softdelete</i> an {@link Login} in the backend.
+	 * @param l ({@link Login})
+	 * @param url ({@link String})
+	 */
+	private void softDeleteLoginInBackend(final Login l, String url) {
+		StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+		            new Response.Listener<String>() {
+		    public void onResponse(String response) {
+		    	loginManager = new LoginManager(SingleEntitySearch.this);
+		    	loginManager.openWritable(SingleEntitySearch.this);
+		    	loginManager.softDeleteLogin(l);
+		    	loginManager.close();
+		    }
+			}, new Response.ErrorListener() {
+		    public void onErrorResponse(VolleyError error) {
+		    	VolleyLog.e("Error: ", error.getMessage());
+				Toast.makeText(SingleEntitySearch.this, "Konnte Login nicht löschen, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
+		    }
+			}) {
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+                return headers;  
+			}
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(stringRequest);
+	}
+	
+	/**
+	 * Method to <i>softdelete</i> an {@link Miscellaneous} in the backend.
+	 * @param m ({@link Miscellaneous})
+	 * @param url ({@link String})
+	 */
+	private void softDeleteMiscellaneousInBackend(final Miscellaneous m, String url) {
+		StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+		            new Response.Listener<String>() {
+		    public void onResponse(String response) {
+		    	miscellaneousManager = new MiscellaneousManager(SingleEntitySearch.this);
+		    	miscellaneousManager.openWritable(SingleEntitySearch.this);
+		    	miscellaneousManager.softDeleteLogin(m);
+		    	miscellaneousManager.close();
+		    }
+			}, new Response.ErrorListener() {
+		    public void onErrorResponse(VolleyError error) {
+		    	VolleyLog.e("Error: ", error.getMessage());
+				Toast.makeText(SingleEntitySearch.this, "Konnte Notiz nicht löschen, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
+		    }
+			}) {
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+                return headers;  
+			}
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(stringRequest);
 	}
 	
 	private void goBackToCategoryListSearch() {

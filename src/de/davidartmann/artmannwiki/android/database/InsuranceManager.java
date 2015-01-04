@@ -134,7 +134,7 @@ public class InsuranceManager {
 	 * @param insurance
 	 * @return true if Insurance could be soft deleted, false otherwise.
 	 */
-	public boolean softDeleteEmail(Insurance insurance) {
+	public boolean softDeleteInsurance(Insurance insurance) {
 		long id = insurance.getId();
 		Insurance toDeactive = getInsuranceById(id);
 		if (toDeactive != null) {
