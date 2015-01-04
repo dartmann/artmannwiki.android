@@ -187,8 +187,9 @@ public class EmailManager {
 		email.setActive(cursor.getInt(1) == 0 ? false : true);
 		email.setCreateTime(new Date(cursor.getLong(2)));
 		email.setLastUpdate(new Date(cursor.getLong(3)));
-		email.setEmailaddress(cursor.getString(4));
-		email.setPassword(cursor.getString(5));
+		email.setBackendId(cursor.getLong(4));
+		email.setEmailaddress(cursor.getString(5));
+		email.setPassword(cursor.getString(6));
 		return email;
 	}
 	

@@ -43,7 +43,6 @@ public class NewAccount extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_account);
-		// find components
 		ownerEditText = (EditText) findViewById(R.id.activity_new_account_edittext_owner);
 		ibanEditText = (EditText) findViewById(R.id.activity_new_account_edittext_iban);
 		bicEditText = (EditText) findViewById(R.id.activity_new_account_edittext_bic);
@@ -59,7 +58,7 @@ public class NewAccount extends Activity {
 				if (getIntent().getBooleanExtra("update", false)) {
 					updateAccount(ownerEditText, ibanEditText, bicEditText, pinEditText);
 				} else {
-					validate(ownerEditText, ibanEditText, bicEditText, pinEditText);
+					createAccount(ownerEditText, ibanEditText, bicEditText, pinEditText);
 				}
 			}
 		});
@@ -148,7 +147,7 @@ public class NewAccount extends Activity {
 			accountManager.openWritable(this);
 			accountManager.updateAccount(a);
 			accountManager.close();
-			createOrUpdateInBackend(a, "http://213.165.81.7:8080/ArtmannWiki/rest/account/post/update/"+a.getBackendId());
+			createOrUpdateInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_ACCOUNT+a.getBackendId());
 			Toast.makeText(this, "Bankkonto erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
@@ -170,7 +169,14 @@ public class NewAccount extends Activity {
 		}
 	}
 
-	private void validate(EditText ownerEditText2, EditText ibanEditText2, EditText bicEditText2, EditText pinEditText2) {
+	/**
+	 * Method to create a new {@link Account}
+	 * @param ownerEditText2
+	 * @param ibanEditText2
+	 * @param bicEditText2
+	 * @param pinEditText2
+	 */
+	private void createAccount(EditText ownerEditText2, EditText ibanEditText2, EditText bicEditText2, EditText pinEditText2) {
 		String owner = ownerEditText2.getText().toString().trim();
 		String iban = ibanEditText2.getText().toString().trim();
 		String bic = bicEditText2.getText().toString().trim();
@@ -196,7 +202,7 @@ public class NewAccount extends Activity {
 			accountManager.openWritable(this);
 			a = accountManager.addAccount(a);
 			accountManager.close();
-			createOrUpdateInBackend(a, "http://213.165.81.7:8080/ArtmannWiki/rest/account/post/add");
+			createOrUpdateInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_ACCOUNT);
 			Toast.makeText(this, "Bankkonto erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}

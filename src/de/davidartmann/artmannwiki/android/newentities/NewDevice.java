@@ -1,6 +1,11 @@
 package de.davidartmann.artmannwiki.android.newentities;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,8 +14,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.Choice;
+import de.davidartmann.artmannwiki.android.backend.BackendConstants;
+import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
 import de.davidartmann.artmannwiki.android.database.DeviceManager;
 import de.davidartmann.artmannwiki.android.model.Device;
 
@@ -28,7 +43,6 @@ public class NewDevice extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_device);
-        // find components
         deviceEditText = (EditText) findViewById(R.id.new_device_edittext_device);
         numberEditText = (EditText) findViewById(R.id.new_device_edittext_number);
         pinEditText = (EditText) findViewById(R.id.new_device_edittext_pin);
@@ -42,43 +56,128 @@ public class NewDevice extends Activity {
             
             public void onClick(View view) {
             	if (getIntent().getBooleanExtra("update", false)) {
-            		updateDevice();
+            		updateDevice(deviceEditText, numberEditText, pinEditText, pukEditText);
 				} else {
-					validate(deviceEditText, numberEditText, pinEditText, pukEditText);
+					createDevice(deviceEditText, numberEditText, pinEditText, pukEditText);
 				}
             }
         });
     }
-
-
-    protected void updateDevice() {
-		Device d = (Device) getIntent().getSerializableExtra("device");
-		d.setLastUpdate(new Date());
-		d.setName(deviceEditText.getText().toString().trim());
-		d.setNumber(numberEditText.getText().toString().trim());
-		d.setPin(pinEditText.getText().toString().trim());
-		d.setPuk(pukEditText.getText().toString().trim());
-		deviceManager = new DeviceManager(this);
-		deviceManager.openWritable(this);
-		deviceManager.updateDevice(d);
-		deviceManager.close();
-		Toast.makeText(this, "Gerät erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
-		goBackToMain();
+    
+    /**
+	 * Method to send the created or updated account to the backend.
+	 * Via a Volley {@link JsonObjectRequest}
+	 * @param d ({@link Device})
+	 * @param url ({@link String})
+	 */
+	private void createOrUpdateInBackend(final Device d, String url) {
+		JSONObject jDevice = new JSONObject();
+		try {
+			jDevice.put("active", d.isActive());
+			jDevice.put("name", d.getName());
+			jDevice.put("number", d.getNumber());
+			jDevice.put("pin", d.getPin());
+			jDevice.put("puk", d.getPuk());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jDevice, 
+			new Response.Listener<JSONObject>() {
+				public void onResponse(JSONObject response) {
+		               try {
+		            	   VolleyLog.v("Response:%n %s", response.toString(4));
+		            	   deviceManager = new DeviceManager(NewDevice.this);
+		            	   deviceManager.openWritable(NewDevice.this);
+		            	   deviceManager.addBackendId(d.getId(), response.getLong("id"));
+		            	   deviceManager.close();
+		               } catch (JSONException e) {
+		            	   e.printStackTrace();
+		               }
+		           }
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					VolleyLog.e("Error: ", error.getMessage());					
+				}
+			}) 	{
+		       	public Map<String, String> getHeaders() throws AuthFailureError {
+		           	HashMap<String, String> headers = new HashMap<String, String>();
+		           	headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+		       		headers.put(BackendConstants.CONTENT_TYPE, BackendConstants.APPLICATION_JSON);
+		       		return headers;
+		       	}
+		};
+		VolleyRequestQueue.getInstance(this).addToRequestQueue(jsonObjectRequest);
 	}
 
 
+    /**
+     * Method to update an existing {@link Device}
+     * @param deviceEditText2
+     * @param numberEditText2
+     * @param pinEditText2
+     * @param pukEditText2
+     */
+    private void updateDevice(EditText deviceEditText2, EditText numberEditText2, EditText pinEditText2, EditText pukEditText2) {
+    	String device = deviceEditText.getText().toString().trim();
+        String number = numberEditText.getText().toString().trim();
+        String pin = pinEditText.getText().toString().trim();
+        String puk = pukEditText.getText().toString().trim();
+        
+        if (device.isEmpty()) {
+			deviceEditText2.setError(pleaseFillField);
+		}
+        if (number.isEmpty()) {
+			numberEditText2.setError(pleaseFillField);
+		}
+        if (pin.isEmpty()) {
+			pinEditText2.setError(pleaseFillField);
+		}
+        if (puk.isEmpty()) {
+			pukEditText2.setError(pleaseFillField);
+		}
+        if (!pin.isEmpty() && !number.isEmpty() && !pin.isEmpty() && !puk.isEmpty()) {   
+	    	Device d = (Device) getIntent().getSerializableExtra("device");
+			d.setLastUpdate(new Date());
+			d.setName(deviceEditText.getText().toString().trim());
+			d.setNumber(numberEditText.getText().toString().trim());
+			d.setPin(pinEditText.getText().toString().trim());
+			d.setPuk(pukEditText.getText().toString().trim());
+			deviceManager = new DeviceManager(this);
+			deviceManager.openWritable(this);
+			deviceManager.updateDevice(d);
+			deviceManager.close();
+			createOrUpdateInBackend(d, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_DEVICE+d.getBackendId());
+			Toast.makeText(this, "Gerät erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+			goBackToMain();
+        }
+	}
+
+    /**
+	 * Method to fill the EditText fields with data. If editing was chosen before.
+	 */
 	private void checkIfUpdate() {
     	if (getIntent().getSerializableExtra("device") != null) {
-			Device d = (Device) getIntent().getSerializableExtra("device");
+			setTitle("Gerät aktualisieren");
+    		Device d = (Device) getIntent().getSerializableExtra("device");
 			deviceEditText.setText(d.getName());
 			numberEditText.setText(d.getNumber());
 			pinEditText.setText(d.getPin());
 			pukEditText.setText(d.getPuk());
+		} else {
+			setTitle("Neues Gerät");
 		}
 	}
 
-
-	protected void validate(EditText deviceEditText2, EditText numberEditText2,	EditText pinEditText2, EditText pukEditText2) {
+	/**
+	 * Method to create a new {@link Device}
+	 * @param deviceEditText2
+	 * @param numberEditText2
+	 * @param pinEditText2
+	 * @param pukEditText2
+	 */
+	private void createDevice(EditText deviceEditText2, EditText numberEditText2,	EditText pinEditText2, EditText pukEditText2) {
     	String device = deviceEditText.getText().toString().trim();
         String number = numberEditText.getText().toString().trim();
         String pin = pinEditText.getText().toString().trim();
@@ -102,13 +201,13 @@ public class NewDevice extends Activity {
 			d.setCreateTime(new Date());
 			deviceManager = new DeviceManager(this);
 			deviceManager.openWritable(this);
-			deviceManager.addDevice(d);
+			d = deviceManager.addDevice(d);
 			deviceManager.close();
+			createOrUpdateInBackend(d, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_DEVICE);
 			Toast.makeText(this, "Gerät erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
 	}
-
 
 	private void goBackToMain() {
 		Intent intent = new Intent(getBaseContext(), Choice.class);

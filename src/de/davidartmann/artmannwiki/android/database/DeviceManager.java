@@ -191,10 +191,11 @@ public class DeviceManager {
 		device.setActive(cursor.getInt(1) == 0 ? false : true);
 		device.setCreateTime(new Date(cursor.getLong(2)));
 		device.setLastUpdate(new Date(cursor.getLong(3)));
-		device.setName(cursor.getString(4));
-		device.setNumber(cursor.getString(5));
-		device.setPin(cursor.getString(6));
-		device.setPuk(cursor.getString(7));
+		device.setBackendId(cursor.getLong(4));
+		device.setName(cursor.getString(5));
+		device.setNumber(cursor.getString(6));
+		device.setPin(cursor.getString(7));
+		device.setPuk(cursor.getString(8));
 		return device;
 	}
 	
