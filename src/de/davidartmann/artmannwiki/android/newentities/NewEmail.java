@@ -1,5 +1,6 @@
 package de.davidartmann.artmannwiki.android.newentities;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import de.davidartmann.artmannwiki.android.Choice;
 import de.davidartmann.artmannwiki.android.backend.BackendConstants;
 import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
 import de.davidartmann.artmannwiki.android.database.EmailManager;
+import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 import de.davidartmann.artmannwiki.android.model.Email;
 
 
@@ -37,6 +39,7 @@ public class NewEmail extends Activity {
 	private EditText passwordRepeatEditText;
 	private Button saveButton;
 	private EmailManager emailManager;
+	private LastUpdateManager lastUpdateManager;
 	private String pleaseFillField;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +93,10 @@ public class NewEmail extends Activity {
 						e1.printStackTrace();
 					}
 		        	emailManager.close();
+		        	lastUpdateManager = new LastUpdateManager(NewEmail.this);
+		        	lastUpdateManager.openWritable(NewEmail.this);
+		        	lastUpdateManager.setLastUpdate(new Date().getTime());
+		        	lastUpdateManager.close();
 		        	Toast.makeText(NewEmail.this, "E-Mail erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 	           	}
 			}, new Response.ErrorListener() {
@@ -132,6 +139,10 @@ public class NewEmail extends Activity {
 					emailManager.openWritable(NewEmail.this);
 					emailManager.updateEmail(e);
 					emailManager.close();
+					lastUpdateManager = new LastUpdateManager(NewEmail.this);
+					lastUpdateManager.openWritable(NewEmail.this);
+		        	lastUpdateManager.setLastUpdate(new Date().getTime());
+		        	lastUpdateManager.close();
 					Toast.makeText(NewEmail.this, "E-Mail erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 		           	}
 			}, new Response.ErrorListener() {

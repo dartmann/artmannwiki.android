@@ -248,7 +248,6 @@ public class CategoryListSearch extends Activity {
 		searchView.setQueryHint(getString(R.string.categorylist_hint_search));
 		addOnQueryTextListener(searchView);
 		return true;
-        //return super.onCreateOptionsMenu(menu);
 	}
 
 	private void addOnQueryTextListener(SearchView searchView) {

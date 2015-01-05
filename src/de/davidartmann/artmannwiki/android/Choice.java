@@ -23,7 +23,6 @@ import com.android.volley.toolbox.StringRequest;
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.backend.BackendConstants;
 import de.davidartmann.artmannwiki.android.backend.SyncManager;
-import de.davidartmann.artmannwiki.android.backend.SyncTask;
 import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
 import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 
@@ -73,7 +72,7 @@ public class Choice extends Activity {
         int id = item.getItemId();
         switch (id) {
 		case R.id.menu_choice_action_sync:
-			checkLastUpdate(Request.Method.GET);
+			checkLastUpdate(Request.Method.GET, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_AND_SET_LAST_UPDATE);
 			return true;
 		case R.id.menu_choice_action_exit:
 			finish();
@@ -95,9 +94,7 @@ public class Choice extends Activity {
 
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void checkLastUpdate(int method) {
-		String url ="http://213.165.81.7:8080/ArtmannWiki/rest/lastupdate";
-
+	private void checkLastUpdate(int method, String url) {
 		StringRequest stringRequest = new StringRequest(method, url,
 		            new Response.Listener() {
 		    public void onResponse(Object response) {
@@ -106,6 +103,7 @@ public class Choice extends Activity {
 		    	lastUpdateManager.openReadable(Choice.this);
 		    	Long localLastUpdate = lastUpdateManager.getLastUpdate();
 		    	lastUpdateManager.close();
+		    	System.out.println("Lokale Zeit: "+localLastUpdate+" Backend Zeit: "+responseTime);
 		    	if (responseTime > localLastUpdate) {
 		    		Toast.makeText(Choice.this, "Update wird durchgeführt", Toast.LENGTH_SHORT).show();
 					new SyncManager().doAccountSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_ACCOUNTS_SINCE+localLastUpdate, responseTime);;

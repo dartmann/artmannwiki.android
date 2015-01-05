@@ -1,5 +1,6 @@
 package de.davidartmann.artmannwiki.android.newentities;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import de.davidartmann.artmannwiki.android.Choice;
 import de.davidartmann.artmannwiki.android.backend.BackendConstants;
 import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
 import de.davidartmann.artmannwiki.android.database.InsuranceManager;
+import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 import de.davidartmann.artmannwiki.android.model.Insurance;
 
 public class NewInsurance extends Activity {
@@ -36,6 +38,7 @@ public class NewInsurance extends Activity {
 	private EditText membershipIdEditText;
 	private Button saveButton;
 	private InsuranceManager insuranceManager;
+	private LastUpdateManager lastUpdateManager;
 	private String pleaseFillField;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +93,10 @@ public class NewInsurance extends Activity {
 						e1.printStackTrace();
 					}
 					insuranceManager.close();
+					lastUpdateManager = new LastUpdateManager(NewInsurance.this);
+					lastUpdateManager.openWritable(NewInsurance.this);
+		        	lastUpdateManager.setLastUpdate(new Date().getTime());
+		        	lastUpdateManager.close();
 					Toast.makeText(NewInsurance.this, "Versicherung erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 	           }
 			}, new Response.ErrorListener() {
@@ -133,6 +140,10 @@ public class NewInsurance extends Activity {
 					insuranceManager.openWritable(NewInsurance.this);
 					insuranceManager.updateInsurance(i);
 					insuranceManager.close();
+					lastUpdateManager = new LastUpdateManager(NewInsurance.this);
+					lastUpdateManager.openWritable(NewInsurance.this);
+		        	lastUpdateManager.setLastUpdate(new Date().getTime());
+		        	lastUpdateManager.close();
 					Toast.makeText(NewInsurance.this, "Versicherung erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 		           	}
 			}, new Response.ErrorListener() {

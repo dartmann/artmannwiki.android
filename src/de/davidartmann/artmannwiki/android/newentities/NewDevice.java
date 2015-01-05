@@ -1,5 +1,6 @@
 package de.davidartmann.artmannwiki.android.newentities;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import de.davidartmann.artmannwiki.android.Choice;
 import de.davidartmann.artmannwiki.android.backend.BackendConstants;
 import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
 import de.davidartmann.artmannwiki.android.database.DeviceManager;
+import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 import de.davidartmann.artmannwiki.android.model.Device;
 
 
@@ -38,6 +40,7 @@ public class NewDevice extends Activity {
 	private EditText pukEditText;
 	private Button saveButton;
 	private DeviceManager deviceManager;
+	private LastUpdateManager lastUpdateManager;
 	private String pleaseFillField;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +97,10 @@ public class NewDevice extends Activity {
 						e1.printStackTrace();
 					}
 					deviceManager.close();
+					lastUpdateManager = new LastUpdateManager(NewDevice.this);
+					lastUpdateManager.openWritable(NewDevice.this);
+		        	lastUpdateManager.setLastUpdate(new Date().getTime());
+		        	lastUpdateManager.close();
 					Toast.makeText(NewDevice.this, "Gerät erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 				}
 			}, new Response.ErrorListener() {
@@ -138,6 +145,10 @@ public class NewDevice extends Activity {
 					deviceManager.openWritable(NewDevice.this);
 					deviceManager.updateDevice(d);
 					deviceManager.close();
+					lastUpdateManager = new LastUpdateManager(NewDevice.this);
+					lastUpdateManager.openWritable(NewDevice.this);
+		        	lastUpdateManager.setLastUpdate(new Date().getTime());
+		        	lastUpdateManager.close();
 					Toast.makeText(NewDevice.this, "Gerät erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 				}
 			}, new Response.ErrorListener() {

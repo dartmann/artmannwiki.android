@@ -26,47 +26,46 @@ public class SyncManager {
 	private AccountManager accountManager;
 	private LastUpdateManager lastUpdateManager;
 	
-	public void doAccountSync(final Context c, String url, final Long timeToSync) {
+	public void doAccountSync(final Context c, String url, final Long newSyncTimeStamp) {
 		JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray> () {
 		    @Override
 		    public void onResponse(JSONArray response) {
 		    	accountManager = new AccountManager(c);
 		    	accountManager.openWritable(c);
-		    	// put all accounts from the db into a list for performance reasons
+		    	// put all accounts from the db into a list so we only need a single query
 		    	List<Account> accounts = accountManager.getAllAccounts();
-		    	// for every account in the response from the backend...
+		    	// for every account in the response...
 		        for (int j = 0; j < response.length(); j++) {
-		        	Account a = new Account();
+		        	Account backendAcc = new Account();
 					try {
 						// ...get one
 						JSONObject jAcc = (JSONObject) response.get(j);
 						System.out.println("JSON Account String: "+jAcc);
-						a.setId(jAcc.getLong("id"));
+						backendAcc.setId(jAcc.getLong("id"));
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-					System.out.println("AccountId umgewandelt: "+a.getId());
-					// get an account from the list
 					List<Account> tempList = new ArrayList<Account>();
-					for (Account tempAcc : accounts) {
+					// get an local account from the list
+					for (Account localAcc : accounts) {
 						// and compare his id with the one from the response
-						if (tempAcc.getId() == a.getId()) {
-							// if matches, update this
+						if (localAcc.getId() == backendAcc.getId()) {
+							// if it matches, update
 							System.out.println("UPDATE!");
 							//accountManager.updateAccount(a);
-							tempList.add(tempAcc);
+							tempList.add(localAcc);
 						}
 					}
 					accounts.removeAll(tempList);
 					// the remaining accounts in the list did not match...
 					tempList = new ArrayList<Account>();
-					for (Account tempAcc : accounts) {
+					for (Account localAcc : accounts) {
 						// (double check)
-						if (tempAcc.getId() != a.getId()) {
+						if (localAcc.getId() != backendAcc.getId()) {
 							// ... so they need to be newly created
 							System.out.println("CREATE!");
 							//accountManager.addAccount(tempAcc);
-							tempList.add(tempAcc);
+							tempList.add(localAcc);
 						}
 					}
 					accounts.removeAll(tempList);
@@ -74,7 +73,8 @@ public class SyncManager {
 		        if (accounts.isEmpty()) {
 		        	Toast.makeText(c, "Update der Bankkonten erfolgreich", Toast.LENGTH_SHORT).show();
 		        	lastUpdateManager = new LastUpdateManager(c);
-		        	lastUpdateManager.setLastUpdate(timeToSync);
+		        	lastUpdateManager.openWritable(c);
+		        	lastUpdateManager.setLastUpdate(newSyncTimeStamp);
 		        	lastUpdateManager.close();
 				} else {
 					Toast.makeText(c, "Update der Bankkonten nicht vollständig", Toast.LENGTH_SHORT).show();

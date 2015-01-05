@@ -1,5 +1,6 @@
 package de.davidartmann.artmannwiki.android.newentities;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.Choice;
 import de.davidartmann.artmannwiki.android.backend.BackendConstants;
 import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
+import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 import de.davidartmann.artmannwiki.android.database.LoginManager;
 import de.davidartmann.artmannwiki.android.model.Login;
 
@@ -38,6 +40,7 @@ public class NewLogin extends Activity {
 	private EditText descriptionEditText;
 	private Button saveButton;
 	private LoginManager loginManager;
+	private LastUpdateManager lastUpdateManager;
 	private String pleaseFillField;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,10 @@ public class NewLogin extends Activity {
 						e1.printStackTrace();
 					}
 		        	loginManager.close();
+		        	lastUpdateManager = new LastUpdateManager(NewLogin.this);
+		        	lastUpdateManager.openWritable(NewLogin.this);
+		        	lastUpdateManager.setLastUpdate(new Date().getTime());
+		        	lastUpdateManager.close();
 		        	Toast.makeText(NewLogin.this, "Login erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 				}
 			}, new Response.ErrorListener() {
@@ -136,6 +143,10 @@ public class NewLogin extends Activity {
 					loginManager.openWritable(NewLogin.this);
 					loginManager.updateLogin(l);
 					loginManager.close();
+					lastUpdateManager = new LastUpdateManager(NewLogin.this);
+					lastUpdateManager.openWritable(NewLogin.this);
+		        	lastUpdateManager.setLastUpdate(new Date().getTime());
+		        	lastUpdateManager.close();
 					Toast.makeText(NewLogin.this, "Login erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 	           	}
 			}, new Response.ErrorListener() {

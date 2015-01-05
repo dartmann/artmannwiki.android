@@ -67,4 +67,6 @@ public class BackendConstants {
 	public static final String SOFT_DELETE_MISCELLANEOUS_BY_ID ="/rest/miscellaneous/softdelete/";
 	public static final String ADD_MISCELLANEOUS = "/rest/miscellaneous/post/add";
 	public static final String UPDATE_MISCELLANEOUS = "/rest/miscellaneous/post/update/";
+	
+	public static final String GET_AND_SET_LAST_UPDATE = "/rest/lastupdate";
 }

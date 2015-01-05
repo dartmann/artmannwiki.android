@@ -1,5 +1,6 @@
 package de.davidartmann.artmannwiki.android.newentities;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import de.davidartmann.artmannwiki.android.Choice;
 import de.davidartmann.artmannwiki.android.backend.BackendConstants;
 import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
 import de.davidartmann.artmannwiki.android.database.AccountManager;
+import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 import de.davidartmann.artmannwiki.android.model.Account;
 
 public class NewAccount extends Activity {
@@ -38,6 +40,7 @@ public class NewAccount extends Activity {
 	private EditText pinEditText;
 	private Button saveButton;
 	private AccountManager accountManager;
+	private LastUpdateManager lastUpdateManager;
 	private String pleaseFillField;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +97,10 @@ public class NewAccount extends Activity {
 	               		e.printStackTrace();
 	               	}
 					accountManager.close();
+					lastUpdateManager = new LastUpdateManager(NewAccount.this);
+					lastUpdateManager.openWritable(NewAccount.this);
+		        	lastUpdateManager.setLastUpdate(new Date().getTime());
+		        	lastUpdateManager.close();
 					Toast.makeText(NewAccount.this, "Bankkonto erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 		        }
 			}, new Response.ErrorListener() {
@@ -138,6 +145,10 @@ public class NewAccount extends Activity {
 					accountManager.openWritable(NewAccount.this);
 					accountManager.updateAccount(a);
 					accountManager.close();
+					lastUpdateManager = new LastUpdateManager(NewAccount.this);
+					lastUpdateManager.openWritable(NewAccount.this);
+		        	lastUpdateManager.setLastUpdate(new Date().getTime());
+		        	lastUpdateManager.close();
 					Toast.makeText(NewAccount.this, "Bankkonto erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 				}
 			}, new Response.ErrorListener() {
@@ -187,10 +198,6 @@ public class NewAccount extends Activity {
 			a.setIban(iban);
 			a.setBic(bic);
 			a.setPin(pin);
-//			accountManager = new AccountManager(this);
-//			accountManager.openWritable(this);
-//			a = accountManager.updateAccount(a);
-//			accountManager.close();
 			updateInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_ACCOUNT+a.getBackendId());
 			goBackToMain();
 		}
@@ -241,10 +248,6 @@ public class NewAccount extends Activity {
 		if (!owner.isEmpty() && !iban.isEmpty() && !bic.isEmpty() && !pin.isEmpty()) {
 			Account a = new Account(owner,iban, bic, pin);
 			a.setActive(true);
-//			accountManager = new AccountManager(this);
-//			accountManager.openWritable(this);
-//			a = accountManager.addAccount(a);
-//			accountManager.close();
 			createInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_ACCOUNT);
 			goBackToMain();
 		}
