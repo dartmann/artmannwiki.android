@@ -352,6 +352,7 @@ public class SingleEntitySearch extends Activity {
             	accountManager.openWritable(SingleEntitySearch.this);
             	accountManager.softDeleteAccount(a);
             	accountManager.close();
+            	Toast.makeText(SingleEntitySearch.this, "Konto erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 		    }
 			}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
@@ -381,6 +382,7 @@ public class SingleEntitySearch extends Activity {
 		    	deviceManager.openWritable(SingleEntitySearch.this);
 		    	deviceManager.softDeleteDevice(d);
 		    	deviceManager.close();
+		    	Toast.makeText(SingleEntitySearch.this, "Gerät erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 		    }
 			}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
@@ -410,6 +412,7 @@ public class SingleEntitySearch extends Activity {
 		    	emailManager.openWritable(SingleEntitySearch.this);
 		    	emailManager.softDeleteEmail(e);
 		    	emailManager.close();
+		    	Toast.makeText(SingleEntitySearch.this, "E-Mail erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 		    }
 			}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
@@ -439,6 +442,7 @@ public class SingleEntitySearch extends Activity {
 		    	insuranceManager.openWritable(SingleEntitySearch.this);
 		    	insuranceManager.softDeleteInsurance(i);
 		    	insuranceManager.close();
+		    	Toast.makeText(SingleEntitySearch.this, "Versicherung erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 		    }
 			}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
@@ -468,6 +472,7 @@ public class SingleEntitySearch extends Activity {
 		    	loginManager.openWritable(SingleEntitySearch.this);
 		    	loginManager.softDeleteLogin(l);
 		    	loginManager.close();
+		    	Toast.makeText(SingleEntitySearch.this, "Login erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 		    }
 			}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
@@ -497,6 +502,7 @@ public class SingleEntitySearch extends Activity {
 		    	miscellaneousManager.openWritable(SingleEntitySearch.this);
 		    	miscellaneousManager.softDeleteLogin(m);
 		    	miscellaneousManager.close();
+		    	Toast.makeText(SingleEntitySearch.this, "Notiz erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 		    }
 			}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
