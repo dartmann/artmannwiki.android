@@ -167,7 +167,7 @@ public class NewMiscellaneous extends Activity {
 			miscellaneousManager.openWritable(this);
 			m = miscellaneousManager.updateMiscellaneous(m);
 			miscellaneousManager.close();
-			createInBackend(m, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_MISCELLANEOUS+m.getBackendId());
+			updateInBackend(m, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_MISCELLANEOUS+m.getBackendId());
 			Toast.makeText(this, "Notiz erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
@@ -209,7 +209,7 @@ public class NewMiscellaneous extends Activity {
 			miscellaneousManager.openWritable(this);
 			m = miscellaneousManager.addMiscellaneous(m);
 			miscellaneousManager.close();
-			updateInBackend(m, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_MISCELLANEOUS);
+			createInBackend(m, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_MISCELLANEOUS);
 			Toast.makeText(this, "Text erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
         	goBackToMain();
 		}

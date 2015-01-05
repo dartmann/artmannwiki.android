@@ -75,7 +75,7 @@ public class CategoryListSearch extends Activity {
 		spinner.setAdapter(spinnerAdapter);
 		addSpinnerOnItemSelectListener();
 		addListViewOnItemClickListener();
-		makeTestData();
+		//makeTestData();
 	}
 	
 	private void addListViewOnItemClickListener() {

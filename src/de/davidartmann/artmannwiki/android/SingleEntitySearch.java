@@ -264,7 +264,7 @@ public class SingleEntitySearch extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						Account a = (Account) intent.getSerializableExtra("account");
 						softDeleteAccountInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.SOFT_DELETE_ACCOUNT_BY_ID+a.getBackendId());
-						goBackToCategoryListSearch();
+						goBackToMain();
 					}
 				}).setNegativeButton("Nein", null);
 				alert.show();
@@ -277,7 +277,7 @@ public class SingleEntitySearch extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						Device d = (Device) intent.getSerializableExtra("device");
 						softDeleteDeviceInBackend(d, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.SOFT_DELETE_DEVICE_BY_ID+d.getBackendId());
-						goBackToCategoryListSearch();
+						goBackToMain();
 					}
 				}).setNegativeButton("Nein", null);
 				alert1.show();
@@ -290,7 +290,7 @@ public class SingleEntitySearch extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						Email e = (Email) intent.getSerializableExtra("email");
 						softDeleteEmailInBackend(e, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.SOFT_DELETE_EMAIL_BY_ID+e.getBackendId());
-						goBackToCategoryListSearch();
+						goBackToMain();
 					}
 				}).setNegativeButton("Nein", null);
 				alert2.show();
@@ -303,7 +303,7 @@ public class SingleEntitySearch extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						Insurance i = (Insurance) intent.getSerializableExtra("insurance");
 						softDeleteInsuranceInBackend(i, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.SOFT_DELETE_INSURANCE_BY_ID+i.getBackendId());
-						goBackToCategoryListSearch();
+						goBackToMain();
 					}
 				}).setNegativeButton("Nein", null);
 				alert3.show();
@@ -316,7 +316,7 @@ public class SingleEntitySearch extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						Login l = (Login) intent.getSerializableExtra("login");
 						softDeleteLoginInBackend(l, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.SOFT_DELETE_LOGIN_BY_ID+l.getBackendId());
-						goBackToCategoryListSearch();
+						goBackToMain();
 					}
 				}).setNegativeButton("Nein", null);
 				alert4.show();
@@ -329,7 +329,7 @@ public class SingleEntitySearch extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						Miscellaneous m = (Miscellaneous) intent.getSerializableExtra("miscellaneous");
 						softDeleteMiscellaneousInBackend(m, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.SOFT_DELETE_MISCELLANEOUS_BY_ID+m.getBackendId());
-						goBackToCategoryListSearch();
+						goBackToMain();
 					}
 				}).setNegativeButton("Nein", null);
 				alert5.show();
@@ -513,8 +513,8 @@ public class SingleEntitySearch extends Activity {
 		VolleyRequestQueue.getInstance(this).addToRequestQueue(stringRequest);
 	}
 	
-	private void goBackToCategoryListSearch() {
-		Intent intent = new Intent(getBaseContext(), CategoryListSearch.class);
+	private void goBackToMain() {
+		Intent intent = new Intent(getBaseContext(), Choice.class);
 		startActivity(intent);
 	}
 

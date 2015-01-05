@@ -13,7 +13,6 @@
         android:maxLength="25"
         android:inputType="text|textMultiLine"
         android:layout_width="fill_parent"
-        android:text="test"
         android:layout_height="wrap_content" />
     <EditText
         android:id="@+id/activity_new_account_edittext_iban"
@@ -22,7 +21,6 @@
         android:hint="@string/hint_iban"
         android:maxLength="25"
         android:layout_width="fill_parent"
-        android:text="test"
         android:layout_height="wrap_content" />
     <EditText
         android:id="@+id/activity_new_account_edittext_bic"
@@ -31,16 +29,14 @@
         android:hint="@string/hint_bic"
         android:maxLength="25"
         android:layout_width="fill_parent"
-        android:text="test"
         android:layout_height="wrap_content" />
     <EditText
         android:id="@+id/activity_new_account_edittext_pin"
-        android:inputType="textPassword"
+        android:inputType="numberPassword"
         android:maxLength="20"
         android:layout_below="@+id/activity_new_account_edittext_bic"
         android:hint="@string/hint_pin"
         android:layout_width="fill_parent"
-        android:text="test"
         android:layout_height="wrap_content" />
     <Button
         android:id="@+id/activity_new_account_button_save"

@@ -84,16 +84,16 @@ public class NewLogin extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jLogin, 
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
-		               try {
-		            	   VolleyLog.v("Response:%n %s", response.toString(4));
-		            	   loginManager = new LoginManager(NewLogin.this);
-		            	   loginManager.openWritable(NewLogin.this);
-		            	   loginManager.addBackendId(l.getId(), response.getLong("id"));
-		            	   loginManager.close();
-		               } catch (JSONException e) {
-		            	   e.printStackTrace();
-		               }
-		           }
+					try {
+	            	   VolleyLog.v("Response:%n %s", response.toString(4));
+	            	   loginManager = new LoginManager(NewLogin.this);
+	            	   loginManager.openWritable(NewLogin.this);
+	            	   loginManager.addBackendId(l.getId(), response.getLong("id"));
+	            	   loginManager.close();
+					} catch (JSONException e) {
+	            	   e.printStackTrace();
+					}
+	           }
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
@@ -186,7 +186,7 @@ public class NewLogin extends Activity {
 			loginManager.openWritable(this);
 			l = loginManager.updateLogin(l);
 			loginManager.close();
-			createInBackend(l, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_LOGIN+l.getBackendId());
+			updateInBackend(l, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_LOGIN+l.getBackendId());
 			Toast.makeText(this, "Login erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
@@ -240,7 +240,7 @@ public class NewLogin extends Activity {
         	loginManager.openWritable(this);
         	l = loginManager.addLogin(l);
         	loginManager.close();
-        	updateInBackend(l, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_LOGIN);
+        	createInBackend(l, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_LOGIN);
         	Toast.makeText(this, "Login erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
         }

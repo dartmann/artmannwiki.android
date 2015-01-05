@@ -30,7 +30,6 @@ public class CategoryListSaveArrayAdapter extends ArrayAdapter<String> {
 	}
 
 	@SuppressLint("InflateParams")
-	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder viewHolder;
 		/*
@@ -52,7 +51,6 @@ public class CategoryListSaveArrayAdapter extends ArrayAdapter<String> {
 			// just use the viewHolder
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		
 		
 		// String based on the position
 		String s = names.get(position);
@@ -77,7 +75,4 @@ public class CategoryListSaveArrayAdapter extends ArrayAdapter<String> {
 		}
 	    return convertView;
 	}
-	
-	
-
 }

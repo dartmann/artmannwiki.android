@@ -81,16 +81,16 @@ public class NewInsurance extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jInsurance, 
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
-		               try {
-		            	   VolleyLog.v("Response:%n %s", response.toString(4));
-		            	   insuranceManager = new InsuranceManager(NewInsurance.this);
-		            	   insuranceManager.openWritable(NewInsurance.this);
-		            	   insuranceManager.addBackendId(i.getId(), response.getLong("id"));
-		            	   insuranceManager.close();
-		               } catch (JSONException e) {
-		            	   e.printStackTrace();
-		               }
-		           }
+	               try {
+	            	   VolleyLog.v("Response:%n %s", response.toString(4));
+	            	   insuranceManager = new InsuranceManager(NewInsurance.this);
+	            	   insuranceManager.openWritable(NewInsurance.this);
+	            	   insuranceManager.addBackendId(i.getId(), response.getLong("id"));
+	            	   insuranceManager.close();
+	               } catch (JSONException e) {
+	            	   e.printStackTrace();
+	               }
+	           }
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
