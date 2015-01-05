@@ -17,8 +17,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.google.gson.JsonSyntaxException;
-
 import de.davidartmann.artmannwiki.android.database.AccountManager;
 import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 import de.davidartmann.artmannwiki.android.model.Account;
@@ -44,8 +42,6 @@ public class SyncManager {
 						JSONObject jAcc = (JSONObject) response.get(j);
 						System.out.println("JSON Account String: "+jAcc);
 						a.setId(jAcc.getLong("id"));
-					} catch (JsonSyntaxException e) {
-						e.printStackTrace();
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
