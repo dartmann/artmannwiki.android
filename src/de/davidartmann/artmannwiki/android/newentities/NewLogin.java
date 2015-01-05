@@ -84,20 +84,22 @@ public class NewLogin extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jLogin, 
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
-					try {
-	            	   VolleyLog.v("Response:%n %s", response.toString(4));
-	            	   loginManager = new LoginManager(NewLogin.this);
-	            	   loginManager.openWritable(NewLogin.this);
-	            	   loginManager.addBackendId(l.getId(), response.getLong("id"));
-	            	   loginManager.close();
-					} catch (JSONException e) {
-	            	   e.printStackTrace();
+					loginManager = new LoginManager(NewLogin.this);
+		        	loginManager.openWritable(NewLogin.this);
+		        	Login tempLog = loginManager.addLogin(l);
+		        	try {
+						loginManager.addBackendId(tempLog.getId(), response.getLong("id"));
+					} catch (JSONException e1) {
+						e1.printStackTrace();
 					}
-	           }
+		        	loginManager.close();
+		        	Toast.makeText(NewLogin.this, "Login erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
+				}
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					VolleyLog.e("Error: ", error.getMessage());					
+					VolleyLog.e("Error: ", error.getMessage());
+					Toast.makeText(NewLogin.this, "Konnte Login nicht speichern, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
 				}
 			}) 	{
 		       	public Map<String, String> getHeaders() throws AuthFailureError {
@@ -130,16 +132,17 @@ public class NewLogin extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jLogin, 
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
-		               try {
-		            	   VolleyLog.v("Response:%n %s", response.toString(4));
-		               } catch (JSONException e) {
-		            	   e.printStackTrace();
-		               }
-		           }
+					loginManager = new LoginManager(NewLogin.this);
+					loginManager.openWritable(NewLogin.this);
+					loginManager.updateLogin(l);
+					loginManager.close();
+					Toast.makeText(NewLogin.this, "Login erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+	           	}
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					VolleyLog.e("Error: ", error.getMessage());					
+					VolleyLog.e("Error: ", error.getMessage());
+					Toast.makeText(NewLogin.this, "Konnte Login nicht aktualisieren, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
 				}
 			}) 	{
 		       	public Map<String, String> getHeaders() throws AuthFailureError {
@@ -182,12 +185,11 @@ public class NewLogin extends Activity {
         	l.setDescription(description);
         	l.setPassword(password);
         	l.setUsername(username);
-			loginManager = new LoginManager(this);
-			loginManager.openWritable(this);
-			l = loginManager.updateLogin(l);
-			loginManager.close();
+//			loginManager = new LoginManager(this);
+//			loginManager.openWritable(this);
+//			l = loginManager.updateLogin(l);
+//			loginManager.close();
 			updateInBackend(l, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_LOGIN+l.getBackendId());
-			Toast.makeText(this, "Login erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
 	}
@@ -203,6 +205,7 @@ public class NewLogin extends Activity {
 			passwordEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 			passwordRepeatEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 			passwordEditText.setText(l.getPassword());
+			descriptionEditText.setText(l.getDescription());
 		} else {
 			setTitle("Neuer Login");
 		}
@@ -236,12 +239,11 @@ public class NewLogin extends Activity {
         if ((password.equals(passwordRepeat))&&((!username.isEmpty())&&(!description.isEmpty()))) {
         	Login l = new Login(username, password, description);
         	l.setActive(true);
-        	loginManager = new LoginManager(this);
-        	loginManager.openWritable(this);
-        	l = loginManager.addLogin(l);
-        	loginManager.close();
+//        	loginManager = new LoginManager(this);
+//        	loginManager.openWritable(this);
+//        	l = loginManager.addLogin(l);
+//        	loginManager.close();
         	createInBackend(l, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_LOGIN);
-        	Toast.makeText(this, "Login erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
         }
         else if (!(password.equals(passwordRepeat))){

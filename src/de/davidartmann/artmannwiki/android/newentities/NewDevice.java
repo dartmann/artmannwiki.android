@@ -85,20 +85,22 @@ public class NewDevice extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jDevice, 
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
-		               try {
-		            	   VolleyLog.v("Response:%n %s", response.toString(4));
-		            	   deviceManager = new DeviceManager(NewDevice.this);
-		            	   deviceManager.openWritable(NewDevice.this);
-		            	   deviceManager.addBackendId(d.getId(), response.getLong("id"));
-		            	   deviceManager.close();
-		               } catch (JSONException e) {
-		            	   e.printStackTrace();
-		               }
-		           }
+					deviceManager = new DeviceManager(NewDevice.this);
+					deviceManager.openWritable(NewDevice.this);
+					Device tempDev = deviceManager.addDevice(d);
+					try {
+						deviceManager.addBackendId(tempDev.getId(), response.getLong("id"));
+					} catch (JSONException e1) {
+						e1.printStackTrace();
+					}
+					deviceManager.close();
+					Toast.makeText(NewDevice.this, "Gerät erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
+				}
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					VolleyLog.e("Error: ", error.getMessage());					
+					VolleyLog.e("Error: ", error.getMessage());
+					Toast.makeText(NewDevice.this, "Konnte Gerät nicht speichern, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
 				}
 			}) 	{
 		       	public Map<String, String> getHeaders() throws AuthFailureError {
@@ -132,16 +134,17 @@ public class NewDevice extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jDevice, 
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
-		               try {
-		            	   VolleyLog.v("Response:%n %s", response.toString(4));
-		               } catch (JSONException e) {
-		            	   e.printStackTrace();
-		               }
-		           }
+					deviceManager = new DeviceManager(NewDevice.this);
+					deviceManager.openWritable(NewDevice.this);
+					deviceManager.updateDevice(d);
+					deviceManager.close();
+					Toast.makeText(NewDevice.this, "Gerät erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+				}
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					VolleyLog.e("Error: ", error.getMessage());					
+					VolleyLog.e("Error: ", error.getMessage());
+					Toast.makeText(NewDevice.this, "Konnte Gerät nicht aktualisieren, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
 				}
 			}) 	{
 		       	public Map<String, String> getHeaders() throws AuthFailureError {
@@ -186,12 +189,11 @@ public class NewDevice extends Activity {
 			d.setNumber(number);
 			d.setPin(pin);
 			d.setPuk(puk);
-			deviceManager = new DeviceManager(this);
-			deviceManager.openWritable(this);
-			d = deviceManager.updateDevice(d);
-			deviceManager.close();
+//			deviceManager = new DeviceManager(this);
+//			deviceManager.openWritable(this);
+//			d = deviceManager.updateDevice(d);
+//			deviceManager.close();
 			updateInBackend(d, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_DEVICE+d.getBackendId());
-			Toast.makeText(this, "Gerät erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
         }
 	}
@@ -242,12 +244,11 @@ public class NewDevice extends Activity {
         if (!pin.isEmpty() && !number.isEmpty() && !pin.isEmpty() && !puk.isEmpty()) {
 			Device d = new Device(device, number, pin, puk);
 			d.setActive(true);
-			deviceManager = new DeviceManager(this);
-			deviceManager.openWritable(this);
-			d = deviceManager.addDevice(d);
-			deviceManager.close();
+//			deviceManager = new DeviceManager(this);
+//			deviceManager.openWritable(this);
+//			d = deviceManager.addDevice(d);
+//			deviceManager.close();
 			createInBackend(d, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_DEVICE);
-			Toast.makeText(this, "Gerät erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
 	}

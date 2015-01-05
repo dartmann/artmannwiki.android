@@ -81,20 +81,22 @@ public class NewEmail extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jEmail, 
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
-		               try {
-		            	   VolleyLog.v("Response:%n %s", response.toString(4));
-		            	   emailManager = new EmailManager(NewEmail.this);
-		            	   emailManager.openWritable(NewEmail.this);
-		            	   emailManager.addBackendId(e.getId(), response.getLong("id"));
-		            	   emailManager.close();
-		               } catch (JSONException e) {
-		            	   e.printStackTrace();
-		               }
-		           }
+					emailManager = new EmailManager(NewEmail.this);
+		        	emailManager.openWritable(NewEmail.this);
+		        	Email tempEmail = emailManager.addEmail(e);
+		        	try {
+						emailManager.addBackendId(tempEmail.getId(), response.getLong("id"));
+					} catch (JSONException e1) {
+						e1.printStackTrace();
+					}
+		        	emailManager.close();
+		        	Toast.makeText(NewEmail.this, "E-Mail erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
+	           	}
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					VolleyLog.e("Error: ", error.getMessage());					
+					VolleyLog.e("Error: ", error.getMessage());
+					Toast.makeText(NewEmail.this, "Konnte E-Mail nicht speichern, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
 				}
 			}) 	{
 		       	public Map<String, String> getHeaders() throws AuthFailureError {
@@ -126,16 +128,17 @@ public class NewEmail extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jEmail, 
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
-		               try {
-		            	   VolleyLog.v("Response:%n %s", response.toString(4));
-		               } catch (JSONException e) {
-		            	   e.printStackTrace();
-		               }
-		           }
+					emailManager = new EmailManager(NewEmail.this);
+					emailManager.openWritable(NewEmail.this);
+					emailManager.updateEmail(e);
+					emailManager.close();
+					Toast.makeText(NewEmail.this, "E-Mail erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+		           	}
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					VolleyLog.e("Error: ", error.getMessage());					
+					VolleyLog.e("Error: ", error.getMessage());
+					Toast.makeText(NewEmail.this, "Konnte E-Mail nicht aktualisieren, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
 				}
 			}) 	{
 		       	public Map<String, String> getHeaders() throws AuthFailureError {
@@ -172,12 +175,11 @@ public class NewEmail extends Activity {
         	Email e = (Email) getIntent().getSerializableExtra("email");
         	e.setEmailaddress(email);
         	e.setPassword(password);
-			emailManager = new EmailManager(this);
-			emailManager.openWritable(this);
-			e = emailManager.updateEmail(e);
-			emailManager.close();
+//			emailManager = new EmailManager(this);
+//			emailManager.openWritable(this);
+//			e = emailManager.updateEmail(e);
+//			emailManager.close();
 			updateInBackend(e, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_EMAIL+e.getBackendId());
-			Toast.makeText(this, "E-Mail erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
         else if (!(email.isEmpty()&&password.isEmpty()&&passwordRepeat.isEmpty()) && !(password.equals(passwordRepeat))) {
@@ -225,12 +227,11 @@ public class NewEmail extends Activity {
         if (!email.isEmpty() && !password.isEmpty() && !passwordRepeat.isEmpty() && (password.equals(passwordRepeat))) {
         	Email e = new Email(email, password);
         	e.setActive(true);
-        	emailManager = new EmailManager(this);
-        	emailManager.openWritable(this);
-        	e = emailManager.addEmail(e);
-        	emailManager.close();
+//        	emailManager = new EmailManager(this);
+//        	emailManager.openWritable(this);
+//        	e = emailManager.addEmail(e);
+//        	emailManager.close();
         	createInBackend(e, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_EMAIL);
-        	Toast.makeText(this, "E-Mail erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
         	goBackToMain();
         }
         else if (!(email.isEmpty()&&password.isEmpty()&&passwordRepeat.isEmpty()) && !(password.equals(passwordRepeat))) {

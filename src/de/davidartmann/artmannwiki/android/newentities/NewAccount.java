@@ -85,20 +85,22 @@ public class NewAccount extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jAccount, 
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
-		               try {
-		            	   VolleyLog.v("Response:%n %s", response.toString(4));
-		            	   accountManager = new AccountManager(NewAccount.this);
-		            	   accountManager.openWritable(NewAccount.this);
-		            	   accountManager.addBackendId(a.getId(), response.getLong("id"));
-		            	   accountManager.close();
-		               } catch (JSONException e) {
-		            	   e.printStackTrace();
-		               }
-		           }
+					accountManager = new AccountManager(NewAccount.this);
+	            	accountManager.openWritable(NewAccount.this);
+	            	Account tempAcc = accountManager.addAccount(a);
+					try {
+		            	accountManager.addBackendId(tempAcc.getId(), response.getLong("id"));
+	               	} catch (JSONException e) {
+	               		e.printStackTrace();
+	               	}
+					accountManager.close();
+					Toast.makeText(NewAccount.this, "Bankkonto erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
+		        }
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					VolleyLog.e("Error: ", error.getMessage());					
+					VolleyLog.e("Error: ", error.getMessage());
+					Toast.makeText(NewAccount.this, "Konnte Bankkonto nicht speichern, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
 				}
 			}) 	{
 		       	public Map<String, String> getHeaders() throws AuthFailureError {
@@ -132,16 +134,16 @@ public class NewAccount extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jAccount, 
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
-		               try {
-		            	   VolleyLog.v("Response:%n %s", response.toString(4));
-		               } catch (JSONException e) {
-		            	   e.printStackTrace();
-		               }
-		           }
+					accountManager = new AccountManager(NewAccount.this);
+					accountManager.openWritable(NewAccount.this);
+					accountManager.updateAccount(a);
+					accountManager.close();
+					Toast.makeText(NewAccount.this, "Bankkonto erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+				}
 			}, new Response.ErrorListener() {
-				@Override
 				public void onErrorResponse(VolleyError error) {
-					VolleyLog.e("Error: ", error.getMessage());					
+					VolleyLog.e("Error: ", error.getMessage());
+					Toast.makeText(NewAccount.this, "Konnte Bankkonto nicht aktualisieren, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
 				}
 			}) 	{
 		       	public Map<String, String> getHeaders() throws AuthFailureError {
@@ -185,12 +187,11 @@ public class NewAccount extends Activity {
 			a.setIban(iban);
 			a.setBic(bic);
 			a.setPin(pin);
-			accountManager = new AccountManager(this);
-			accountManager.openWritable(this);
-			a = accountManager.updateAccount(a);
-			accountManager.close();
+//			accountManager = new AccountManager(this);
+//			accountManager.openWritable(this);
+//			a = accountManager.updateAccount(a);
+//			accountManager.close();
 			updateInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_ACCOUNT+a.getBackendId());
-			Toast.makeText(this, "Bankkonto erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
 	}
@@ -240,12 +241,11 @@ public class NewAccount extends Activity {
 		if (!owner.isEmpty() && !iban.isEmpty() && !bic.isEmpty() && !pin.isEmpty()) {
 			Account a = new Account(owner,iban, bic, pin);
 			a.setActive(true);
-			accountManager = new AccountManager(this);
-			accountManager.openWritable(this);
-			a = accountManager.addAccount(a);
-			accountManager.close();
+//			accountManager = new AccountManager(this);
+//			accountManager.openWritable(this);
+//			a = accountManager.addAccount(a);
+//			accountManager.close();
 			createInBackend(a, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_ACCOUNT);
-			Toast.makeText(this, "Bankkonto erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
 		

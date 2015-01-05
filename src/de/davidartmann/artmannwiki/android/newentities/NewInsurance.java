@@ -81,20 +81,22 @@ public class NewInsurance extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jInsurance, 
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
-	               try {
-	            	   VolleyLog.v("Response:%n %s", response.toString(4));
-	            	   insuranceManager = new InsuranceManager(NewInsurance.this);
-	            	   insuranceManager.openWritable(NewInsurance.this);
-	            	   insuranceManager.addBackendId(i.getId(), response.getLong("id"));
-	            	   insuranceManager.close();
-	               } catch (JSONException e) {
-	            	   e.printStackTrace();
-	               }
+					insuranceManager = new InsuranceManager(NewInsurance.this);
+					insuranceManager.openWritable(NewInsurance.this);
+					Insurance tempIns = insuranceManager.addInsurance(i);
+					try {
+						insuranceManager.addBackendId(tempIns.getId(), response.getLong("id"));
+					} catch (JSONException e1) {
+						e1.printStackTrace();
+					}
+					insuranceManager.close();
+					Toast.makeText(NewInsurance.this, "Versicherung erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 	           }
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					VolleyLog.e("Error: ", error.getMessage());					
+					VolleyLog.e("Error: ", error.getMessage());
+					Toast.makeText(NewInsurance.this, "Konnte Versicherung nicht speichern, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
 				}
 			}) 	{
 		       	public Map<String, String> getHeaders() throws AuthFailureError {
@@ -127,16 +129,17 @@ public class NewInsurance extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jInsurance, 
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
-		               try {
-		            	   VolleyLog.v("Response:%n %s", response.toString(4));
-		               } catch (JSONException e) {
-		            	   e.printStackTrace();
-		               }
-		           }
+					insuranceManager = new InsuranceManager(NewInsurance.this);
+					insuranceManager.openWritable(NewInsurance.this);
+					insuranceManager.updateInsurance(i);
+					insuranceManager.close();
+					Toast.makeText(NewInsurance.this, "Versicherung erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+		           	}
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					VolleyLog.e("Error: ", error.getMessage());					
+					VolleyLog.e("Error: ", error.getMessage());
+					Toast.makeText(NewInsurance.this, "Konnte Versicherung nicht aktualisieren, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
 				}
 			}) 	{
 		       	public Map<String, String> getHeaders() throws AuthFailureError {
@@ -174,12 +177,11 @@ public class NewInsurance extends Activity {
 			i.setKind(kind);
 			i.setMembershipId(membershipId);
 			i.setName(name);
-			insuranceManager = new InsuranceManager(this);
-			insuranceManager.openWritable(this);
-			i = insuranceManager.updateInsurance(i);
-			insuranceManager.close();
+//			insuranceManager = new InsuranceManager(this);
+//			insuranceManager.openWritable(this);
+//			i = insuranceManager.updateInsurance(i);
+//			insuranceManager.close();
 			updateInBackend(i, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_INSURANCE+i.getBackendId());
-			Toast.makeText(this, "Versicherung erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
 	}
@@ -222,12 +224,11 @@ public class NewInsurance extends Activity {
 		if (!name.isEmpty() && !kind.isEmpty() && !membershipId.isEmpty()) {
 			Insurance i = new Insurance(name, kind, membershipId);
 			i.setActive(true);
-			insuranceManager = new InsuranceManager(this);
-			insuranceManager.openWritable(this);
-			i = insuranceManager.addInsurance(i);
-			insuranceManager.close();
+//			insuranceManager = new InsuranceManager(this);
+//			insuranceManager.openWritable(this);
+//			i = insuranceManager.addInsurance(i);
+//			insuranceManager.close();
 			createInBackend(i, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_INSURANCE);
-			Toast.makeText(this, "Versicherung erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
 	}

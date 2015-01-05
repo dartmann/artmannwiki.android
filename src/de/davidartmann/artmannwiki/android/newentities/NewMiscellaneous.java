@@ -77,20 +77,22 @@ public class NewMiscellaneous extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jMiscellaneous, 
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
-		               try {
-		            	   VolleyLog.v("Response:%n %s", response.toString(4));
-		            	   miscellaneousManager = new MiscellaneousManager(NewMiscellaneous.this);
-		            	   miscellaneousManager.openWritable(NewMiscellaneous.this);
-		            	   miscellaneousManager.addBackendId(m.getId(), response.getLong("id"));
-		            	   miscellaneousManager.close();
-		               } catch (JSONException e) {
-		            	   e.printStackTrace();
-		               }
-		           }
+					miscellaneousManager = new MiscellaneousManager(NewMiscellaneous.this);
+					miscellaneousManager.openWritable(NewMiscellaneous.this);
+					Miscellaneous tempMisc = miscellaneousManager.addMiscellaneous(m);
+					try {
+						miscellaneousManager.addBackendId(tempMisc.getId(), response.getLong("id"));
+					} catch (JSONException e1) {
+						e1.printStackTrace();
+					}
+					miscellaneousManager.close();
+					Toast.makeText(NewMiscellaneous.this, "Notiz erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
+				}
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					VolleyLog.e("Error: ", error.getMessage());					
+					VolleyLog.e("Error: ", error.getMessage());
+					Toast.makeText(NewMiscellaneous.this, "Konnte Notiz nicht speichern, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
 				}
 			}) 	{
 		       	public Map<String, String> getHeaders() throws AuthFailureError {
@@ -122,16 +124,17 @@ public class NewMiscellaneous extends Activity {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jMiscellaneous, 
 			new Response.Listener<JSONObject>() {
 				public void onResponse(JSONObject response) {
-		               try {
-		            	   VolleyLog.v("Response:%n %s", response.toString(4));
-		               } catch (JSONException e) {
-		            	   e.printStackTrace();
-		               }
-		           }
+					miscellaneousManager = new MiscellaneousManager(NewMiscellaneous.this);
+					miscellaneousManager.openWritable(NewMiscellaneous.this);
+					miscellaneousManager.updateMiscellaneous(m);
+					miscellaneousManager.close();
+					Toast.makeText(NewMiscellaneous.this, "Notiz erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
+	           	}
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					VolleyLog.e("Error: ", error.getMessage());					
+					VolleyLog.e("Error: ", error.getMessage());
+					Toast.makeText(NewMiscellaneous.this, "Konnte Notiz nicht aktualisieren, Fehler bei Übertragung zum Server", Toast.LENGTH_SHORT).show();
 				}
 			}) 	{
 		       	public Map<String, String> getHeaders() throws AuthFailureError {
@@ -163,12 +166,11 @@ public class NewMiscellaneous extends Activity {
 			Miscellaneous m = (Miscellaneous) getIntent().getSerializableExtra("miscellaneous");
 			m.setDescription(description);
 			m.setText(text);
-			miscellaneousManager = new MiscellaneousManager(this);
-			miscellaneousManager.openWritable(this);
-			m = miscellaneousManager.updateMiscellaneous(m);
-			miscellaneousManager.close();
+//			miscellaneousManager = new MiscellaneousManager(this);
+//			miscellaneousManager.openWritable(this);
+//			m = miscellaneousManager.updateMiscellaneous(m);
+//			miscellaneousManager.close();
 			updateInBackend(m, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.UPDATE_MISCELLANEOUS+m.getBackendId());
-			Toast.makeText(this, "Notiz erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 			goBackToMain();
 		}
 	}
@@ -205,12 +207,11 @@ public class NewMiscellaneous extends Activity {
 		if (!text.isEmpty() && !description.isEmpty()) {
 			Miscellaneous m = new Miscellaneous(text, description);
 			m.setActive(true);
-			miscellaneousManager = new MiscellaneousManager(this);
-			miscellaneousManager.openWritable(this);
-			m = miscellaneousManager.addMiscellaneous(m);
-			miscellaneousManager.close();
+//			miscellaneousManager = new MiscellaneousManager(this);
+//			miscellaneousManager.openWritable(this);
+//			m = miscellaneousManager.addMiscellaneous(m);
+//			miscellaneousManager.close();
 			createInBackend(m, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.ADD_MISCELLANEOUS);
-			Toast.makeText(this, "Text erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
         	goBackToMain();
 		}
 	}
