@@ -22,6 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.backend.BackendConstants;
+import de.davidartmann.artmannwiki.android.backend.SyncManager;
 import de.davidartmann.artmannwiki.android.backend.SyncTask;
 import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
 import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
@@ -104,9 +105,12 @@ public class Choice extends Activity {
 		    	lastUpdateManager = new LastUpdateManager(Choice.this);
 		    	lastUpdateManager.openReadable(Choice.this);
 		    	Long localLastUpdate = lastUpdateManager.getLastUpdate();
+		    	lastUpdateManager.close();
 		    	if (responseTime > localLastUpdate) {
 		    		Toast.makeText(Choice.this, "Update wird durchgeführt", Toast.LENGTH_SHORT).show();
-					new SyncTask().execute();
+					new SyncManager().doAccountSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_ACCOUNTS_SINCE+localLastUpdate, responseTime);;
+				} else {
+					Toast.makeText(Choice.this, "Kein Update nötig", Toast.LENGTH_SHORT).show();
 				}
 		    }
 		}, new Response.ErrorListener() {

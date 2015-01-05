@@ -145,7 +145,7 @@ public class CategoryListSearch extends Activity {
 		if (s.equals("Bankkonto")) {
 			selectedSpinnerItem = values[0];
 			accountManager.openReadable(this);
-			List<Account> accountList = accountManager.getAllAccounts();
+			List<Account> accountList = accountManager.getAllInactiveAccounts();
 			accountAdapter = new ArrayAdapter<Account>(this, android.R.layout.simple_list_item_1, accountList);
 			listView.setAdapter(accountAdapter);
 			accountAdapter.notifyDataSetChanged();

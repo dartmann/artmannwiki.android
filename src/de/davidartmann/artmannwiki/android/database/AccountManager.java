@@ -146,10 +146,10 @@ public class AccountManager {
 	}
 	
 	/**
-	 * Method to retrieve all {@link Account}s from the database.
+	 * Method to retrieve all inactive {@link Account}s from the database.
 	 * @return {@link List} with {@link Account}s
 	 */
-	public List<Account> getAllAccounts() {
+	public List<Account> getAllInactiveAccounts() {
 		List<Account> accountList = new ArrayList<Account>();
 		//columns parameter(second one) is also null because then all columns get returned
 		//and thats necessary, so the accountFromCursor() method works correctly
@@ -160,6 +160,23 @@ public class AccountManager {
 			if (account.isActive()) {
 				accountList.add(account);
 			}
+			cursor.moveToNext();
+		}
+        cursor.close();
+        return accountList;
+	}
+	
+	/**
+	 * Method to retrieve all inactive {@link Account}s from the database.
+	 * @return {@link List} with {@link Account}s
+	 */
+	public List<Account> getAllAccounts() {
+		List<Account> accountList = new ArrayList<Account>();
+		Cursor cursor = db.query(TABLE_ACCOUNT, null, null, null, null, null, null);
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()) {
+			Account account = accountFromCursor(cursor);
+			accountList.add(account);
 			cursor.moveToNext();
 		}
         cursor.close();

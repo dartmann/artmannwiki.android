@@ -18,6 +18,7 @@ public class BackendConstants {
 	public static final String GET_ACCOUNT_BY_ID = "/rest/account/get/{id}";
 	public static final String GET_ACCOUNT_BY_IBAN = "/rest/account/get/{iban}";
 	public static final String GET_ALL_ACCOUNTS = "/rest/account/get/all";
+	public static final String GET_ACCOUNTS_SINCE = "/rest/account/get/since/";
 	public static final String DELETE_ACCOUNT_BY_ID = "/rest/account/delete/{id}";
 	public static final String DELETE_ACCOUNT_BY_IBAN = "/rest/account/delete/{iban}";
 	public static final String SOFT_DELETE_ACCOUNT_BY_ID ="/rest/account/softdelete/";
