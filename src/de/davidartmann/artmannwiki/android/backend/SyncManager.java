@@ -1,6 +1,6 @@
 package de.davidartmann.artmannwiki.android.backend;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+
 import de.davidartmann.artmannwiki.android.database.AccountManager;
 import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 import de.davidartmann.artmannwiki.android.model.Account;
@@ -32,45 +33,39 @@ public class SyncManager {
 		    public void onResponse(JSONArray response) {
 		    	accountManager = new AccountManager(c);
 		    	accountManager.openWritable(c);
-		    	// put all accounts from the db into a list so we only need a single query
 		    	List<Account> accounts = accountManager.getAllAccounts();
-		    	// for every account in the response...
-		        for (int j = 0; j < response.length(); j++) {
+		    	int j;
+		        for (j = 0; j < response.length(); j++) {
 		        	Account backendAcc = new Account();
 					try {
-						// ...get one
 						JSONObject jAcc = (JSONObject) response.get(j);
 						System.out.println("JSON Account String: "+jAcc);
 						backendAcc.setId(jAcc.getLong("id"));
+						backendAcc.setActive(jAcc.getBoolean("active"));
+						backendAcc.setBic(jAcc.getString("bic"));
+						backendAcc.setIban(jAcc.getString("iban"));
+						backendAcc.setOwner(jAcc.getString("owner"));
+						backendAcc.setPin(jAcc.getString("pin"));
+						backendAcc.setCreateTime(new Date(jAcc.getLong("createTime")));
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-					List<Account> tempList = new ArrayList<Account>();
-					// get an local account from the list
+					int updates = 0;
 					for (Account localAcc : accounts) {
-						// and compare his id with the one from the response
-						if (localAcc.getId() == backendAcc.getId()) {
-							// if it matches, update
+						System.out.println("Check BackendId: "+localAcc.getBackendId());
+						if (localAcc.getBackendId() == backendAcc.getId()) {
 							System.out.println("UPDATE!");
-							//accountManager.updateAccount(a);
-							tempList.add(localAcc);
+							accountManager.updateAccount(backendAcc);
+							updates++;
 						}
 					}
-					accounts.removeAll(tempList);
-					// the remaining accounts in the list did not match...
-					tempList = new ArrayList<Account>();
-					for (Account localAcc : accounts) {
-						// (double check)
-						if (localAcc.getId() != backendAcc.getId()) {
-							// ... so they need to be newly created
-							System.out.println("CREATE!");
-							//accountManager.addAccount(tempAcc);
-							tempList.add(localAcc);
-						}
+					if (updates != response.length()) {
+						System.out.println("CREATE!");
+						Account a = accountManager.addAccount(backendAcc);
+						accountManager.addBackendId(a.getId(), backendAcc.getId());
 					}
-					accounts.removeAll(tempList);
 				}
-		        if (accounts.isEmpty()) {
+		        if (j == response.length()) {
 		        	Toast.makeText(c, "Update der Bankkonten erfolgreich", Toast.LENGTH_SHORT).show();
 		        	lastUpdateManager = new LastUpdateManager(c);
 		        	lastUpdateManager.openWritable(c);
