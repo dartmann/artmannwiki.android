@@ -139,7 +139,7 @@ public class AccountManager {
 		Account toDeactive = getAccountById(id);
 		if (toDeactive != null) {
 			toDeactive.setActive(false);
-			updateAccount(toDeactive);
+			updateAccountById(toDeactive);
 			return true;
 		}
 		return false;
@@ -184,16 +184,33 @@ public class AccountManager {
 	}
 	
 	/**
-	 * Method to update an existing {@link Account}.
+	 * Method to update an existing {@link Account} with its id.
 	 * @param account
 	 * @return {@link Account}
 	 */
-	public Account updateAccount(Account account) {
+	public Account updateAccountById(Account account) {
 		long accountId = account.getId();
 		account.setLastUpdate(new Date());
 		ContentValues contentValues = fillContentValuesWithUpdatedAccountData(account);
 		db.update(TABLE_ACCOUNT, contentValues, DBManager.COLUMN_ID + "=" + accountId, null);
 		Cursor cursor = db.query(TABLE_ACCOUNT, null, DBManager.COLUMN_ID + "=" + accountId, null, null, null, null);
+		cursor.moveToFirst();
+		Account returnAccount = accountFromCursor(cursor);
+		cursor.close();
+		return returnAccount;
+	}
+	
+	/**
+	 * Method to update an existing {@link Account} with its backendId.
+	 * @param account
+	 * @return {@link Account}
+	 */
+	public Account updateAccountByBackendId(Account account) {
+		long accountBackendId = account.getBackendId();
+		account.setLastUpdate(new Date());
+		ContentValues contentValues = fillContentValuesWithUpdatedAccountData(account);
+		db.update(TABLE_ACCOUNT, contentValues, DBManager.COLUMN_BACKEND_ID + "=" + accountBackendId, null);
+		Cursor cursor = db.query(TABLE_ACCOUNT, null, DBManager.COLUMN_BACKEND_ID + "=" + accountBackendId, null, null, null, null);
 		cursor.moveToFirst();
 		Account returnAccount = accountFromCursor(cursor);
 		cursor.close();

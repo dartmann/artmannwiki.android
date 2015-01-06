@@ -45,6 +45,8 @@ public class Choice extends Activity {
         
         wikiSearchButton = (Button) findViewById(R.id.choice_wiki_search);
         wikiNewEntityButton = (Button) findViewById(R.id.choice_wiki_new_entity);
+        
+        //TODO: make an automatic check if update is needed and inform the user
 
         wikiSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,13 +94,11 @@ public class Choice extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void checkLastUpdate(int method, String url) {
 		StringRequest stringRequest = new StringRequest(method, url,
-		            new Response.Listener() {
-		    public void onResponse(Object response) {
-		    	Long responseTime = Long.parseLong((String) response);
+		            new Response.Listener<String>() {
+		    public void onResponse(String response) {
+		    	Long responseTime = Long.parseLong(response);
 		    	lastUpdateManager = new LastUpdateManager(Choice.this);
 		    	lastUpdateManager.openReadable(Choice.this);
 		    	Long localLastUpdate = lastUpdateManager.getLastUpdate();
@@ -106,7 +106,8 @@ public class Choice extends Activity {
 		    	System.out.println("Lokale Zeit: "+localLastUpdate+" Backend Zeit: "+responseTime);
 		    	if (responseTime > localLastUpdate) {
 		    		Toast.makeText(Choice.this, "Update wird durchgeführt", Toast.LENGTH_SHORT).show();
-					new SyncManager().doAccountSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_ACCOUNTS_SINCE+localLastUpdate, responseTime);;
+					new SyncManager().doAccountSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_ACCOUNTS_SINCE+localLastUpdate, responseTime);
+					//TODO: other syncings
 				} else {
 					Toast.makeText(Choice.this, "Kein Update nötig", Toast.LENGTH_SHORT).show();
 				}

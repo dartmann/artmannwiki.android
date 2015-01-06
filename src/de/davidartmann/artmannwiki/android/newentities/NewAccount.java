@@ -1,6 +1,5 @@
 package de.davidartmann.artmannwiki.android.newentities;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,9 +26,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.Choice;
 import de.davidartmann.artmannwiki.android.backend.BackendConstants;
+import de.davidartmann.artmannwiki.android.backend.SyncManager;
 import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
 import de.davidartmann.artmannwiki.android.database.AccountManager;
-import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 import de.davidartmann.artmannwiki.android.model.Account;
 
 public class NewAccount extends Activity {
@@ -40,7 +39,6 @@ public class NewAccount extends Activity {
 	private EditText pinEditText;
 	private Button saveButton;
 	private AccountManager accountManager;
-	private LastUpdateManager lastUpdateManager;
 	private String pleaseFillField;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,10 +95,11 @@ public class NewAccount extends Activity {
 	               		e.printStackTrace();
 	               	}
 					accountManager.close();
-					lastUpdateManager = new LastUpdateManager(NewAccount.this);
-					lastUpdateManager.openWritable(NewAccount.this);
-		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-		        	lastUpdateManager.close();
+//					lastUpdateManager = new LastUpdateManager(NewAccount.this);
+//					lastUpdateManager.openWritable(NewAccount.this);
+//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
+//		        	lastUpdateManager.close();
+					new SyncManager().setLocalSyncTimeWithBackendResponse(NewAccount.this);
 					Toast.makeText(NewAccount.this, "Bankkonto erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 		        }
 			}, new Response.ErrorListener() {
@@ -143,12 +142,13 @@ public class NewAccount extends Activity {
 				public void onResponse(JSONObject response) {
 					accountManager = new AccountManager(NewAccount.this);
 					accountManager.openWritable(NewAccount.this);
-					accountManager.updateAccount(a);
+					accountManager.updateAccountById(a);
 					accountManager.close();
-					lastUpdateManager = new LastUpdateManager(NewAccount.this);
-					lastUpdateManager.openWritable(NewAccount.this);
-		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-		        	lastUpdateManager.close();
+//					lastUpdateManager = new LastUpdateManager(NewAccount.this);
+//					lastUpdateManager.openWritable(NewAccount.this);
+//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
+//		        	lastUpdateManager.close();
+					new SyncManager().setLocalSyncTimeWithBackendResponse(NewAccount.this);
 					Toast.makeText(NewAccount.this, "Bankkonto erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 				}
 			}, new Response.ErrorListener() {

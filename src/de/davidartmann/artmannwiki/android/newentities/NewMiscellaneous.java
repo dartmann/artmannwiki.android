@@ -1,6 +1,5 @@
 package de.davidartmann.artmannwiki.android.newentities;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,8 +24,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.Choice;
 import de.davidartmann.artmannwiki.android.backend.BackendConstants;
+import de.davidartmann.artmannwiki.android.backend.SyncManager;
 import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
-import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 import de.davidartmann.artmannwiki.android.database.MiscellaneousManager;
 import de.davidartmann.artmannwiki.android.model.Miscellaneous;
 
@@ -36,7 +35,6 @@ public class NewMiscellaneous extends Activity {
 	private EditText descriptionEditText;
 	private Button saveButton;
 	private MiscellaneousManager miscellaneousManager;
-	private LastUpdateManager lastUpdateManager;
 	private String pleaseFillField;
 	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,10 +87,11 @@ public class NewMiscellaneous extends Activity {
 						e1.printStackTrace();
 					}
 					miscellaneousManager.close();
-					lastUpdateManager = new LastUpdateManager(NewMiscellaneous.this);
-					lastUpdateManager.openWritable(NewMiscellaneous.this);
-		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-		        	lastUpdateManager.close();
+//					lastUpdateManager = new LastUpdateManager(NewMiscellaneous.this);
+//					lastUpdateManager.openWritable(NewMiscellaneous.this);
+//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
+//		        	lastUpdateManager.close();
+					new SyncManager().setLocalSyncTimeWithBackendResponse(NewMiscellaneous.this);
 					Toast.makeText(NewMiscellaneous.this, "Notiz erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 				}
 			}, new Response.ErrorListener() {
@@ -135,10 +134,11 @@ public class NewMiscellaneous extends Activity {
 					miscellaneousManager.openWritable(NewMiscellaneous.this);
 					miscellaneousManager.updateMiscellaneous(m);
 					miscellaneousManager.close();
-					lastUpdateManager = new LastUpdateManager(NewMiscellaneous.this);
-					lastUpdateManager.openWritable(NewMiscellaneous.this);
-		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-		        	lastUpdateManager.close();
+//					lastUpdateManager = new LastUpdateManager(NewMiscellaneous.this);
+//					lastUpdateManager.openWritable(NewMiscellaneous.this);
+//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
+//		        	lastUpdateManager.close();
+					new SyncManager().setLocalSyncTimeWithBackendResponse(NewMiscellaneous.this);
 					Toast.makeText(NewMiscellaneous.this, "Notiz erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 	           	}
 			}, new Response.ErrorListener() {
