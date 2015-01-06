@@ -95,10 +95,6 @@ public class NewAccount extends Activity {
 	               		e.printStackTrace();
 	               	}
 					accountManager.close();
-//					lastUpdateManager = new LastUpdateManager(NewAccount.this);
-//					lastUpdateManager.openWritable(NewAccount.this);
-//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-//		        	lastUpdateManager.close();
 					new SyncManager().setLocalSyncTimeWithBackendResponse(NewAccount.this);
 					Toast.makeText(NewAccount.this, "Bankkonto erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 		        }
@@ -144,10 +140,6 @@ public class NewAccount extends Activity {
 					accountManager.openWritable(NewAccount.this);
 					accountManager.updateAccountById(a);
 					accountManager.close();
-//					lastUpdateManager = new LastUpdateManager(NewAccount.this);
-//					lastUpdateManager.openWritable(NewAccount.this);
-//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-//		        	lastUpdateManager.close();
 					new SyncManager().setLocalSyncTimeWithBackendResponse(NewAccount.this);
 					Toast.makeText(NewAccount.this, "Bankkonto erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 				}

@@ -87,10 +87,6 @@ public class NewMiscellaneous extends Activity {
 						e1.printStackTrace();
 					}
 					miscellaneousManager.close();
-//					lastUpdateManager = new LastUpdateManager(NewMiscellaneous.this);
-//					lastUpdateManager.openWritable(NewMiscellaneous.this);
-//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-//		        	lastUpdateManager.close();
 					new SyncManager().setLocalSyncTimeWithBackendResponse(NewMiscellaneous.this);
 					Toast.makeText(NewMiscellaneous.this, "Notiz erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 				}
@@ -134,10 +130,6 @@ public class NewMiscellaneous extends Activity {
 					miscellaneousManager.openWritable(NewMiscellaneous.this);
 					miscellaneousManager.updateMiscellaneousById(m);
 					miscellaneousManager.close();
-//					lastUpdateManager = new LastUpdateManager(NewMiscellaneous.this);
-//					lastUpdateManager.openWritable(NewMiscellaneous.this);
-//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-//		        	lastUpdateManager.close();
 					new SyncManager().setLocalSyncTimeWithBackendResponse(NewMiscellaneous.this);
 					Toast.makeText(NewMiscellaneous.this, "Notiz erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 	           	}

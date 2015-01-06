@@ -91,10 +91,6 @@ public class NewEmail extends Activity {
 						e1.printStackTrace();
 					}
 		        	emailManager.close();
-//		        	lastUpdateManager = new LastUpdateManager(NewEmail.this);
-//		        	lastUpdateManager.openWritable(NewEmail.this);
-//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-//		        	lastUpdateManager.close();
 		        	new SyncManager().setLocalSyncTimeWithBackendResponse(NewEmail.this);
 		        	Toast.makeText(NewEmail.this, "E-Mail erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 	           	}
@@ -138,10 +134,6 @@ public class NewEmail extends Activity {
 					emailManager.openWritable(NewEmail.this);
 					emailManager.updateEmailById(e);
 					emailManager.close();
-//					lastUpdateManager = new LastUpdateManager(NewEmail.this);
-//					lastUpdateManager.openWritable(NewEmail.this);
-//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-//		        	lastUpdateManager.close();
 					new SyncManager().setLocalSyncTimeWithBackendResponse(NewEmail.this);
 					Toast.makeText(NewEmail.this, "E-Mail erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 		           	}

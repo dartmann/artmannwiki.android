@@ -94,10 +94,6 @@ public class NewLogin extends Activity {
 						e1.printStackTrace();
 					}
 		        	loginManager.close();
-//		        	lastUpdateManager = new LastUpdateManager(NewLogin.this);
-//		        	lastUpdateManager.openWritable(NewLogin.this);
-//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-//		        	lastUpdateManager.close();
 		        	new SyncManager().setLocalSyncTimeWithBackendResponse(NewLogin.this);
 		        	Toast.makeText(NewLogin.this, "Login erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 				}
@@ -142,10 +138,6 @@ public class NewLogin extends Activity {
 					loginManager.openWritable(NewLogin.this);
 					loginManager.updateLoginById(l);
 					loginManager.close();
-//					lastUpdateManager = new LastUpdateManager(NewLogin.this);
-//					lastUpdateManager.openWritable(NewLogin.this);
-//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-//		        	lastUpdateManager.close();
 					new SyncManager().setLocalSyncTimeWithBackendResponse(NewLogin.this);
 					Toast.makeText(NewLogin.this, "Login erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 	           	}

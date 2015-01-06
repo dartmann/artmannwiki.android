@@ -110,6 +110,8 @@ public class Choice extends Activity {
 					new SyncManager().doDeviceSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_DEVICES_SINCE+localLastUpdate, responseTime);
 					new SyncManager().doEmailSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_EMAILS_SINCE+localLastUpdate, responseTime);
 					new SyncManager().doInsuranceSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_INSURANCES_SINCE+localLastUpdate, responseTime);
+					new SyncManager().doLoginSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_LOGINS_SINCE+localLastUpdate, responseTime);
+					new SyncManager().doMiscellaneousSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_MISCELLANEOUS_SINCE+localLastUpdate, responseTime);
 					//TODO: other syncings and the local sync time should be setted one time after all syncs have passed 
 					//-> async task with post progress and every sync could hold a percentage to display in progressbar
 				} else {

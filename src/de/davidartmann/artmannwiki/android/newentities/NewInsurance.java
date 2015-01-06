@@ -91,10 +91,6 @@ public class NewInsurance extends Activity {
 						e1.printStackTrace();
 					}
 					insuranceManager.close();
-//					lastUpdateManager = new LastUpdateManager(NewInsurance.this);
-//					lastUpdateManager.openWritable(NewInsurance.this);
-//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-//		        	lastUpdateManager.close();
 					new SyncManager().setLocalSyncTimeWithBackendResponse(NewInsurance.this);
 					Toast.makeText(NewInsurance.this, "Versicherung erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 	           }
@@ -139,10 +135,6 @@ public class NewInsurance extends Activity {
 					insuranceManager.openWritable(NewInsurance.this);
 					insuranceManager.updateInsuranceById(i);
 					insuranceManager.close();
-//					lastUpdateManager = new LastUpdateManager(NewInsurance.this);
-//					lastUpdateManager.openWritable(NewInsurance.this);
-//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-//		        	lastUpdateManager.close();
 					new SyncManager().setLocalSyncTimeWithBackendResponse(NewInsurance.this);
 					Toast.makeText(NewInsurance.this, "Versicherung erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 		           	}

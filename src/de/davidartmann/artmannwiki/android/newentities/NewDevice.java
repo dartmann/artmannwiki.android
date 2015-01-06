@@ -95,10 +95,6 @@ public class NewDevice extends Activity {
 						e1.printStackTrace();
 					}
 					deviceManager.close();
-//					lastUpdateManager = new LastUpdateManager(NewDevice.this);
-//					lastUpdateManager.openWritable(NewDevice.this);
-//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-//		        	lastUpdateManager.close();
 					new SyncManager().setLocalSyncTimeWithBackendResponse(NewDevice.this);
 					Toast.makeText(NewDevice.this, "Gerät erfolgreich abgespeichert", Toast.LENGTH_SHORT).show();
 				}
@@ -144,10 +140,6 @@ public class NewDevice extends Activity {
 					deviceManager.openWritable(NewDevice.this);
 					deviceManager.updateDeviceById(d);
 					deviceManager.close();
-//					lastUpdateManager = new LastUpdateManager(NewDevice.this);
-//					lastUpdateManager.openWritable(NewDevice.this);
-//		        	lastUpdateManager.setLastUpdate(new Date().getTime());
-//		        	lastUpdateManager.close();
 					new SyncManager().setLocalSyncTimeWithBackendResponse(NewDevice.this);
 					Toast.makeText(NewDevice.this, "Gerät erfolgreich aktualisiert", Toast.LENGTH_SHORT).show();
 				}
