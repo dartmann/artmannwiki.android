@@ -181,6 +181,23 @@ public class DeviceManager {
 	}
 	
 	/**
+	 * Method to update an existing {@link Device} with its backendId.
+	 * @param device
+	 * @return {@link Device}
+	 */
+	public Device updateDeviceByBackendId(Device device) {
+		long deviceBackendId = device.getBackendId();
+		device.setLastUpdate(new Date());
+		ContentValues contentValues = fillContenValuesWithUpdatedDeviceData(device);
+		db.update(TABLE_DEVICE, contentValues, DBManager.COLUMN_BACKEND_ID + "=" + deviceBackendId, null);
+		Cursor cursor = db.query(TABLE_DEVICE, null, DBManager.COLUMN_BACKEND_ID + "=" + deviceBackendId, null, null, null, null);
+		cursor.moveToFirst();
+		Device returnDevice = deviceFromCursor(cursor);
+		cursor.close();
+		return returnDevice;
+	}
+	
+	/**
 	 * Method to get a new {@link Device} instance out of a cursor element.
 	 * @param cursor
 	 * @return {@link Device}

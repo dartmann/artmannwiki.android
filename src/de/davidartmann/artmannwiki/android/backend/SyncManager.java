@@ -22,12 +22,15 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import de.davidartmann.artmannwiki.android.database.AccountManager;
+import de.davidartmann.artmannwiki.android.database.DeviceManager;
 import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 import de.davidartmann.artmannwiki.android.model.Account;
+import de.davidartmann.artmannwiki.android.model.Device;
 
 public class SyncManager {
 	
 	private AccountManager accountManager;
+	private DeviceManager deviceManager;
 	private LastUpdateManager lastUpdateManager;
 	
 	/**
@@ -118,6 +121,72 @@ public class SyncManager {
 		    public void onErrorResponse(VolleyError error) {
 		        VolleyLog.e("Error: ", error.getMessage());
 		        Toast.makeText(c, "Update der Bankkonten konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
+		    }
+		}) {
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> headers = new HashMap<String, String>();
+				headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
+                return headers;  
+			}
+		};
+		VolleyRequestQueue.getInstance(c).addToRequestQueue(jsonArrayRequest);
+	}
+	
+	/**
+	 * Method to sync the {@link Device}s from the backend locally.
+	 * @param c {@link Context}
+	 * @param url {@link String}
+	 * @param newSyncTimeStamp {@link Long}
+	 */
+	public void doDeviceSync(final Context c, String url, final Long newSyncTimeStamp) {
+		JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray> () {
+		    @Override
+		    public void onResponse(JSONArray response) {
+		    	deviceManager = new DeviceManager(c);
+		    	deviceManager.openWritable(c);
+		    	List<Device> localDevices = deviceManager.getAllDevices();
+		    	int j;
+		        for (j = 0; j < response.length(); j++) {
+		        	Device backendDev = null;
+					try {
+						JSONObject jDev = (JSONObject) response.get(j);
+						System.out.println("JSON Account String: "+jDev);
+						backendDev = new Device(jDev.getString("owner"), jDev.getString("iban"), jDev.getString("bic"), jDev.getString("pin"));
+						backendDev.setBackendId(jDev.getLong("id"));
+						backendDev.setActive(jDev.getBoolean("active"));
+						backendDev.setCreateTime(new Date(jDev.getLong("createTime")));
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					boolean update = false;
+					for (Device localDev : localDevices) {
+						if (localDev.getBackendId() == backendDev.getBackendId()) {
+							System.out.println("UPDATE!");
+							deviceManager.updateDeviceByBackendId(backendDev);
+							update = true;
+						}
+					}
+					if (!update) {
+						System.out.println("CREATE!");
+						Device d = deviceManager.addDevice(backendDev);
+						deviceManager.addBackendId(d.getId(), backendDev.getBackendId());
+					}
+				}//endResponseLoop
+		        deviceManager.close();
+		        if (j == response.length()) {
+		        	Toast.makeText(c, "Update der Geräte erfolgreich", Toast.LENGTH_SHORT).show();
+		        	lastUpdateManager = new LastUpdateManager(c);
+		        	lastUpdateManager.openWritable(c);
+		        	lastUpdateManager.setLastUpdate(newSyncTimeStamp);
+		        	lastUpdateManager.close();
+				} else {
+					Toast.makeText(c, "Update der Geräte nicht vollständig", Toast.LENGTH_SHORT).show();
+				}
+		    }
+		}, new Response.ErrorListener() {
+		    public void onErrorResponse(VolleyError error) {
+		        VolleyLog.e("Error: ", error.getMessage());
+		        Toast.makeText(c, "Update der Geräte konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
 		    }
 		}) {
 			public Map<String, String> getHeaders() throws AuthFailureError {
