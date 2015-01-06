@@ -409,7 +409,7 @@ public class SyncManager {
 	}
 	
 	/**
-	 * Method to sync the {@link Miscellaneous}s from the backend locally.
+	 * Method to sync the {@link Miscellaneous} from the backend locally.
 	 * @param c {@link Context}
 	 * @param url {@link String}
 	 * @param newSyncTimeStamp {@link Long}
