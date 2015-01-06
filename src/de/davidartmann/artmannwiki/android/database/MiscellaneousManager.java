@@ -122,7 +122,7 @@ public class MiscellaneousManager {
 		Miscellaneous toDeactive = getMiscellaneousById(id);
 		if (toDeactive != null) {
 			toDeactive.setActive(false);
-			updateMiscellaneous(toDeactive);
+			updateMiscellaneousById(toDeactive);
 			return true;
 		}
 		return false;
@@ -148,16 +148,33 @@ public class MiscellaneousManager {
 	}
 	
 	/**
-	 * Method to update an existing {@link Miscellaneous}.
+	 * Method to update an existing {@link Miscellaneous} by its id.
 	 * @param miscellaneous
 	 * @return {@link Miscellaneous}
 	 */
-	public Miscellaneous updateMiscellaneous(Miscellaneous miscellaneous) {
+	public Miscellaneous updateMiscellaneousById(Miscellaneous miscellaneous) {
 		miscellaneous.setLastUpdate(new Date());
 		long loginId = miscellaneous.getId();
 		ContentValues contentValues = fillContentValuesWithUpdatedMiscellaneousData(miscellaneous);
 		db.update(TABLE_MISCELLANEOUS, contentValues, DBManager.COLUMN_ID + "=" + loginId, null);
 		Cursor cursor = db.query(TABLE_MISCELLANEOUS, null, DBManager.COLUMN_ID + "=" + loginId, null, null, null, null);
+		cursor.moveToFirst();
+		Miscellaneous returnMiscellaneous = miscellaneousFromCursor(cursor);
+		cursor.close();
+		return returnMiscellaneous;
+	}
+	
+	/**
+	 * Method to update an existing {@link Miscellaneous} by its backendId.
+	 * @param miscellaneous
+	 * @return {@link Miscellaneous}
+	 */
+	public Miscellaneous updateAccountByBackendId(Miscellaneous miscellaneous) {
+		long miscellaneousBackendId = miscellaneous.getBackendId();
+		miscellaneous.setLastUpdate(new Date());
+		ContentValues contentValues = fillContentValuesWithUpdatedMiscellaneousData(miscellaneous);
+		db.update(TABLE_MISCELLANEOUS, contentValues, DBManager.COLUMN_BACKEND_ID + "=" + miscellaneousBackendId, null);
+		Cursor cursor = db.query(TABLE_MISCELLANEOUS, null, DBManager.COLUMN_BACKEND_ID + "=" + miscellaneousBackendId, null, null, null, null);
 		cursor.moveToFirst();
 		Miscellaneous returnMiscellaneous = miscellaneousFromCursor(cursor);
 		cursor.close();

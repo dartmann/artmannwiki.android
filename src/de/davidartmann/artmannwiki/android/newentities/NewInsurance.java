@@ -137,7 +137,7 @@ public class NewInsurance extends Activity {
 				public void onResponse(JSONObject response) {
 					insuranceManager = new InsuranceManager(NewInsurance.this);
 					insuranceManager.openWritable(NewInsurance.this);
-					insuranceManager.updateInsurance(i);
+					insuranceManager.updateInsuranceById(i);
 					insuranceManager.close();
 //					lastUpdateManager = new LastUpdateManager(NewInsurance.this);
 //					lastUpdateManager.openWritable(NewInsurance.this);

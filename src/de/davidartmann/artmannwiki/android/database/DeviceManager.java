@@ -75,7 +75,7 @@ public class DeviceManager {
 	}
 	
 	/**
-	 * Method to get a new {@link Device} by his <u>id</u> from the database.
+	 * Method to get a new {@link Device} by its <u>id</u> from the database.
 	 * @param id ({@link Long})
 	 * @return {@link Device}
 	 */
@@ -89,7 +89,7 @@ public class DeviceManager {
 	}
 	
 	/**
-	 * Method to get a new {@link Device} by his <u>number</u> from the database.
+	 * Method to get a new {@link Device} by its <u>number</u> from the database.
 	 * @param iban ({@link String})
 	 * @return {@link Device}
 	 */
@@ -138,7 +138,7 @@ public class DeviceManager {
 		Device toDeactive = getDeviceById(id);
 		if (toDeactive != null) {
 			toDeactive.setActive(false);
-			updateDevice(toDeactive);
+			updateDeviceById(toDeactive);
 			return true;
 		}
 		return false;
@@ -164,11 +164,11 @@ public class DeviceManager {
 	}
 	
 	/**
-	 * Method to update an existing {@link Device}.
+	 * Method to update an existing {@link Device} by its id.
 	 * @param device
 	 * @return {@link Device}
 	 */
-	public Device updateDevice(Device device) {
+	public Device updateDeviceById(Device device) {
 		device.setLastUpdate(new Date());
 		long deviceId = device.getId();
 		ContentValues contentValues = fillContenValuesWithUpdatedDeviceData(device);
@@ -181,7 +181,7 @@ public class DeviceManager {
 	}
 	
 	/**
-	 * Method to update an existing {@link Device} with its backendId.
+	 * Method to update an existing {@link Device} by its backendId.
 	 * @param device
 	 * @return {@link Device}
 	 */

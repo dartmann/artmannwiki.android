@@ -136,7 +136,7 @@ public class NewEmail extends Activity {
 				public void onResponse(JSONObject response) {
 					emailManager = new EmailManager(NewEmail.this);
 					emailManager.openWritable(NewEmail.this);
-					emailManager.updateEmail(e);
+					emailManager.updateEmailById(e);
 					emailManager.close();
 //					lastUpdateManager = new LastUpdateManager(NewEmail.this);
 //					lastUpdateManager.openWritable(NewEmail.this);

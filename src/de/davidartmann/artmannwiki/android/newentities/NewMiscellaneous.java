@@ -132,7 +132,7 @@ public class NewMiscellaneous extends Activity {
 				public void onResponse(JSONObject response) {
 					miscellaneousManager = new MiscellaneousManager(NewMiscellaneous.this);
 					miscellaneousManager.openWritable(NewMiscellaneous.this);
-					miscellaneousManager.updateMiscellaneous(m);
+					miscellaneousManager.updateMiscellaneousById(m);
 					miscellaneousManager.close();
 //					lastUpdateManager = new LastUpdateManager(NewMiscellaneous.this);
 //					lastUpdateManager.openWritable(NewMiscellaneous.this);

@@ -125,7 +125,7 @@ public class LoginManager {
 		Login toDeactive = getLoginById(id);
 		if (toDeactive != null) {
 			toDeactive.setActive(false);
-			updateLogin(toDeactive);
+			updateLoginById(toDeactive);
 			return true;
 		}
 		return false;
@@ -151,11 +151,11 @@ public class LoginManager {
 	}
 	
 	/**
-	 * Method to update an existing {@link Login}.
+	 * Method to update an existing {@link Login} by its id.
 	 * @param login
 	 * @return {@link Login}
 	 */
-	public Login updateLogin(Login login) {
+	public Login updateLoginById(Login login) {
 		login.setLastUpdate(new Date());
 		long loginId = login.getId();
 		ContentValues contentValues = fillContentValuesWithUpdatedLoginData(login);
@@ -165,6 +165,23 @@ public class LoginManager {
 		Login returnAccount = loginFromCursor(cursor);
 		cursor.close();
 		return returnAccount;
+	}
+	
+	/**
+	 * Method to update an existing {@link Login} by its backendId.
+	 * @param login
+	 * @return {@link Login}
+	 */
+	public Login updateLoginByBackendId(Login login) {
+		long loginBackendId = login.getBackendId();
+		login.setLastUpdate(new Date());
+		ContentValues contentValues = fillContentValuesWithUpdatedLoginData(login);
+		db.update(TABLE_LOGIN, contentValues, DBManager.COLUMN_BACKEND_ID + "=" + loginBackendId, null);
+		Cursor cursor = db.query(TABLE_LOGIN, null, DBManager.COLUMN_BACKEND_ID + "=" + loginBackendId, null, null, null, null);
+		cursor.moveToFirst();
+		Login returnLogin = loginFromCursor(cursor);
+		cursor.close();
+		return returnLogin;
 	}
 	
 	/**

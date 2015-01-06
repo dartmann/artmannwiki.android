@@ -71,7 +71,7 @@ public class EmailManager {
 	}
 	
 	/**
-	 * Method to get a new {@link Email} by his <u>id</u> from the database.
+	 * Method to get a new {@link Email} by its <u>id</u> from the database.
 	 * @param id ({@link Long})
 	 * @return {@link Email}
 	 */
@@ -85,7 +85,7 @@ public class EmailManager {
 	}
 	
 	/**
-	 * Method to get a new {@link Email} by his <u>emailaddress</u> from the database.
+	 * Method to get a new {@link Email} by its <u>emailaddress</u> from the database.
 	 * @param emailaddress ({@link String})
 	 * @return {@link Email}
 	 */
@@ -134,7 +134,7 @@ public class EmailManager {
 		Email toDeactive = getEmailById(id);
 		if (toDeactive != null) {
 			toDeactive.setActive(false);
-			updateEmail(toDeactive);
+			updateEmailById(toDeactive);
 			return true;
 		}
 		return false;
@@ -160,16 +160,33 @@ public class EmailManager {
 	}
 	
 	/**
-	 * Method to update an existing {@link Email}.
+	 * Method to update an existing {@link Email} by its id.
 	 * @param email
 	 * @return {@link Email}
 	 */
-	public Email updateEmail(Email email) {
+	public Email updateEmailById(Email email) {
 		email.setLastUpdate(new Date());
 		long emailId = email.getId();
 		ContentValues contentValues = fillContenValuesWithUpdatedEmailData(email);
 		db.update(TABLE_EMAIL, contentValues, DBManager.COLUMN_ID + "=" + emailId, null);
 		Cursor cursor = db.query(TABLE_EMAIL, null, DBManager.COLUMN_ID + "=" + emailId, null, null, null, null);
+		cursor.moveToFirst();
+		Email returnEmail = emailFromCursor(cursor);
+		cursor.close();
+		return returnEmail;
+	}
+	
+	/**
+	 * Method to update an existing {@link Email} by its backendId.
+	 * @param email
+	 * @return {@link Email}
+	 */
+	public Email updateEmailByBackendId(Email email) {
+		long emailBackendId = email.getBackendId();
+		email.setLastUpdate(new Date());
+		ContentValues contentValues = fillContenValuesWithUpdatedEmailData(email);
+		db.update(TABLE_EMAIL, contentValues, DBManager.COLUMN_BACKEND_ID + "=" + emailBackendId, null);
+		Cursor cursor = db.query(TABLE_EMAIL, null, DBManager.COLUMN_BACKEND_ID + "=" + emailBackendId, null, null, null, null);
 		cursor.moveToFirst();
 		Email returnEmail = emailFromCursor(cursor);
 		cursor.close();

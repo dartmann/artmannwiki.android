@@ -28,6 +28,7 @@ public class BackendConstants {
 	public static final String GET_DEVICE_BY_ID = "/rest/device/get/{id}";
 	public static final String GET_DEVICE_BY_NUMBER = "/rest/device/get/{number}";
 	public static final String GET_ALL_DEVICES = "/rest/device/get/all";
+	public static final String GET_DEVICES_SINCE = "/rest/device/get/since/";
 	public static final String DELETE_DEVICE_BY_ID = "/rest/device/delete/{id}";
 	public static final String DELETE_DEVICE_BY_NUMBER = "/rest/device/delete/{number}";
 	public static final String SOFT_DELETE_DEVICE_BY_ID ="/rest/device/softdelete/";
@@ -37,6 +38,7 @@ public class BackendConstants {
 	public static final String GET_EMAIL_BY_ID = "/rest/email/get/{id}";
 	public static final String GET_EMAIL_BY_EMAILADRESS = "/rest/email/get/{emailadress}";
 	public static final String GET_ALL_EMAILS = "/rest/email/get/all";
+	public static final String GET_EMAILS_SINCE = "/rest/email/get/since/";
 	public static final String DELETE_EMAIL_BY_ID = "/rest/email/delete/{id}";
 	public static final String DELETE_EMAIL_BY_EMAILADRESS = "/rest/email/delete/{emailadress}";
 	public static final String SOFT_DELETE_EMAIL_BY_ID ="/rest/email/softdelete/";
@@ -46,6 +48,7 @@ public class BackendConstants {
 	public static final String GET_INSURANCE_BY_ID = "/rest/insurance/get/{id}";
 	public static final String GET_INSURANCE_BY_MEMBERSHIPID = "/rest/insurance/get/{membershipId}";
 	public static final String GET_ALL_INSURANCES = "/rest/insurance/get/all";
+	public static final String GET_INSURANCES_SINCE = "/rest/insurance/get/since/";
 	public static final String DELETE_INSURANCE_BY_ID = "/rest/insurance/delete/{id}";
 	public static final String DELETE_INSURANCE_BY_MEMBERSHIPID = "/rest/insurance/delete/{membershipId}";
 	public static final String SOFT_DELETE_INSURANCE_BY_ID ="/rest/insurance/softdelete/";
@@ -55,6 +58,7 @@ public class BackendConstants {
 	public static final String GET_LOGIN_BY_ID = "/rest/login/get/{id}";
 	public static final String GET_LOGIN_BY_USERNAME = "/rest/login/get/{username}";
 	public static final String GET_ALL_LOGINS = "/rest/login/get/all";
+	public static final String GET_LOGINS_SINCE = "/rest/login/get/since/";
 	public static final String DELETE_LOGIN_BY_ID = "/rest/login/delete/{id}";
 	public static final String DELETE_LOGIN_BY_USERNAME = "/rest/login/delete/{username}";
 	public static final String SOFT_DELETE_LOGIN_BY_ID ="/rest/login/softdelete/";
@@ -63,6 +67,7 @@ public class BackendConstants {
 	
 	public static final String GET_MISCELLANEOUS_BY_ID = "/rest/miscellaneous/get/{id}";
 	public static final String GET_ALL_MISCELLANEOUS = "/rest/miscellaneous/get/all";
+	public static final String GET_MISCELLANEOUS_SINCE = "/rest/miscellaneous/get/since/";
 	public static final String DELETE_MISCELLANEOUS_BY_ID = "/rest/miscellaneous/delete/{id}";
 	public static final String SOFT_DELETE_MISCELLANEOUS_BY_ID ="/rest/miscellaneous/softdelete/";
 	public static final String ADD_MISCELLANEOUS = "/rest/miscellaneous/post/add";

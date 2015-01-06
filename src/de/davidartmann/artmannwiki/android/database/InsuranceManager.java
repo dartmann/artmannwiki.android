@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import de.davidartmann.artmannwiki.android.LoginMain;
+import de.davidartmann.artmannwiki.android.model.Account;
 import de.davidartmann.artmannwiki.android.model.Email;
 import de.davidartmann.artmannwiki.android.model.Insurance;
 
@@ -139,7 +140,7 @@ public class InsuranceManager {
 		Insurance toDeactive = getInsuranceById(id);
 		if (toDeactive != null) {
 			toDeactive.setActive(false);
-			updateInsurance(toDeactive);
+			updateInsuranceById(toDeactive);
 			return true;
 		}
 		return false;
@@ -165,11 +166,11 @@ public class InsuranceManager {
 	}
 	
 	/**
-	 * Method to update an existing {@link Insurance}.
+	 * Method to update an existing {@link Insurance} by its id.
 	 * @param insurance
 	 * @return {@link Insurance}
 	 */
-	public Insurance updateInsurance(Insurance insurance) {
+	public Insurance updateInsuranceById(Insurance insurance) {
 		insurance.setLastUpdate(new Date());
 		long insuranceId = insurance.getId();
 		ContentValues contentValues = fillContenValuesWithUpdatedInsuranceData(insurance);
@@ -179,6 +180,23 @@ public class InsuranceManager {
 		Insurance returnEmail = insuranceFromCursor(cursor);
 		cursor.close();
 		return returnEmail;
+	}
+	
+	/**
+	 * Method to update an existing {@link Insurance} by its backendId.
+	 * @param insurance
+	 * @return {@link Account}
+	 */
+	public Insurance updateInsuranceByBackendId(Insurance insurance) {
+		long insuranceBackendId = insurance.getBackendId();
+		insurance.setLastUpdate(new Date());
+		ContentValues contentValues = fillContenValuesWithUpdatedInsuranceData(insurance);
+		db.update(TABLE_INSURANCE, contentValues, DBManager.COLUMN_BACKEND_ID + "=" + insuranceBackendId, null);
+		Cursor cursor = db.query(TABLE_INSURANCE, null, DBManager.COLUMN_BACKEND_ID + "=" + insuranceBackendId, null, null, null, null);
+		cursor.moveToFirst();
+		Insurance returnInsurance = insuranceFromCursor(cursor);
+		cursor.close();
+		return returnInsurance;
 	}
 	
 	/**

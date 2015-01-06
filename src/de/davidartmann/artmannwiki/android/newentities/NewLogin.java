@@ -140,7 +140,7 @@ public class NewLogin extends Activity {
 				public void onResponse(JSONObject response) {
 					loginManager = new LoginManager(NewLogin.this);
 					loginManager.openWritable(NewLogin.this);
-					loginManager.updateLogin(l);
+					loginManager.updateLoginById(l);
 					loginManager.close();
 //					lastUpdateManager = new LastUpdateManager(NewLogin.this);
 //					lastUpdateManager.openWritable(NewLogin.this);

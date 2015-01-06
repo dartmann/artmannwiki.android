@@ -142,7 +142,7 @@ public class NewDevice extends Activity {
 				public void onResponse(JSONObject response) {
 					deviceManager = new DeviceManager(NewDevice.this);
 					deviceManager.openWritable(NewDevice.this);
-					deviceManager.updateDevice(d);
+					deviceManager.updateDeviceById(d);
 					deviceManager.close();
 //					lastUpdateManager = new LastUpdateManager(NewDevice.this);
 //					lastUpdateManager.openWritable(NewDevice.this);

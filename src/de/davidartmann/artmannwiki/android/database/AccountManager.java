@@ -184,7 +184,7 @@ public class AccountManager {
 	}
 	
 	/**
-	 * Method to update an existing {@link Account} with its id.
+	 * Method to update an existing {@link Account} by its id.
 	 * @param account
 	 * @return {@link Account}
 	 */
@@ -201,7 +201,7 @@ public class AccountManager {
 	}
 	
 	/**
-	 * Method to update an existing {@link Account} with its backendId.
+	 * Method to update an existing {@link Account} by its backendId.
 	 * @param account
 	 * @return {@link Account}
 	 */
