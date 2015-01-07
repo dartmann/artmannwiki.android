@@ -74,17 +74,18 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 	}
 	
 	protected Long doInBackground(Long... params) {
-		doAccountSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_ACCOUNTS_SINCE+params[0], params[1]);
+		//TODO: not really async context here, the main thread still goes down...
+		VolleyRequestQueue.getInstance(context).addToRequestQueue(doAccountSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_ACCOUNTS_SINCE+params[0], params[1]));
 		publishProgress(1/6);
-		doDeviceSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_DEVICES_SINCE+params[0], params[1]);
+		VolleyRequestQueue.getInstance(context).addToRequestQueue(doDeviceSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_DEVICES_SINCE+params[0], params[1]));
 		publishProgress(2/6);
-		doEmailSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_EMAILS_SINCE+params[0], params[1]);
+		VolleyRequestQueue.getInstance(context).addToRequestQueue(doEmailSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_EMAILS_SINCE+params[0], params[1]));
 		publishProgress(3/6);
-		doInsuranceSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_INSURANCES_SINCE+params[0], params[1]);
+		VolleyRequestQueue.getInstance(context).addToRequestQueue(doInsuranceSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_INSURANCES_SINCE+params[0], params[1]));
 		publishProgress(4/6);
-		doLoginSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_LOGINS_SINCE+params[0], params[1]);
+		VolleyRequestQueue.getInstance(context).addToRequestQueue(doLoginSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_LOGINS_SINCE+params[0], params[1]));
 		publishProgress(5/6);
-		doMiscellaneousSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_MISCELLANEOUS_SINCE+params[0], params[1]);
+		VolleyRequestQueue.getInstance(context).addToRequestQueue(doMiscellaneousSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_MISCELLANEOUS_SINCE+params[0], params[1]));
 		publishProgress(6/6);
 		return null;
 	}
@@ -141,7 +142,7 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 	 * @param url {@link String}
 	 * @param newSyncTimeStamp {@link Long}
 	 */
-	private void doAccountSync(final Context c, String url, final Long newSyncTimeStamp) {
+	private JsonArrayRequest doAccountSync(final Context c, String url, final Long newSyncTimeStamp) {
 		JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray> () {
 		    @Override
 		    public void onResponse(JSONArray response) {
@@ -192,7 +193,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
                 return headers;  
 			}
 		};
-		VolleyRequestQueue.getInstance(c).addToRequestQueue(jsonArrayRequest);
+		return jsonArrayRequest;
+		//VolleyRequestQueue.getInstance(c).addToRequestQueue(jsonArrayRequest);
 	}
 	
 	/**
@@ -201,7 +203,7 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 	 * @param url {@link String}
 	 * @param newSyncTimeStamp {@link Long}
 	 */
-	private void doDeviceSync(final Context c, String url, final Long newSyncTimeStamp) {
+	private JsonArrayRequest doDeviceSync(final Context c, String url, final Long newSyncTimeStamp) {
 		JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray> () {
 		    @Override
 		    public void onResponse(JSONArray response) {
@@ -252,7 +254,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
                 return headers;  
 			}
 		};
-		VolleyRequestQueue.getInstance(c).addToRequestQueue(jsonArrayRequest);
+		return jsonArrayRequest;
+		//VolleyRequestQueue.getInstance(c).addToRequestQueue(jsonArrayRequest);
 	}
 	
 	/**
@@ -261,7 +264,7 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 	 * @param url {@link String}
 	 * @param newSyncTimeStamp {@link Long}
 	 */
-	private void doEmailSync(final Context c, String url, final Long newSyncTimeStamp) {
+	private JsonArrayRequest doEmailSync(final Context c, String url, final Long newSyncTimeStamp) {
 		JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray> () {
 		    @Override
 		    public void onResponse(JSONArray response) {
@@ -312,7 +315,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
                 return headers;  
 			}
 		};
-		VolleyRequestQueue.getInstance(c).addToRequestQueue(jsonArrayRequest);
+		return jsonArrayRequest;
+		//VolleyRequestQueue.getInstance(c).addToRequestQueue(jsonArrayRequest);
 	}
 	
 	/**
@@ -321,7 +325,7 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 	 * @param url {@link String}
 	 * @param newSyncTimeStamp {@link Long}
 	 */
-	private void doInsuranceSync(final Context c, String url, final Long newSyncTimeStamp) {
+	private JsonArrayRequest doInsuranceSync(final Context c, String url, final Long newSyncTimeStamp) {
 		JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray> () {
 		    @Override
 		    public void onResponse(JSONArray response) {
@@ -372,7 +376,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
                 return headers;  
 			}
 		};
-		VolleyRequestQueue.getInstance(c).addToRequestQueue(jsonArrayRequest);
+		return jsonArrayRequest;
+		//VolleyRequestQueue.getInstance(c).addToRequestQueue(jsonArrayRequest);
 	}
 	
 	/**
@@ -381,7 +386,7 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 	 * @param url {@link String}
 	 * @param newSyncTimeStamp {@link Long}
 	 */
-	private void doLoginSync(final Context c, String url, final Long newSyncTimeStamp) {
+	private JsonArrayRequest doLoginSync(final Context c, String url, final Long newSyncTimeStamp) {
 		JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray> () {
 		    @Override
 		    public void onResponse(JSONArray response) {
@@ -432,7 +437,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
                 return headers;  
 			}
 		};
-		VolleyRequestQueue.getInstance(c).addToRequestQueue(jsonArrayRequest);
+		return jsonArrayRequest;
+		//VolleyRequestQueue.getInstance(c).addToRequestQueue(jsonArrayRequest);
 	}
 	
 	/**
@@ -441,7 +447,7 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 	 * @param url {@link String}
 	 * @param newSyncTimeStamp {@link Long}
 	 */
-	private void doMiscellaneousSync(final Context c, String url, final Long newSyncTimeStamp) {
+	private JsonArrayRequest doMiscellaneousSync(final Context c, String url, final Long newSyncTimeStamp) {
 		JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray> () {
 		    @Override
 		    public void onResponse(JSONArray response) {
@@ -476,7 +482,7 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					}
 				}//endResponseLoop
 		        miscellaneousManager.close();
-		        if (j == response.length()) {
+		        if (j != response.length()) {
 		        	Toast.makeText(c, "Update der Notizen nicht vollständig", Toast.LENGTH_SHORT).show();
 				}
 		    }
@@ -492,7 +498,7 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
                 return headers;  
 			}
 		};
-		VolleyRequestQueue.getInstance(c).addToRequestQueue(jsonArrayRequest);
+		return jsonArrayRequest;
 	}
 
 }
