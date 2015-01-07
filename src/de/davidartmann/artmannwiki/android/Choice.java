@@ -42,11 +42,12 @@ public class Choice extends Activity {
         else {
             setContentView(R.layout.activity_choice_portrait);
         }
+        if(getIntent().getBooleanExtra("firstAssign", false)) {
+        	checkLastUpdate();
+        }
         
         wikiSearchButton = (Button) findViewById(R.id.choice_wiki_search);
         wikiNewEntityButton = (Button) findViewById(R.id.choice_wiki_new_entity);
-        
-        //TODO: make an automatic check if update is needed and inform the user -> after first login (extra from mainLogin activity) perform a sync always
 
         wikiSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +75,7 @@ public class Choice extends Activity {
         int id = item.getItemId();
         switch (id) {
 		case R.id.menu_choice_action_sync:
-			checkLastUpdate(Request.Method.GET, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_AND_SET_LAST_UPDATE);
+			checkLastUpdate();
 			return true;
 		case R.id.menu_choice_action_exit:
 			finish();
@@ -94,8 +95,13 @@ public class Choice extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-	private void checkLastUpdate(int method, String url) {
-		StringRequest stringRequest = new StringRequest(method, url,
+    /**
+	 * Method to check the backend for the last update time
+	 * @param method
+	 * @param url
+	 */
+	private void checkLastUpdate() {
+		StringRequest stringRequest = new StringRequest(Request.Method.GET, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_AND_SET_LAST_UPDATE,
 		            new Response.Listener<String>() {
 		    public void onResponse(String response) {
 		    	Long responseTime = Long.parseLong(response);
@@ -103,25 +109,15 @@ public class Choice extends Activity {
 		    	lastUpdateManager.openReadable(Choice.this);
 		    	Long localLastUpdate = lastUpdateManager.getLastUpdate();
 		    	lastUpdateManager.close();
-		    	System.out.println("Lokale Zeit: "+localLastUpdate+" Backend Zeit: "+responseTime);
-		    	if (responseTime > localLastUpdate) {
-		    		Toast.makeText(Choice.this, "Update wird durchgeführt", Toast.LENGTH_SHORT).show();
-					new SyncManager().doAccountSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_ACCOUNTS_SINCE+localLastUpdate, responseTime);
-					new SyncManager().doDeviceSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_DEVICES_SINCE+localLastUpdate, responseTime);
-					new SyncManager().doEmailSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_EMAILS_SINCE+localLastUpdate, responseTime);
-					new SyncManager().doInsuranceSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_INSURANCES_SINCE+localLastUpdate, responseTime);
-					new SyncManager().doLoginSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_LOGINS_SINCE+localLastUpdate, responseTime);
-					new SyncManager().doMiscellaneousSync(Choice.this, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_MISCELLANEOUS_SINCE+localLastUpdate, responseTime);
-					//TODO: other syncings and the local sync time should be setted one time after all syncs have passed 
-					//-> async task with post progress and every sync could hold a percentage to display in progressbar
-				} else {
-					Toast.makeText(Choice.this, "Kein Update nötig", Toast.LENGTH_SHORT).show();
+		    	if (localLastUpdate < responseTime) {
+		    		new SyncManager(Choice.this).execute(localLastUpdate, responseTime);
 				}
 		    }
 		}, new Response.ErrorListener() {
 		    @Override
 		    public void onErrorResponse(VolleyError error) {
 		    	Log.e("checkLastUpdate", error.toString());
+		    	Toast.makeText(Choice.this, "Fehler beim check der letzten Updatezeit - Server nicht erreichbar", Toast.LENGTH_SHORT).show();
 		    }
 		}) {
 
@@ -132,6 +128,6 @@ public class Choice extends Activity {
                 return headers;  
 			}
 		};
-		VolleyRequestQueue.getInstance(this).addToRequestQueue(stringRequest);
+		VolleyRequestQueue.getInstance(Choice.this).addToRequestQueue(stringRequest);
 	}
 }

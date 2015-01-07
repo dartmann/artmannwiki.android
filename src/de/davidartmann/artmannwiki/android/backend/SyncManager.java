@@ -9,7 +9,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -35,7 +37,7 @@ import de.davidartmann.artmannwiki.android.model.Insurance;
 import de.davidartmann.artmannwiki.android.model.Login;
 import de.davidartmann.artmannwiki.android.model.Miscellaneous;
 
-public class SyncManager {
+public class SyncManager extends AsyncTask<Long, Integer, Long> {
 	
 	private AccountManager accountManager;
 	private DeviceManager deviceManager;
@@ -44,7 +46,61 @@ public class SyncManager {
 	private LoginManager loginManager;
 	private MiscellaneousManager miscellaneousManager;
 	private LastUpdateManager lastUpdateManager;
+	private Context context;
+	private ProgressDialog progressDialog;
 	
+	/**
+	 * Constructor without parameters for the NewAccount, NewDevice, (...) Classes
+	 */
+	public SyncManager() {
+		//nothing
+	}
+	
+	/**
+	 * Contructor to pass the {@link Context}
+	 * @param c
+	 */
+	public SyncManager(Context c) {
+		this.context = c;
+	}
+	
+	protected void onPreExecute() {
+		progressDialog = new ProgressDialog(context);
+		progressDialog.setMax(1);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setIndeterminate(true);
+		progressDialog.setCancelable(false);
+		progressDialog.show();
+	}
+	
+	protected Long doInBackground(Long... params) {
+		doAccountSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_ACCOUNTS_SINCE+params[0], params[1]);
+		publishProgress(1/6);
+		doDeviceSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_DEVICES_SINCE+params[0], params[1]);
+		publishProgress(2/6);
+		doEmailSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_EMAILS_SINCE+params[0], params[1]);
+		publishProgress(3/6);
+		doInsuranceSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_INSURANCES_SINCE+params[0], params[1]);
+		publishProgress(4/6);
+		doLoginSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_LOGINS_SINCE+params[0], params[1]);
+		publishProgress(5/6);
+		doMiscellaneousSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_MISCELLANEOUS_SINCE+params[0], params[1]);
+		publishProgress(6/6);
+		return null;
+	}
+	
+	protected void onPostExecute(Long result) {
+		setLocalSyncTimeWithBackendResponse(context);
+		if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
+		Toast.makeText(context, "Update durchgeführt", Toast.LENGTH_LONG).show();
+	}
+
+	protected void onProgressUpdate(Integer... values) {
+		progressDialog.setProgress(values[0]);
+	}
+
 	/**
 	 * Method to get the last sync timestamp from the backend and store it locally.
 	 * This is done, when an C(R)UD operation has finished, to store the right sync time.
@@ -56,8 +112,9 @@ public class SyncManager {
 		    public void onResponse(String response) {
 		    	lastUpdateManager = new LastUpdateManager(c);
 		    	lastUpdateManager.openWritable(c);
-		    	Long localLastUpdate = lastUpdateManager.setLastUpdate(Long.parseLong(response));
-		    	System.out.println("Successfully updated local sync time: '"+lastUpdateManager.getLastUpdate()+"' with '"+localLastUpdate+"' from the backend");
+		    	Long localLastUpdate = lastUpdateManager.getLastUpdate();
+		    	Long localNewLastUpdate = lastUpdateManager.setLastUpdate(Long.parseLong(response));
+		    	System.out.println("Successfully updated local sync time: '"+localLastUpdate+"' with '"+localNewLastUpdate+"' from the backend");
 		    	lastUpdateManager.close();
 		    }
 		}, new Response.ErrorListener() {
@@ -84,7 +141,7 @@ public class SyncManager {
 	 * @param url {@link String}
 	 * @param newSyncTimeStamp {@link Long}
 	 */
-	public void doAccountSync(final Context c, String url, final Long newSyncTimeStamp) {
+	private void doAccountSync(final Context c, String url, final Long newSyncTimeStamp) {
 		JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray> () {
 		    @Override
 		    public void onResponse(JSONArray response) {
@@ -119,14 +176,8 @@ public class SyncManager {
 					}
 				}//endResponseLoop
 		        accountManager.close();
-		        if (j == response.length()) {
-		        	Toast.makeText(c, "Update der Bankkonten erfolgreich", Toast.LENGTH_SHORT).show();
-		        	lastUpdateManager = new LastUpdateManager(c);
-		        	lastUpdateManager.openWritable(c);
-		        	lastUpdateManager.setLastUpdate(newSyncTimeStamp);
-		        	lastUpdateManager.close();
-				} else {
-					Toast.makeText(c, "Update der Bankkonten nicht vollständig", Toast.LENGTH_SHORT).show();
+		        if (j != response.length()) {
+		        	Toast.makeText(c, "Update der Bankkonten nicht vollständig", Toast.LENGTH_SHORT).show();
 				}
 		    }
 		}, new Response.ErrorListener() {
@@ -150,7 +201,7 @@ public class SyncManager {
 	 * @param url {@link String}
 	 * @param newSyncTimeStamp {@link Long}
 	 */
-	public void doDeviceSync(final Context c, String url, final Long newSyncTimeStamp) {
+	private void doDeviceSync(final Context c, String url, final Long newSyncTimeStamp) {
 		JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray> () {
 		    @Override
 		    public void onResponse(JSONArray response) {
@@ -185,14 +236,8 @@ public class SyncManager {
 					}
 				}//endResponseLoop
 		        deviceManager.close();
-		        if (j == response.length()) {
-		        	Toast.makeText(c, "Update der Geräte erfolgreich", Toast.LENGTH_SHORT).show();
-		        	lastUpdateManager = new LastUpdateManager(c);
-		        	lastUpdateManager.openWritable(c);
-		        	lastUpdateManager.setLastUpdate(newSyncTimeStamp);
-		        	lastUpdateManager.close();
-				} else {
-					Toast.makeText(c, "Update der Geräte nicht vollständig", Toast.LENGTH_SHORT).show();
+		        if (j != response.length()) {
+		        	Toast.makeText(c, "Update der Geräte nicht vollständig", Toast.LENGTH_SHORT).show();
 				}
 		    }
 		}, new Response.ErrorListener() {
@@ -216,7 +261,7 @@ public class SyncManager {
 	 * @param url {@link String}
 	 * @param newSyncTimeStamp {@link Long}
 	 */
-	public void doEmailSync(final Context c, String url, final Long newSyncTimeStamp) {
+	private void doEmailSync(final Context c, String url, final Long newSyncTimeStamp) {
 		JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray> () {
 		    @Override
 		    public void onResponse(JSONArray response) {
@@ -251,14 +296,8 @@ public class SyncManager {
 					}
 				}//endResponseLoop
 		        emailManager.close();
-		        if (j == response.length()) {
-		        	Toast.makeText(c, "Update der E-Mails erfolgreich", Toast.LENGTH_SHORT).show();
-		        	lastUpdateManager = new LastUpdateManager(c);
-		        	lastUpdateManager.openWritable(c);
-		        	lastUpdateManager.setLastUpdate(newSyncTimeStamp);
-		        	lastUpdateManager.close();
-				} else {
-					Toast.makeText(c, "Update der E-Mails nicht vollständig", Toast.LENGTH_SHORT).show();
+		        if (j != response.length()) {
+		        	Toast.makeText(c, "Update der E-Mails nicht vollständig", Toast.LENGTH_SHORT).show();
 				}
 		    }
 		}, new Response.ErrorListener() {
@@ -282,7 +321,7 @@ public class SyncManager {
 	 * @param url {@link String}
 	 * @param newSyncTimeStamp {@link Long}
 	 */
-	public void doInsuranceSync(final Context c, String url, final Long newSyncTimeStamp) {
+	private void doInsuranceSync(final Context c, String url, final Long newSyncTimeStamp) {
 		JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray> () {
 		    @Override
 		    public void onResponse(JSONArray response) {
@@ -318,13 +357,7 @@ public class SyncManager {
 				}//endResponseLoop
 		        insuranceManager.close();
 		        if (j == response.length()) {
-		        	Toast.makeText(c, "Update der Versicherungen erfolgreich", Toast.LENGTH_SHORT).show();
-		        	lastUpdateManager = new LastUpdateManager(c);
-		        	lastUpdateManager.openWritable(c);
-		        	lastUpdateManager.setLastUpdate(newSyncTimeStamp);
-		        	lastUpdateManager.close();
-				} else {
-					Toast.makeText(c, "Update der Versicherungen nicht vollständig", Toast.LENGTH_SHORT).show();
+		        	Toast.makeText(c, "Update der Versicherungen nicht vollständig", Toast.LENGTH_SHORT).show();
 				}
 		    }
 		}, new Response.ErrorListener() {
@@ -348,7 +381,7 @@ public class SyncManager {
 	 * @param url {@link String}
 	 * @param newSyncTimeStamp {@link Long}
 	 */
-	public void doLoginSync(final Context c, String url, final Long newSyncTimeStamp) {
+	private void doLoginSync(final Context c, String url, final Long newSyncTimeStamp) {
 		JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray> () {
 		    @Override
 		    public void onResponse(JSONArray response) {
@@ -383,14 +416,8 @@ public class SyncManager {
 					}
 				}//endResponseLoop
 		        loginManager.close();
-		        if (j == response.length()) {
-		        	Toast.makeText(c, "Update der Logins erfolgreich", Toast.LENGTH_SHORT).show();
-		        	lastUpdateManager = new LastUpdateManager(c);
-		        	lastUpdateManager.openWritable(c);
-		        	lastUpdateManager.setLastUpdate(newSyncTimeStamp);
-		        	lastUpdateManager.close();
-				} else {
-					Toast.makeText(c, "Update der Logins nicht vollständig", Toast.LENGTH_SHORT).show();
+		        if (j != response.length()) {
+		        	Toast.makeText(c, "Update der Logins nicht vollständig", Toast.LENGTH_SHORT).show();
 				}
 		    }
 		}, new Response.ErrorListener() {
@@ -414,7 +441,7 @@ public class SyncManager {
 	 * @param url {@link String}
 	 * @param newSyncTimeStamp {@link Long}
 	 */
-	public void doMiscellaneousSync(final Context c, String url, final Long newSyncTimeStamp) {
+	private void doMiscellaneousSync(final Context c, String url, final Long newSyncTimeStamp) {
 		JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray> () {
 		    @Override
 		    public void onResponse(JSONArray response) {
@@ -450,13 +477,7 @@ public class SyncManager {
 				}//endResponseLoop
 		        miscellaneousManager.close();
 		        if (j == response.length()) {
-		        	Toast.makeText(c, "Update der Notizen erfolgreich", Toast.LENGTH_SHORT).show();
-		        	lastUpdateManager = new LastUpdateManager(c);
-		        	lastUpdateManager.openWritable(c);
-		        	lastUpdateManager.setLastUpdate(newSyncTimeStamp);
-		        	lastUpdateManager.close();
-				} else {
-					Toast.makeText(c, "Update der Notizen nicht vollständig", Toast.LENGTH_SHORT).show();
+		        	Toast.makeText(c, "Update der Notizen nicht vollständig", Toast.LENGTH_SHORT).show();
 				}
 		    }
 		}, new Response.ErrorListener() {

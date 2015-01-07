@@ -2,7 +2,6 @@ package de.davidartmann.artmannwiki.android;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -186,7 +185,8 @@ public class CategoryListSearch extends Activity {
 			miscArrayAdapter.notifyDataSetChanged();
 		}
 	}
-	
+	//TODO: delete
+	/*
 	private void makeTestData() {
 		accountManager.openWritable(this);
 		deviceManager.openWritable(this);
@@ -220,6 +220,7 @@ public class CategoryListSearch extends Activity {
 	        miscellaneousManager.addMiscellaneous(miscellaneous);
 		}
 	}
+	*/
 
 	protected void onPause() {
 		accountManager.close();

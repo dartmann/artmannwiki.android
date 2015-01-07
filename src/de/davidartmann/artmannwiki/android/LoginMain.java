@@ -50,8 +50,8 @@ public class LoginMain extends Activity {
                     if((passField1.equals(passField2)) && (passField1.length()>=6)) {
                         editor.putString(PREFS_ATTR, passField1).apply();
                         Toast.makeText(LoginMain.this, "Erfolgreiche erste Anmeldung", Toast.LENGTH_SHORT).show();
-                        //setContentView(R.layout.activity_main_wiki);
                         Intent intent = new Intent(getBaseContext(), Choice.class);
+                        intent.putExtra("firstAssign", true);
                         startActivity(intent);
                         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(passwordField.getWindowToken(), 0);
@@ -72,7 +72,6 @@ public class LoginMain extends Activity {
                 }
                 else {
                     if(passField1.equals(passwdSp)) {
-                        Toast.makeText(LoginMain.this, "Erfolgreiche Anmeldung", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getBaseContext(), Choice.class);
                         startActivity(intent);
                         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
