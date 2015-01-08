@@ -45,6 +45,10 @@ public class VolleyRequestQueue /*extends Application*/{
         return mRequestQueue;
     }
 
+    /**
+     * Adds a Request to the Volley {@link RequestQueue}
+     * @param req
+     */
     public <T> void addToRequestQueue(Request<T> req) {
         getRequestQueue().add(req);
     }

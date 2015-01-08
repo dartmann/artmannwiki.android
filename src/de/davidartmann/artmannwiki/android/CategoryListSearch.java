@@ -33,6 +33,7 @@ import de.davidartmann.artmannwiki.android.model.Insurance;
 import de.davidartmann.artmannwiki.android.model.Login;
 import de.davidartmann.artmannwiki.android.model.Miscellaneous;
 
+//TODO: fetch data from db in extra thread
 public class CategoryListSearch extends Activity {
 	private Spinner spinner;
 	private ListView listView;
@@ -60,7 +61,6 @@ public class CategoryListSearch extends Activity {
 		for(String s : values) {
         	spinnerItems.add(s);
         }
-		// Instantiate the manager classes
 		accountManager = new AccountManager(this);
 		deviceManager = new DeviceManager(this);
 		emailManager = new EmailManager(this);
@@ -74,7 +74,6 @@ public class CategoryListSearch extends Activity {
 		spinner.setAdapter(spinnerAdapter);
 		addSpinnerOnItemSelectListener();
 		addListViewOnItemClickListener();
-		//makeTestData();
 	}
 	
 	private void addListViewOnItemClickListener() {
@@ -139,7 +138,7 @@ public class CategoryListSearch extends Activity {
 		});
 	}
 
-	//TODO: implement the viewholder pattern AND try to put this in a extra thread because it last much too long
+	//TODO: implement the viewholder pattern
 	private void showSelectedEntities(String s) {
 		if (s.equals("Bankkonto")) {
 			selectedSpinnerItem = values[0];
@@ -185,42 +184,6 @@ public class CategoryListSearch extends Activity {
 			miscArrayAdapter.notifyDataSetChanged();
 		}
 	}
-	//TODO: delete
-	/*
-	private void makeTestData() {
-		accountManager.openWritable(this);
-		deviceManager.openWritable(this);
-		emailManager.openWritable(this);
-		insuranceManager.openWritable(this);
-		loginManager.openWritable(this);
-		miscellaneousManager.openWritable(this);
-		for(int i = 0; i<5; i++) {
-			Account account = new Account(String.valueOf(i), "123456123", "BYLADMNIEA", "1234");
-	        account.setActive(true);
-	        accountManager.addAccount(account);
-	        
-	        Device device = new Device("String.valueOf(i)", "017526661654", "1234", "13245678");
-	        device.setActive(true);
-	        deviceManager.addDevice(device);
-	        
-	        Email email = new Email(String.valueOf(i)+"@test.de", "jklsadfjklsdafjklö");
-	        email.setActive(true);
-	        emailManager.addEmail(email);
-	        
-	        Insurance insurance = new Insurance(String.valueOf(i), "bscheiser", "321321321321");
-	        insurance.setActive(true);
-	        insuranceManager.addInsurance(insurance);
-	        
-	        Login login = new Login(String.valueOf(i), "123superSecure@123!", "admintestuser");
-	        login.setActive(true);
-	        loginManager.addLogin(login);
-	        
-	        Miscellaneous miscellaneous = new Miscellaneous(UUID.randomUUID().toString(), "asasdasdasdasdasd");
-	        miscellaneous.setActive(true);
-	        miscellaneousManager.addMiscellaneous(miscellaneous);
-		}
-	}
-	*/
 
 	protected void onPause() {
 		accountManager.close();
