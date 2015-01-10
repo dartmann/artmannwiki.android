@@ -9,7 +9,7 @@ public class BackendConstants {
 	public static final String CONTENT_TYPE = "Content-Type";
 	public static final String APPLICATION_JSON = "application/json";
 	
-	public static final String ARTMANNWIKI_ROOT = "http://213.165.81.7:8080/ArtmannWiki";
+	public static final String ARTMANNWIKI_ROOT = "https://213.165.81.7:8443/ArtmannWiki";
 	
 	//---------------------------------------------------------------------
 	// The REST URL constants:

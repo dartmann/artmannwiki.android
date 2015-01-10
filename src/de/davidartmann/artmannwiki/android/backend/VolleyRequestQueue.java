@@ -1,10 +1,14 @@
 package de.davidartmann.artmannwiki.android.backend;
 
+import java.io.InputStream;
+
 import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+
+import de.artmann.artmannwiki.R;
 
 public class VolleyRequestQueue /*extends Application*/{
 
@@ -40,7 +44,10 @@ public class VolleyRequestQueue /*extends Application*/{
      */
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
+        	InputStream keyStore = mCtx.getResources().openRawResource(R.raw.tomcat);
+            mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext(), 
+            		new ExtHttpClientStack(
+            				new SslHttpClient(keyStore, "T0mcat2015K3y", 8443)));
         }
         return mRequestQueue;
     }

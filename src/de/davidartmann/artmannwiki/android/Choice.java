@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -33,7 +32,6 @@ public class Choice extends Activity {
 	private Button wikiSearchButton;
 	private Button wikiNewEntityButton;
 	private LastUpdateManager lastUpdateManager;
-	private EditText editText;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +43,11 @@ public class Choice extends Activity {
             setContentView(R.layout.activity_choice_portrait);
         }
         if(getIntent().getBooleanExtra("firstAssign", false)) {
-        	//TODO: checkLastUpdate();
+        	checkLastUpdate();
         }
         
         wikiSearchButton = (Button) findViewById(R.id.choice_wiki_search);
         wikiNewEntityButton = (Button) findViewById(R.id.choice_wiki_new_entity);
-        
-        editText = (EditText) findViewById(R.id.editTextResponseSSL);
 
         wikiSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,8 +75,7 @@ public class Choice extends Activity {
         int id = item.getItemId();
         switch (id) {
 		case R.id.menu_choice_action_sync:
-			//TODO: checkLastUpdate();
-			test();
+			checkLastUpdate();
 			return true;
 		case R.id.menu_choice_action_exit:
 			finish();
@@ -99,30 +94,6 @@ public class Choice extends Activity {
 		}
         return super.onOptionsItemSelected(item);
     }
-    
-    private void test() {
-		StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://213.165.81.7:8443/ArtmannWiki/rest/lastupdate",
-		            new Response.Listener<String>() {
-		    public void onResponse(String response) {
-		    	editText.setText(response);
-		    }
-		}, new Response.ErrorListener() {
-		    @Override
-		    public void onErrorResponse(VolleyError error) {
-		    	editText.setText(error.toString());
-		    	Log.e("checkLastUpdate", error.toString());
-		    }
-		}) {
-
-			@Override
-			public Map<String, String> getHeaders() throws AuthFailureError {
-				HashMap<String, String> headers = new HashMap<String, String>();
-				headers.put(BackendConstants.HEADER_KEY, BackendConstants.HEADER_VALUE);
-                return headers;  
-			}
-		};
-		VolleyRequestQueue.getInstance(Choice.this).addToRequestQueue(stringRequest);
-	}
 
     /**
 	 * Method to check the backend for the last update time
