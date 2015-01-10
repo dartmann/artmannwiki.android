@@ -15,6 +15,7 @@ public class SyncTask extends AsyncTask<String, Integer, Void> {
 	@Override
 	protected Void doInBackground(String... strings) {
 		for (int i = 0; i < strings.length; i++) {			
+			@SuppressWarnings("unused")
 			JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(strings[i], new Response.Listener<JSONArray> () {
 			    @Override
 			    public void onResponse(JSONArray response) {
@@ -37,19 +38,16 @@ public class SyncTask extends AsyncTask<String, Integer, Void> {
 
 	@Override
 	protected void onPostExecute(Void result) {
-		// TODO Auto-generated method stub
 		super.onPostExecute(result);
 	}
 
 	@Override
 	protected void onPreExecute() {
-		// TODO Auto-generated method stub
 		super.onPreExecute();
 	}
 
 	@Override
 	protected void onProgressUpdate(Integer... values) {
-		// TODO Auto-generated method stub
 		super.onProgressUpdate(values);
 	}
 

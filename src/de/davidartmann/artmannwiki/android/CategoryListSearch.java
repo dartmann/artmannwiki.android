@@ -33,7 +33,6 @@ import de.davidartmann.artmannwiki.android.model.Insurance;
 import de.davidartmann.artmannwiki.android.model.Login;
 import de.davidartmann.artmannwiki.android.model.Miscellaneous;
 
-//TODO: fetch data from db in extra thread
 public class CategoryListSearch extends Activity {
 	private Spinner spinner;
 	private ListView listView;

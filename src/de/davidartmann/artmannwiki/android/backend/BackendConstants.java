@@ -14,7 +14,7 @@ public class BackendConstants {
 	//---------------------------------------------------------------------
 	// The REST URL constants:
 	//---------------------------------------------------------------------
-	//TODO: get & delete variable id fields must be removed before usage!!!
+	// get & delete variable id fields must be removed before usage!!!
 	public static final String GET_ACCOUNT_BY_ID = "/rest/account/get/{id}";
 	public static final String GET_ACCOUNT_BY_IBAN = "/rest/account/get/{iban}";
 	public static final String GET_ALL_ACCOUNTS = "/rest/account/get/all";

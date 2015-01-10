@@ -19,7 +19,7 @@ public class Account extends SoftDeleteEntity implements Serializable{
 
 	private static final long serialVersionUID = 6224508889742851291L;
 
-	//TODO: maybe the name of the bank is necessary?
+	// maybe the name of the bank is necessary?
 	
 	private String owner;
 	
