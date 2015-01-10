@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,13 @@ import android.widget.Toast;
 import de.artmann.artmannwiki.R;
 
 public class LoginMain extends Activity {
+	
+	private EditText passwordField;
+	private EditText passwordField2;
+	private Button loginButton;
+	private TextView textView;
+	private SharedPreferences sharedPreferences;
+	private Editor editor;
 
     public static final String PREFS_NAME = "sprefsfile_artmannwiki";
     public static final String PREFS_ATTR = "pStr";
@@ -24,15 +32,14 @@ public class LoginMain extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        final EditText passwordField = (EditText) findViewById(R.id.login_password_field);
-        final EditText passwordField2 = (EditText) findViewById(R.id.login_password_field_2);
-        Button loginButton = (Button) findViewById(R.id.login_button);
-        final TextView textView = (TextView) findViewById(R.id.login_textview);
-        final SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, 0);    //0 == Activity.MODE_PRIVATE
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        passwordField = (EditText) findViewById(R.id.login_password_field);
+        passwordField2 = (EditText) findViewById(R.id.login_password_field_2);
+        loginButton = (Button) findViewById(R.id.login_button);
+        textView = (TextView) findViewById(R.id.login_textview);
+        sharedPreferences = getSharedPreferences(PREFS_NAME, 0);    //0 == Activity.MODE_PRIVATE
+        editor = sharedPreferences.edit();
 
         String passwd = sharedPreferences.getString(PREFS_ATTR, "");
-        textView.setText(passwd);
         if(passwd.equals("")) {
             passwordField2.setVisibility(View.VISIBLE);
             textView.setText(R.string.prompt_register);

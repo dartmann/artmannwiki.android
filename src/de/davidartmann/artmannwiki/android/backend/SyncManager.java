@@ -176,9 +176,6 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					}
 				}//endResponseLoop
 		        accountManager.close();
-		        if (j != response.length()) {
-		        	Toast.makeText(c, "Update der Bankkonten nicht vollständig", Toast.LENGTH_SHORT).show();
-				}
 		    }
 		}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
@@ -214,7 +211,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					try {
 						JSONObject jDev = (JSONObject) response.get(j);
 						System.out.println("JSON Gerät String: "+jDev);
-						backendDev = new Device(jDev.getString("name"), jDev.getString("number"), jDev.getString("pin"), jDev.getString("puk"));
+						backendDev = new Device(jDev.getString("name"), jDev.getString("number"), 
+								jDev.getString("pin"), jDev.getString("puk"));
 						backendDev.setBackendId(jDev.getLong("id"));
 						backendDev.setActive(jDev.getBoolean("active"));
 						backendDev.setCreateTime(new Date(jDev.getLong("createTime")));
@@ -236,9 +234,6 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					}
 				}//endResponseLoop
 		        deviceManager.close();
-		        if (j != response.length()) {
-		        	Toast.makeText(c, "Update der Geräte nicht vollständig", Toast.LENGTH_SHORT).show();
-				}
 		    }
 		}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
@@ -296,9 +291,6 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					}
 				}//endResponseLoop
 		        emailManager.close();
-		        if (j != response.length()) {
-		        	Toast.makeText(c, "Update der E-Mails nicht vollständig", Toast.LENGTH_SHORT).show();
-				}
 		    }
 		}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
@@ -334,7 +326,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					try {
 						JSONObject jIns = (JSONObject) response.get(j);
 						System.out.println("JSON Versicherung String: "+jIns);
-						backendInsurance = new Insurance(jIns.getString("name"), jIns.getString("kind"), jIns.getString("membershipId"));
+						backendInsurance = new Insurance(jIns.getString("name"), 
+								jIns.getString("kind"), jIns.getString("membershipId"));
 						backendInsurance.setBackendId(jIns.getLong("id"));
 						backendInsurance.setActive(jIns.getBoolean("active"));
 						backendInsurance.setCreateTime(new Date(jIns.getLong("createTime")));
@@ -356,9 +349,6 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					}
 				}//endResponseLoop
 		        insuranceManager.close();
-		        if (j == response.length()) {
-		        	Toast.makeText(c, "Update der Versicherungen nicht vollständig", Toast.LENGTH_SHORT).show();
-				}
 		    }
 		}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
@@ -394,7 +384,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					try {
 						JSONObject jLog = (JSONObject) response.get(j);
 						System.out.println("JSON Login String: "+jLog);
-						backendLogin = new Login(jLog.getString("username"), jLog.getString("password"), jLog.getString("description"));
+						backendLogin = new Login(jLog.getString("username"), jLog.getString("password"), 
+								jLog.getString("description"));
 						backendLogin.setBackendId(jLog.getLong("id"));
 						backendLogin.setActive(jLog.getBoolean("active"));
 						backendLogin.setCreateTime(new Date(jLog.getLong("createTime")));
@@ -416,9 +407,6 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					}
 				}//endResponseLoop
 		        loginManager.close();
-		        if (j != response.length()) {
-		        	Toast.makeText(c, "Update der Logins nicht vollständig", Toast.LENGTH_SHORT).show();
-				}
 		    }
 		}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
@@ -476,9 +464,6 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					}
 				}//endResponseLoop
 		        miscellaneousManager.close();
-		        if (j != response.length()) {
-		        	Toast.makeText(c, "Update der Notizen nicht vollständig", Toast.LENGTH_SHORT).show();
-				}
 		    }
 		}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
