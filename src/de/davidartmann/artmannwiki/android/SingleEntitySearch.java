@@ -149,7 +149,7 @@ public class SingleEntitySearch extends Activity {
 			intentSerializableExtra = 4;
 			final Login l = (Login) intent.getSerializableExtra("login");
 			setTitle("Login");
-			normalTextView.setText(l.getNormalData());
+			normalTextView.setText(l.toString());
 			button.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					if (secretTextView.getVisibility() == View.GONE) {

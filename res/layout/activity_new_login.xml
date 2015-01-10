@@ -32,7 +32,7 @@
     <EditText
         android:id="@+id/activity_new_login_edittext_info"
         android:inputType="text"
-        android:maxLength="30"
+        android:maxLength="100"
         android:hint="@string/hint_new_login_info"
         android:layout_below="@+id/activity_new_login_edittext_password_repeat"
         android:layout_width="match_parent"

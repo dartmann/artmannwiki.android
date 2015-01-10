@@ -73,7 +73,7 @@ public class ExtHttpClientStack implements HttpStack {
         onPrepareRequest(httpRequest);
         HttpParams httpParams = httpRequest.getParams();
         int timeoutMs = request.getTimeoutMs();
-        // TODO: Reevaluate this connection timeout
+        // maybe the connection timeout is to short
         HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
         HttpConnectionParams.setSoTimeout(httpParams, timeoutMs);
 

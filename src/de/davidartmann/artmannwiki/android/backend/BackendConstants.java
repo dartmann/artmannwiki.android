@@ -3,7 +3,6 @@ package de.davidartmann.artmannwiki.android.backend;
 public class BackendConstants {
 	
 	public static final String HEADER_KEY = "artmannwiki_headerkey";
-	//TODO: change this when productive
 	public static final String HEADER_VALUE = "blafoo";
 	
 	public static final String CONTENT_TYPE = "Content-Type";

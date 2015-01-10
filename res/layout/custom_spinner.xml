@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" 
-    android:textSize="20sp"
-    android:gravity="start"
-    android:textStyle="bold"
-    android:padding="5dip">
-
-</TextView>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="fill_parent"
+ android:layout_height="wrap_content"
+ android:orientation="vertical"
+ android:padding="3dip" >
+    <ImageView
+        android:contentDescription="@string/customspinnericon"
+        android:id="@+id/customspinner_image"
+        android:layout_width="30dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_drawer"/>
+    <TextView 
+        android:id="@+id/customspinner_text"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_toRightOf="@id/customspinner_image"
+	    android:layout_toEndOf="@id/customspinner_image"
+	    android:textSize="20sp"
+	    android:gravity="start"
+	    android:textStyle="bold"
+	    android:padding="5dip" />
+</RelativeLayout>

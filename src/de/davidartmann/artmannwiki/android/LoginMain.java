@@ -58,7 +58,7 @@ public class LoginMain extends Activity {
                         editor.putString(PREFS_ATTR, passField1).apply();
                         Toast.makeText(LoginMain.this, "Erfolgreiche erste Anmeldung", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getBaseContext(), Choice.class);
-                        intent.putExtra("firstAssign", true);
+                        intent.putExtra("firstLogin", true);
                         startActivity(intent);
                         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(passwordField.getWindowToken(), 0);
@@ -81,6 +81,7 @@ public class LoginMain extends Activity {
                     if(passField1.equals(passwdSp)) {
                         Intent intent = new Intent(getBaseContext(), Choice.class);
                         startActivity(intent);
+                        intent.putExtra("login", true);
                         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(passwordField.getWindowToken(), 0);
                     }

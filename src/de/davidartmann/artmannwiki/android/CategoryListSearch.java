@@ -20,6 +20,7 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Spinner;
 import de.artmann.artmannwiki.R;
+import de.davidartmann.artmannwiki.android.adapter.CategoryListSearchSpinnerAdapter;
 import de.davidartmann.artmannwiki.android.database.AccountManager;
 import de.davidartmann.artmannwiki.android.database.DeviceManager;
 import de.davidartmann.artmannwiki.android.database.EmailManager;
@@ -69,7 +70,8 @@ public class CategoryListSearch extends Activity {
 		spinner = (Spinner) findViewById(R.id.activity_categorylist_search_spinner);
 		listView = (ListView) findViewById(R.id.activity_categorylist_search_listview);
 		//TODO: customize the spinner (images like the save list)
-		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.custom_spinner, spinnerItems);
+		//ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.custom_spinner, spinnerItems);
+		CategoryListSearchSpinnerAdapter spinnerAdapter = new CategoryListSearchSpinnerAdapter(CategoryListSearch.this, spinnerItems);
 		spinner.setAdapter(spinnerAdapter);
 		addSpinnerOnItemSelectListener();
 		addListViewOnItemClickListener();

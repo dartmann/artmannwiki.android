@@ -83,6 +83,7 @@
     <drawable name="mistyrose">#FBBBB9</drawable>
     <drawable name="screen_background_holo_light">#fff3f3f3</drawable>
     <drawable name="screen_background_holo_dark">#ff000000</drawable>
+    <drawable name="darkgrey">#606060</drawable>
     <color name="background_holo_dark">#ff000000</color>
     <color name="background_holo_light">#fff3f3f3</color>
 
@@ -91,6 +92,7 @@
     
     <!-- Descriptions -->
     <string name="categorylistitemicon">Image of the category list items</string>
+    <string name="customspinnericon">Image of the custom spinner</string>
     
     <!-- NavigationDrawer -->
     <string name="drawer_imageview">image view for the navigationsbar</string>

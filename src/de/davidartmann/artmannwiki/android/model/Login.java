@@ -67,11 +67,6 @@ public class Login extends SoftDeleteEntity implements Serializable{
 	}
 	
 	public String toString() {
-		return "Benutzername: "+username;
-	}
-	
-	public String getNormalData() {
 		return "Benutzername: "+username+"\n"+"Beschreibung: "+description;
 	}
-	
 }

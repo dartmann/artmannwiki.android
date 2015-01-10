@@ -42,7 +42,9 @@ public class Choice extends Activity {
         else {
             setContentView(R.layout.activity_choice_portrait);
         }
-        if(getIntent().getBooleanExtra("firstAssign", false)) {
+        if (getIntent().getBooleanExtra("firstLogin", false)) {
+        	checkLastUpdate();
+        } else if (getIntent().getBooleanExtra("login", false)) {
         	checkLastUpdate();
         }
         
