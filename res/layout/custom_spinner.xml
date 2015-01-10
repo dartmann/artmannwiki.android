@@ -7,10 +7,13 @@
     <ImageView
         android:contentDescription="@string/customspinnericon"
         android:id="@+id/customspinner_image"
-        android:layout_width="30dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:layout_height="30dp"
+        android:layout_width="30dip"
+        android:paddingLeft="2dip"
+        android:paddingRight="2dip"
+        android:layout_height="30dip"
+        android:paddingTop="4dip"
+        android:paddingStart="2dip"
+        android:paddingEnd="2dip"
         android:src="@drawable/ic_drawer"/>
     <TextView 
         android:id="@+id/customspinner_text"

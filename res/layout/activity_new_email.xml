@@ -11,7 +11,7 @@
     <EditText
         android:id="@+id/new_mail_edittext_mailadress"
         android:inputType="textEmailAddress"
-        android:maxLength="35"
+        android:maxLength="50"
         android:hint="@string/action_hint_mail"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
