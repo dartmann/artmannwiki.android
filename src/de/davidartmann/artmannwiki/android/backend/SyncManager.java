@@ -9,10 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -52,8 +50,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 	private LastUpdateManager lastUpdateManager;
 	private Context context;
 	private ProgressDialog progressDialog;
-	private int createdItem;
-	private int updatedItem;
+//	private int createdItem;
+//	private int updatedItem;
 	private boolean updateError = false;
 	
 	/**
@@ -102,6 +100,10 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		}
 		if (!updateError) {
 			setLocalSyncTimeWithBackendResponse(context);
+			/*
+			 * Unfortunately this is not realizable at the moment, because the VolleyRequestQueue handles its work in an own Thread
+			 * and i don't get feedback from it, so i can not say how much entities are updated/created.
+			 * 
 			AlertDialog.Builder alert = new AlertDialog.Builder(context)
 				.setTitle("Update Übersicht")
 				.setMessage("Es wurden "+createdItem+" neue Einträge erstellt und "+updatedItem+" aktualisiert")
@@ -111,6 +113,7 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					}
 				});
 			alert.show();
+			*/
 		}
 	}
 
@@ -182,11 +185,13 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 						if (localAcc.getBackendId() == backendAcc.getBackendId()) {
 							accountManager.updateAccountByBackendId(backendAcc);
 							update = true;
+//							updatedItem++;
 						}
 					}
 					if (!update) {
 						Account a = accountManager.addAccount(backendAcc);
 						accountManager.addBackendId(a.getId(), backendAcc.getBackendId());
+//						createdItem++;
 					}
 				}//endResponseLoop
 		        accountManager.close();
@@ -238,11 +243,13 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 						if (localDev.getBackendId() == backendDev.getBackendId()) {
 							deviceManager.updateDeviceByBackendId(backendDev);
 							update = true;
+//							updatedItem++;
 						}
 					}
 					if (!update) {
 						Device d = deviceManager.addDevice(backendDev);
 						deviceManager.addBackendId(d.getId(), backendDev.getBackendId());
+//						createdItem++;
 					}
 				}//endResponseLoop
 		        deviceManager.close();
@@ -293,11 +300,13 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 						if (localEmail.getBackendId() == backendEmail.getBackendId()) {
 							emailManager.updateEmailByBackendId(backendEmail);
 							update = true;
+//							updatedItem++;
 						}
 					}
 					if (!update) {
 						Email e = emailManager.addEmail(backendEmail);
 						emailManager.addBackendId(e.getId(), backendEmail.getBackendId());
+//						createdItem++;
 					}
 				}//endResponseLoop
 		        emailManager.close();
@@ -349,11 +358,13 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 						if (localInsurance.getBackendId() == backendInsurance.getBackendId()) {
 							insuranceManager.updateInsuranceByBackendId(backendInsurance);
 							update = true;
+//							updatedItem++;
 						}
 					}
 					if (!update) {
 						Insurance i = insuranceManager.addInsurance(backendInsurance);
 						insuranceManager.addBackendId(i.getId(), backendInsurance.getBackendId());
+//						createdItem++;
 					}
 				}//endResponseLoop
 		        insuranceManager.close();
@@ -405,11 +416,13 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 						if (localLogin.getBackendId() == backendLogin.getBackendId()) {
 							loginManager.updateLoginByBackendId(backendLogin);
 							update = true;
+//							updatedItem++;
 						}
 					}
 					if (!update) {
 						Login l = loginManager.addLogin(backendLogin);
 						loginManager.addBackendId(l.getId(), backendLogin.getBackendId());
+//						createdItem++;
 					}
 				}//endResponseLoop
 		        loginManager.close();
@@ -460,11 +473,13 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 						if (localMiscellaneous.getBackendId() == backendMiscellaneous.getBackendId()) {
 							miscellaneousManager.updateMiscellaneousById(backendMiscellaneous);
 							update = true;
+//							updatedItem++;
 						}
 					}
 					if (!update) {
 						Miscellaneous m = miscellaneousManager.addMiscellaneous(backendMiscellaneous);
 						miscellaneousManager.addBackendId(m.getId(), backendMiscellaneous.getBackendId());
+//						createdItem++;
 					}
 				}//endResponseLoop
 		        miscellaneousManager.close();
