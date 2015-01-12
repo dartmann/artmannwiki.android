@@ -9,11 +9,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -37,6 +38,9 @@ import de.davidartmann.artmannwiki.android.model.Insurance;
 import de.davidartmann.artmannwiki.android.model.Login;
 import de.davidartmann.artmannwiki.android.model.Miscellaneous;
 
+/**
+ * Class which extends the {@link AsyncTask} to perform several update tasks in the background.
+ */
 public class SyncManager extends AsyncTask<Long, Integer, Long> {
 	
 	private AccountManager accountManager;
@@ -48,6 +52,9 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 	private LastUpdateManager lastUpdateManager;
 	private Context context;
 	private ProgressDialog progressDialog;
+	private int createdItem;
+	private int updatedItem;
+	private boolean updateError = false;
 	
 	/**
 	 * Constructor without parameters for the NewAccount, NewDevice, (...) Classes
@@ -66,7 +73,7 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 	
 	protected void onPreExecute() {
 		progressDialog = new ProgressDialog(context);
-		progressDialog.setMax(1);
+		progressDialog.setMax(6);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		progressDialog.setIndeterminate(true);
 		progressDialog.setCancelable(false);
@@ -75,26 +82,36 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 	
 	protected Long doInBackground(Long... params) {
 		doAccountSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_ACCOUNTS_SINCE+params[0], params[1]);
-		publishProgress(1/6);
+		publishProgress(1);
 		doDeviceSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_DEVICES_SINCE+params[0], params[1]);
-		publishProgress(2/6);
+		publishProgress(2);
 		doEmailSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_EMAILS_SINCE+params[0], params[1]);
-		publishProgress(3/6);
+		publishProgress(3);
 		doInsuranceSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_INSURANCES_SINCE+params[0], params[1]);
-		publishProgress(4/6);
+		publishProgress(4);
 		doLoginSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_LOGINS_SINCE+params[0], params[1]);
-		publishProgress(5/6);
+		publishProgress(5);
 		doMiscellaneousSync(context, BackendConstants.ARTMANNWIKI_ROOT+BackendConstants.GET_MISCELLANEOUS_SINCE+params[0], params[1]);
-		publishProgress(6/6);
+		publishProgress(6);
 		return null;
 	}
 	
 	protected void onPostExecute(Long result) {
-		setLocalSyncTimeWithBackendResponse(context);
 		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}
-		Toast.makeText(context, "Update durchgeführt", Toast.LENGTH_LONG).show();
+		if (!updateError) {
+			setLocalSyncTimeWithBackendResponse(context);
+			AlertDialog.Builder alert = new AlertDialog.Builder(context)
+				.setTitle("Update Übersicht")
+				.setMessage("Es wurden "+createdItem+" neue Einträge erstellt und "+updatedItem+" aktualisiert")
+				.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+			alert.show();
+		}
 	}
 
 	protected void onProgressUpdate(Integer... values) {
@@ -112,16 +129,16 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		    public void onResponse(String response) {
 		    	lastUpdateManager = new LastUpdateManager(c);
 		    	lastUpdateManager.openWritable(c);
-		    	Long localLastUpdate = lastUpdateManager.getLastUpdate();
-		    	Long localNewLastUpdate = lastUpdateManager.setLastUpdate(Long.parseLong(response));
-		    	System.out.println("Successfully updated local sync time: '"+localLastUpdate+"' with '"+localNewLastUpdate+"' from the backend");
+		    	/*Long localLastUpdate = */lastUpdateManager.getLastUpdate();
+		    	/*Long localNewLastUpdate = */lastUpdateManager.setLastUpdate(Long.parseLong(response));
 		    	lastUpdateManager.close();
 		    }
 		}, new Response.ErrorListener() {
 		    @Override
 		    public void onErrorResponse(VolleyError error) {
 		    	Log.e("checkLastUpdate", error.toString());
-		    	System.err.println("Could not set local sync time, because backend connection failed");
+		    	updateError = true;
+		    	//Toast.makeText(c, "Setzen der lokalen Update Zeit konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
 		    }
 		}) {
 
@@ -153,7 +170,6 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		        	Account backendAcc = null;
 					try {
 						JSONObject jAcc = (JSONObject) response.get(j);
-						System.out.println("JSON Account String: "+jAcc);
 						backendAcc = new Account(jAcc.getString("owner"), jAcc.getString("iban"), jAcc.getString("bic"), jAcc.getString("pin"));
 						backendAcc.setBackendId(jAcc.getLong("id"));
 						backendAcc.setActive(jAcc.getBoolean("active"));
@@ -164,13 +180,11 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					boolean update = false;
 					for (Account localAcc : localAccounts) {
 						if (localAcc.getBackendId() == backendAcc.getBackendId()) {
-							System.out.println("UPDATE!");
 							accountManager.updateAccountByBackendId(backendAcc);
 							update = true;
 						}
 					}
 					if (!update) {
-						System.out.println("CREATE!");
 						Account a = accountManager.addAccount(backendAcc);
 						accountManager.addBackendId(a.getId(), backendAcc.getBackendId());
 					}
@@ -180,7 +194,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
 		        VolleyLog.e("Error: ", error.getMessage());
-		        Toast.makeText(c, "Update der Bankkonten konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
+		        updateError = true;
+		        //Toast.makeText(c, "Update der Bankkonten konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
 		    }
 		}) {
 			public Map<String, String> getHeaders() throws AuthFailureError {
@@ -210,7 +225,6 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		        	Device backendDev = null;
 					try {
 						JSONObject jDev = (JSONObject) response.get(j);
-						System.out.println("JSON Gerät String: "+jDev);
 						backendDev = new Device(jDev.getString("name"), jDev.getString("number"), 
 								jDev.getString("pin"), jDev.getString("puk"));
 						backendDev.setBackendId(jDev.getLong("id"));
@@ -222,13 +236,11 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					boolean update = false;
 					for (Device localDev : localDevices) {
 						if (localDev.getBackendId() == backendDev.getBackendId()) {
-							System.out.println("UPDATE!");
 							deviceManager.updateDeviceByBackendId(backendDev);
 							update = true;
 						}
 					}
 					if (!update) {
-						System.out.println("CREATE!");
 						Device d = deviceManager.addDevice(backendDev);
 						deviceManager.addBackendId(d.getId(), backendDev.getBackendId());
 					}
@@ -238,7 +250,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
 		        VolleyLog.e("Error: ", error.getMessage());
-		        Toast.makeText(c, "Update der Geräte konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
+		        updateError = true;
+		        //Toast.makeText(c, "Update der Geräte konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
 		    }
 		}) {
 			public Map<String, String> getHeaders() throws AuthFailureError {
@@ -268,7 +281,6 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		        	Email backendEmail = null;
 					try {
 						JSONObject jEmail = (JSONObject) response.get(j);
-						System.out.println("JSON Email String: "+jEmail);
 						backendEmail = new Email(jEmail.getString("emailaddress"), jEmail.getString("password"));
 						backendEmail.setBackendId(jEmail.getLong("id"));
 						backendEmail.setActive(jEmail.getBoolean("active"));
@@ -279,13 +291,11 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					boolean update = false;
 					for (Email localEmail : localEmails) {
 						if (localEmail.getBackendId() == backendEmail.getBackendId()) {
-							System.out.println("UPDATE!");
 							emailManager.updateEmailByBackendId(backendEmail);
 							update = true;
 						}
 					}
 					if (!update) {
-						System.out.println("CREATE!");
 						Email e = emailManager.addEmail(backendEmail);
 						emailManager.addBackendId(e.getId(), backendEmail.getBackendId());
 					}
@@ -295,7 +305,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
 		        VolleyLog.e("Error: ", error.getMessage());
-		        Toast.makeText(c, "Update der E-Mails konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
+		        updateError = true;
+		        //Toast.makeText(c, "Update der E-Mails konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
 		    }
 		}) {
 			public Map<String, String> getHeaders() throws AuthFailureError {
@@ -325,7 +336,6 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		        	Insurance backendInsurance = null;
 					try {
 						JSONObject jIns = (JSONObject) response.get(j);
-						System.out.println("JSON Versicherung String: "+jIns);
 						backendInsurance = new Insurance(jIns.getString("name"), 
 								jIns.getString("kind"), jIns.getString("membershipId"));
 						backendInsurance.setBackendId(jIns.getLong("id"));
@@ -337,13 +347,11 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					boolean update = false;
 					for (Insurance localInsurance : localInsurances) {
 						if (localInsurance.getBackendId() == backendInsurance.getBackendId()) {
-							System.out.println("UPDATE!");
 							insuranceManager.updateInsuranceByBackendId(backendInsurance);
 							update = true;
 						}
 					}
 					if (!update) {
-						System.out.println("CREATE!");
 						Insurance i = insuranceManager.addInsurance(backendInsurance);
 						insuranceManager.addBackendId(i.getId(), backendInsurance.getBackendId());
 					}
@@ -353,7 +361,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
 		        VolleyLog.e("Error: ", error.getMessage());
-		        Toast.makeText(c, "Update der Versicherungen konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
+		        updateError = true;
+		        //Toast.makeText(c, "Update der Versicherungen konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
 		    }
 		}) {
 			public Map<String, String> getHeaders() throws AuthFailureError {
@@ -383,7 +392,6 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		        	Login backendLogin = null;
 					try {
 						JSONObject jLog = (JSONObject) response.get(j);
-						System.out.println("JSON Login String: "+jLog);
 						backendLogin = new Login(jLog.getString("username"), jLog.getString("password"), 
 								jLog.getString("description"));
 						backendLogin.setBackendId(jLog.getLong("id"));
@@ -395,13 +403,11 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					boolean update = false;
 					for (Login localLogin : localLogins) {
 						if (localLogin.getBackendId() == backendLogin.getBackendId()) {
-							System.out.println("UPDATE!");
 							loginManager.updateLoginByBackendId(backendLogin);
 							update = true;
 						}
 					}
 					if (!update) {
-						System.out.println("CREATE!");
 						Login l = loginManager.addLogin(backendLogin);
 						loginManager.addBackendId(l.getId(), backendLogin.getBackendId());
 					}
@@ -411,7 +417,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
 		        VolleyLog.e("Error: ", error.getMessage());
-		        Toast.makeText(c, "Update der Logins konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
+		        updateError = true;
+		        //Toast.makeText(c, "Update der Logins konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
 		    }
 		}) {
 			public Map<String, String> getHeaders() throws AuthFailureError {
@@ -441,7 +448,6 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		        	Miscellaneous backendMiscellaneous = null;
 					try {
 						JSONObject jMisc = (JSONObject) response.get(j);
-						System.out.println("JSON Login String: "+jMisc);
 						backendMiscellaneous = new Miscellaneous(jMisc.getString("text"), jMisc.getString("description"));
 						backendMiscellaneous.setBackendId(jMisc.getLong("id"));
 						backendMiscellaneous.setActive(jMisc.getBoolean("active"));
@@ -452,13 +458,11 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 					boolean update = false;
 					for (Miscellaneous localMiscellaneous : localMiscellaneouses) {
 						if (localMiscellaneous.getBackendId() == backendMiscellaneous.getBackendId()) {
-							System.out.println("UPDATE!");
 							miscellaneousManager.updateMiscellaneousById(backendMiscellaneous);
 							update = true;
 						}
 					}
 					if (!update) {
-						System.out.println("CREATE!");
 						Miscellaneous m = miscellaneousManager.addMiscellaneous(backendMiscellaneous);
 						miscellaneousManager.addBackendId(m.getId(), backendMiscellaneous.getBackendId());
 					}
@@ -468,7 +472,8 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		}, new Response.ErrorListener() {
 		    public void onErrorResponse(VolleyError error) {
 		        VolleyLog.e("Error: ", error.getMessage());
-		        Toast.makeText(c, "Update der Notizen konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
+		        updateError = true;
+		        //Toast.makeText(c, "Update der Notizen konnte nicht durchgeführt werden, Fehler bei der Verbindung", Toast.LENGTH_SHORT).show();
 		    }
 		}) {
 			public Map<String, String> getHeaders() throws AuthFailureError {
