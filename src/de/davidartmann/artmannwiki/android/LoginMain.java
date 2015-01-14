@@ -80,8 +80,8 @@ public class LoginMain extends Activity {
                 else {
                     if(passField1.equals(passwdSp)) {
                         Intent intent = new Intent(getBaseContext(), Choice.class);
-                        startActivity(intent);
                         intent.putExtra("login", true);
+                        startActivity(intent);
                         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(passwordField.getWindowToken(), 0);
                     }
