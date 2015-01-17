@@ -1,6 +1,5 @@
 package de.davidartmann.artmannwiki.android;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,12 +25,12 @@ import com.android.volley.toolbox.StringRequest;
 
 import de.artmann.artmannwiki.R;
 import de.davidartmann.artmannwiki.android.backend.BackendConstants;
+import de.davidartmann.artmannwiki.android.backend.SyncManager;
 import de.davidartmann.artmannwiki.android.backend.VolleyRequestQueue;
 import de.davidartmann.artmannwiki.android.database.AccountManager;
 import de.davidartmann.artmannwiki.android.database.DeviceManager;
 import de.davidartmann.artmannwiki.android.database.EmailManager;
 import de.davidartmann.artmannwiki.android.database.InsuranceManager;
-import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 import de.davidartmann.artmannwiki.android.database.LoginManager;
 import de.davidartmann.artmannwiki.android.database.MiscellaneousManager;
 import de.davidartmann.artmannwiki.android.model.Account;
@@ -60,7 +59,6 @@ public class SingleEntitySearch extends Activity {
 	private InsuranceManager insuranceManager;
 	private LoginManager loginManager;
 	private MiscellaneousManager miscellaneousManager;
-	private LastUpdateManager lastUpdateManager;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -355,10 +353,7 @@ public class SingleEntitySearch extends Activity {
             	accountManager.openWritable(SingleEntitySearch.this);
             	accountManager.softDeleteAccount(a);
             	accountManager.close();
-            	lastUpdateManager = new LastUpdateManager(SingleEntitySearch.this);
-				lastUpdateManager.openWritable(SingleEntitySearch.this);
-	        	lastUpdateManager.setLastUpdate(new Date().getTime());
-	        	lastUpdateManager.close();
+            	new SyncManager().setLocalSyncTimeWithBackendResponse(SingleEntitySearch.this);
             	Toast.makeText(SingleEntitySearch.this, "Konto erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 		    }
 			}, new Response.ErrorListener() {
@@ -389,10 +384,7 @@ public class SingleEntitySearch extends Activity {
 		    	deviceManager.openWritable(SingleEntitySearch.this);
 		    	deviceManager.softDeleteDevice(d);
 		    	deviceManager.close();
-		    	lastUpdateManager = new LastUpdateManager(SingleEntitySearch.this);
-				lastUpdateManager.openWritable(SingleEntitySearch.this);
-	        	lastUpdateManager.setLastUpdate(new Date().getTime());
-	        	lastUpdateManager.close();
+		    	new SyncManager().setLocalSyncTimeWithBackendResponse(SingleEntitySearch.this);
 		    	Toast.makeText(SingleEntitySearch.this, "Gerät erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 		    }
 			}, new Response.ErrorListener() {
@@ -423,10 +415,7 @@ public class SingleEntitySearch extends Activity {
 		    	emailManager.openWritable(SingleEntitySearch.this);
 		    	emailManager.softDeleteEmail(e);
 		    	emailManager.close();
-		    	lastUpdateManager = new LastUpdateManager(SingleEntitySearch.this);
-				lastUpdateManager.openWritable(SingleEntitySearch.this);
-	        	lastUpdateManager.setLastUpdate(new Date().getTime());
-	        	lastUpdateManager.close();
+		    	new SyncManager().setLocalSyncTimeWithBackendResponse(SingleEntitySearch.this);
 		    	Toast.makeText(SingleEntitySearch.this, "E-Mail erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 		    }
 			}, new Response.ErrorListener() {
@@ -457,10 +446,7 @@ public class SingleEntitySearch extends Activity {
 		    	insuranceManager.openWritable(SingleEntitySearch.this);
 		    	insuranceManager.softDeleteInsurance(i);
 		    	insuranceManager.close();
-		    	lastUpdateManager = new LastUpdateManager(SingleEntitySearch.this);
-				lastUpdateManager.openWritable(SingleEntitySearch.this);
-	        	lastUpdateManager.setLastUpdate(new Date().getTime());
-	        	lastUpdateManager.close();
+		    	new SyncManager().setLocalSyncTimeWithBackendResponse(SingleEntitySearch.this);
 		    	Toast.makeText(SingleEntitySearch.this, "Versicherung erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 		    }
 			}, new Response.ErrorListener() {
@@ -491,10 +477,7 @@ public class SingleEntitySearch extends Activity {
 		    	loginManager.openWritable(SingleEntitySearch.this);
 		    	loginManager.softDeleteLogin(l);
 		    	loginManager.close();
-		    	lastUpdateManager = new LastUpdateManager(SingleEntitySearch.this);
-				lastUpdateManager.openWritable(SingleEntitySearch.this);
-	        	lastUpdateManager.setLastUpdate(new Date().getTime());
-	        	lastUpdateManager.close();
+		    	new SyncManager().setLocalSyncTimeWithBackendResponse(SingleEntitySearch.this);
 		    	Toast.makeText(SingleEntitySearch.this, "Login erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 		    }
 			}, new Response.ErrorListener() {
@@ -525,10 +508,7 @@ public class SingleEntitySearch extends Activity {
 		    	miscellaneousManager.openWritable(SingleEntitySearch.this);
 		    	miscellaneousManager.softDeleteLogin(m);
 		    	miscellaneousManager.close();
-		    	lastUpdateManager = new LastUpdateManager(SingleEntitySearch.this);
-				lastUpdateManager.openWritable(SingleEntitySearch.this);
-	        	lastUpdateManager.setLastUpdate(new Date().getTime());
-	        	lastUpdateManager.close();
+		    	new SyncManager().setLocalSyncTimeWithBackendResponse(SingleEntitySearch.this);
 		    	Toast.makeText(SingleEntitySearch.this, "Notiz erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
 		    }
 			}, new Response.ErrorListener() {
@@ -553,6 +533,7 @@ public class SingleEntitySearch extends Activity {
 
 	protected void onPause() {
 		super.onPause();
+		finish();
 	}
 
 	protected void onResume() {

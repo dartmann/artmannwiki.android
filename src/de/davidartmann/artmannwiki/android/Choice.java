@@ -28,7 +28,7 @@ import de.davidartmann.artmannwiki.android.database.LastUpdateManager;
 
 
 public class Choice extends Activity {
-	
+
 	private Button wikiSearchButton;
 	private Button wikiNewEntityButton;
 	private LastUpdateManager lastUpdateManager;
@@ -67,6 +67,11 @@ public class Choice extends Activity {
         });
         
     }
+    
+    @Override
+	protected void onPause() {
+		super.onPause();
+	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
     	getMenuInflater().inflate(R.menu.choice, menu);

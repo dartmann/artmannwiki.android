@@ -69,8 +69,6 @@ public class CategoryListSearch extends Activity {
 		miscellaneousManager = new MiscellaneousManager(this);
 		spinner = (Spinner) findViewById(R.id.activity_categorylist_search_spinner);
 		listView = (ListView) findViewById(R.id.activity_categorylist_search_listview);
-		//TODO: customize the spinner (images like the save list)
-		//ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.custom_spinner, spinnerItems);
 		CategoryListSearchSpinnerAdapter spinnerAdapter = new CategoryListSearchSpinnerAdapter(CategoryListSearch.this, spinnerItems);
 		spinner.setAdapter(spinnerAdapter);
 		addSpinnerOnItemSelectListener();
@@ -194,6 +192,7 @@ public class CategoryListSearch extends Activity {
 		loginManager.close();
 		miscellaneousManager.close();
 		super.onPause();
+		finish();
 	}
 
 	protected void onResume() {

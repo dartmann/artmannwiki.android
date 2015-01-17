@@ -248,6 +248,7 @@ public class NewAccount extends Activity {
 
 	private void goBackToMain() {
 		Intent intent = new Intent(getBaseContext(), Choice.class);
+		finish();
 		startActivity(intent);
 	}
 

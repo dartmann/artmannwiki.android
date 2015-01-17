@@ -132,8 +132,7 @@ public class SyncManager extends AsyncTask<Long, Integer, Long> {
 		    public void onResponse(String response) {
 		    	lastUpdateManager = new LastUpdateManager(c);
 		    	lastUpdateManager.openWritable(c);
-		    	/*Long localLastUpdate = */lastUpdateManager.getLastUpdate();
-		    	/*Long localNewLastUpdate = */lastUpdateManager.setLastUpdate(Long.parseLong(response));
+		    	lastUpdateManager.setLastUpdate(Long.parseLong(response));
 		    	lastUpdateManager.close();
 		    }
 		}, new Response.ErrorListener() {
