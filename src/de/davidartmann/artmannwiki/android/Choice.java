@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -118,6 +119,10 @@ public class Choice extends Activity {
 		    	lastUpdateManager.close();
 		    	if (localLastUpdate < responseTime) {
 		    		new SyncManager(Choice.this).execute(localLastUpdate, responseTime);
+				} else {
+					Toast t = Toast.makeText(Choice.this, "Update nicht nötig", Toast.LENGTH_SHORT);
+					t.setGravity(Gravity.CENTER, 0, 0);
+					t.show();
 				}
 		    }
 		}, new Response.ErrorListener() {
