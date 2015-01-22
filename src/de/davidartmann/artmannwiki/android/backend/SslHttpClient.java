@@ -13,7 +13,7 @@ import khandroid.ext.apache.http.impl.conn.PoolingClientConnectionManager;
 import khandroid.ext.apache.http.params.HttpParams;
 
 public class SslHttpClient extends DefaultHttpClient {
-	private static final int HTTP_DEFAULT_PORT = 80;
+	private static final int HTTP_DEFAULT_PORT = 8080;
     private static final String HTTP_SCHEME = "http";
     private static final int HTTP_DEFAULT_HTTPS_PORT = 8443;
     private static final String HTTP_SSL_SCHEME = "https";
@@ -81,8 +81,7 @@ public class SslHttpClient extends DefaultHttpClient {
         SchemeRegistry registry = new SchemeRegistry();
 
         PlainSocketFactory pfs = PlainSocketFactory.getSocketFactory();
-        Scheme s = new Scheme(HTTP_SCHEME, HTTP_DEFAULT_PORT, pfs);
-        registry.register(s);
+        registry.register(new Scheme(HTTP_SCHEME, HTTP_DEFAULT_PORT, pfs));
 
         PoolingClientConnectionManager ret;
         try {

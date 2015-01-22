@@ -58,8 +58,7 @@ public class SslX509TrustManager implements X509TrustManager {
     private TrustManagerFactory prepareTrustManagerFactory(InputStream keyStore, String keyStorePassword) throws GeneralSecurityException {
         TrustManagerFactory ret = null;
         
-        KeyStore ks;
-        ks = KeyStore.getInstance("BKS");
+        KeyStore ks = KeyStore.getInstance("BKS");
         try {
             ks.load(keyStore, keyStorePassword.toCharArray());
         } catch (IOException e) {
