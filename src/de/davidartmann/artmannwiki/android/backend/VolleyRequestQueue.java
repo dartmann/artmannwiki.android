@@ -6,7 +6,6 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
 
 import de.artmann.artmannwiki.R;
@@ -15,9 +14,6 @@ public class VolleyRequestQueue /*extends Application*/{
 
     private RequestQueue mRequestQueue;
 	private static Context mCtx;
-	@SuppressWarnings("unused")
-	private HurlStack hurlStack;
-	
 	/**
      * A singleton instance of the application class for easy access in other places
      */
@@ -48,46 +44,15 @@ public class VolleyRequestQueue /*extends Application*/{
      */
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
-        	/*
-        	KeyStore trustedKeyStore = null;
-        	InputStream keyStoreInputStream = null;
-        	try {
-	        	trustedKeyStore = KeyStore.getInstance("BKS");
-	        	keyStoreInputStream = mCtx.getResources().openRawResource(R.raw.tomcat);
-	        	trustedKeyStore.load(keyStoreInputStream, "T0mcat2015K3y".toCharArray());
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					keyStoreInputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-        	try {
-        		TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            	tmf.init(trustedKeyStore);
-            	
-            	KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-            	kmf.init(trustedKeyStore, "T0mcat2015K3y".toCharArray());
-            	
-            	SSLContext sslContext = null;
-            	sslContext = SSLContext.getInstance("TLS");
-    			sslContext.init(null, tmf.getTrustManagers(), null);
-    			
-            	// will provide the client certificate from the keystore during handshake
-            	SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-            	hurlStack = new HurlStack(null, sslSocketFactory);
-            	mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext(), hurlStack);
-        	} catch (Exception e) {
-        		e.printStackTrace();
-        	}
-        	*/
         	InputStream keyStoreInputStream = mCtx.getResources().openRawResource(R.raw.tomcat);
+        	/*
             mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext(), 
             		new ExtHttpClientStack(
             				new SslHttpClient(keyStoreInputStream, "T0mcat2015K3y", 8443)));
-            
+            */
+        	mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext(), 
+        			new MyHttpStack(
+        					new MySslHttpClient(keyStoreInputStream, "T0mcat2015K3y")));
         }
         return mRequestQueue;
     }
