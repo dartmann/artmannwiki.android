@@ -1,6 +1,11 @@
 package de.davidartmann.artmannwiki.android.backend;
 
 import java.io.InputStream;
+import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 
 import org.apache.http.HttpVersion;
 import org.apache.http.conn.ClientConnectionManager;
@@ -51,7 +56,24 @@ public class MySslHttpClient extends DefaultHttpClient {
 		SchemeRegistry registry = new SchemeRegistry();
 		PlainSocketFactory psf = PlainSocketFactory.getSocketFactory();
 		registry.register(new Scheme(HTTP_SCHEME, psf, HTTP_DEFAULT_PORT));
-		registry.register(new Scheme(HTTP_SSL_SCHEME, new MySslSocketFactory(mKeyStore, mKeyStorePassword), HTTP_DEFAULT_HTTPS_PORT));
+		try {
+			registry.register(new Scheme(HTTP_SSL_SCHEME, new MySslSocketFactory(mKeyStore, mKeyStorePassword), HTTP_DEFAULT_HTTPS_PORT));
+		} catch (KeyManagementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnrecoverableKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		HttpParams httpParams = new BasicHttpParams();
 		httpParams.setParameter(ConnManagerParams.MAX_TOTAL_CONNECTIONS, 1);
 		httpParams.setParameter(ConnManagerParams.MAX_CONNECTIONS_PER_ROUTE, new ConnPerRouteBean(1));

@@ -17,7 +17,7 @@ public class MyX509TrustManager implements X509TrustManager {
 	private X509TrustManager mX509TrustManager = null;
 	
 	public MyX509TrustManager(InputStream keyStore, String keyStorePassword) throws GeneralSecurityException {
-		super();
+		//super();
 		TrustManagerFactory factory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 		KeyStore ks = KeyStore.getInstance("BKS");
 		try {
@@ -30,7 +30,7 @@ public class MyX509TrustManager implements X509TrustManager {
 		if (trustManagers.length == 0) {
 			throw new NoSuchAlgorithmException("No TrustManager found");
 		}
-		this.mX509TrustManager = (X509TrustManager) trustManagers[0];
+		mX509TrustManager = (X509TrustManager) trustManagers[0];
 	}
 
 	public void checkClientTrusted(X509Certificate[] certificates, String authType) throws CertificateException {
@@ -46,7 +46,7 @@ public class MyX509TrustManager implements X509TrustManager {
 	}
 
 	public X509Certificate[] getAcceptedIssuers() {
-		return this.mX509TrustManager.getAcceptedIssuers();
+		return mX509TrustManager.getAcceptedIssuers();
 	}
 
 }

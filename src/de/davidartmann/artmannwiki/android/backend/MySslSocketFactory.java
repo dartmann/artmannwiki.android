@@ -2,87 +2,44 @@ package de.davidartmann.artmannwiki.android.backend;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.TrustManager;
+import javax.net.ssl.HostnameVerifier;
 
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.scheme.LayeredSocketFactory;
-import org.apache.http.conn.scheme.SocketFactory;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 
-public class MySslSocketFactory implements SocketFactory, LayeredSocketFactory {
+public class MySslSocketFactory extends SSLSocketFactory {
 	
-	private SSLContext mSslContext;
-	private static InputStream mKeyStore;
-	private static String mKeyStorePassword;
-	
-	public MySslSocketFactory(InputStream keyStore, String keyStorePassword) {
-		mKeyStore = keyStore;
-		mKeyStorePassword = keyStorePassword;
-	}
-	
-	private static SSLContext createSSLContext() throws IOException {
+	public MySslSocketFactory(InputStream keyStore, String keyStorePassword) 
+			throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, GeneralSecurityException {
+		super(isToKs(keyStore, keyStorePassword));
+		KeyStore ks = KeyStore.getInstance("BKS");
 		try {
-			SSLContext context = SSLContext.getInstance("TLS");
-			context.init(null, new TrustManager[] {new MyX509TrustManager(mKeyStore, mKeyStorePassword)}, null);
-			return context;
-		} catch (Exception e) {
-			throw new IOException(e.getMessage());
-		}
+            ks.load(keyStore, keyStorePassword.toCharArray());
+        } catch (IOException e) {
+            throw new GeneralSecurityException("Problem reading keystore stream", e);
+        }
+		HostnameVerifier hostnameVerifier = SSLSocketFactory.STRICT_HOSTNAME_VERIFIER;
+		
 	}
 	
-	private SSLContext getSSLContext() throws IOException {
-		if (mSslContext == null) {
-			this.mSslContext = createSSLContext();
+	private static KeyStore isToKs(InputStream isKeyStore, String keyStorePassword) throws GeneralSecurityException {
+		KeyStore ks = KeyStore.getInstance("BKS");
+		try {
+            ks.load(isKeyStore, keyStorePassword.toCharArray());
+        } catch (IOException e) {
+            throw new GeneralSecurityException("Problem reading keystore stream", e);
+        } catch (NoSuchAlgorithmException e) {
+        	throw new IllegalStateException("No such Algorithm", e);
+		} catch (CertificateException e) {
+			throw new IllegalStateException("Problem with certificate", e);
 		}
-		return this.mSslContext;
+		return ks;
 	}
-
-	public Socket createSocket(Socket socket, String host, int port, boolean autoClose)
-			throws IOException, UnknownHostException {
-		return getSSLContext().getSocketFactory().createSocket(socket, host, port, autoClose);
-	}
-
-	public Socket connectSocket(Socket socket, String host, int port,
-			InetAddress localAddress, int localPort, HttpParams params) throws IOException,
-			UnknownHostException, ConnectTimeoutException {
-		int connTimeout = HttpConnectionParams.getConnectionTimeout(params);
-		int soTimeout = HttpConnectionParams.getSoTimeout(params);
-		InetSocketAddress remoteAddress = new InetSocketAddress(host, port);
-		SSLSocket sslSocket = (SSLSocket) ((socket != null) ? socket : createSocket());
-		if ((localAddress != null) || (localPort > 0)) {
-			if (localPort < 0) {
-				localPort = 0; // indicates any port
-			}
-			InetSocketAddress isa = new InetSocketAddress(localAddress, localPort);
-			sslSocket.bind(isa);
-		}
-		sslSocket.connect(remoteAddress, connTimeout);
-		sslSocket.setSoTimeout(soTimeout);
-		return sslSocket;
-	}
-
-	public Socket createSocket() throws IOException {
-		return getSSLContext().getSocketFactory().createSocket();
-	}
-
-	public boolean isSecure(Socket socket) throws IllegalArgumentException {
-		return true;
-	}
-
-	public boolean equals(Object o) {
-		return ((o != null) && o.getClass().equals(MySslSocketFactory.class));
-	}
-
-	public int hashCode() {
-		return MySslSocketFactory.class.hashCode();
-	}
-
 }
