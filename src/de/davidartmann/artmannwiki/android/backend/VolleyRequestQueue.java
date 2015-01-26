@@ -10,7 +10,7 @@ import com.android.volley.toolbox.Volley;
 
 import de.artmann.artmannwiki.R;
 
-public class VolleyRequestQueue /*extends Application*/{
+public class VolleyRequestQueue {
 
     private RequestQueue mRequestQueue;
 	private static Context mCtx;
