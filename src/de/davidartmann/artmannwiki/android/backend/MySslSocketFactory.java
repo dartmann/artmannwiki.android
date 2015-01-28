@@ -10,7 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
-import javax.net.ssl.HostnameVerifier;
+//import javax.net.ssl.HostnameVerifier;
 
 import org.apache.http.conn.ssl.SSLSocketFactory;
 
@@ -25,7 +25,7 @@ public class MySslSocketFactory extends SSLSocketFactory {
         } catch (IOException e) {
             throw new GeneralSecurityException("Problem reading keystore stream", e);
         }
-		HostnameVerifier hostnameVerifier = SSLSocketFactory.STRICT_HOSTNAME_VERIFIER;
+//		HostnameVerifier hostnameVerifier = SSLSocketFactory.STRICT_HOSTNAME_VERIFIER;
 		
 	}
 	
